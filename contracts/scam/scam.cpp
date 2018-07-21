@@ -12,7 +12,7 @@
 
 
 
-void scam::createTransaction(account_name owner, string pet_name) {
+void scam::createTran(account_name owner, string pet_name) {
 
     require_auth(owner);
 
