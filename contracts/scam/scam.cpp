@@ -13,7 +13,7 @@ using namespace eosio;
 using std::string;
 using std::hash;
 
-class dice : public eosio::contract {
+class scam : public eosio::contract {
 
 public:
     struct st_transactions {
@@ -36,7 +36,7 @@ public:
 
     _tb_transactions transactions;
 
-    void createpet(name owner, string pet_name) {
+    void createTransaction(name owner, string pet_name) {
 
         require_auth(owner);
 
@@ -78,4 +78,4 @@ extern "C" { \
    } \
 }
 
-EOSIO_ABI_EX(transaction, (createpet))
+EOSIO_ABI_EX(scam, (createTransaction))
