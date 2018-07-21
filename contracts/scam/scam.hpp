@@ -6,6 +6,10 @@
 #define PROJECT_SCAM_H
 #endif //PROJECT_SCAM_H
 
+using namespace eosio;
+using std::string;
+using std::hash;
+
 
 class scam : public eosio::contract {
   public:

@@ -9,9 +9,7 @@
 #include "scam.hpp"
 
 
-using namespace eosio;
-using std::string;
-using std::hash;
+
 
 void scam::createTransaction(name owner, string pet_name) {
 
