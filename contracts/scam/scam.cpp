@@ -11,7 +11,7 @@
 
 
 
-void scam::createTransaction(name owner, string pet_name) {
+void scam::createTransaction(account_name owner, string pet_name) {
 
     require_auth(owner);
 
