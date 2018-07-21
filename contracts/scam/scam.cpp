@@ -54,4 +54,4 @@ extern "C" { \
    } \
 }
 
-EOSIO_ABI_EX(scam, (createTransaction))
+EOSIO_ABI_EX(scam, (createTran))
