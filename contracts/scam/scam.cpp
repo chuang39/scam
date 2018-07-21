@@ -18,12 +18,12 @@ void scam::createTransaction(account_name owner, string pet_name) {
 
     //uuid new_id = _next_id();
 
+    print( "=============Hello, ", name{owner} );
     transactions.emplace(owner, [&](auto &r) {
-        print( "=============Hello, ", name{owner} );
         st_transactions transaction{};
         transaction.id = 1;
         //transaction.name = "baby";
-        transaction.owner = owner;
+        transaction.owner = name{owner};
         transaction.created_at = now();
         transaction.ammount = 0;
 
