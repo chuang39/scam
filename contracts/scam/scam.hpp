@@ -37,5 +37,5 @@ class scam : public eosio::contract {
 
     _tb_transactions transactions;
 
-    void createtransaction(account_name owner, string pet_name);
+    void createtran(account_name owner, string pet_name);
 };
