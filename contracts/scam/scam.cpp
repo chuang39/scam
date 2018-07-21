@@ -6,7 +6,7 @@
 #include <eosiolib/time.hpp>
 #include <eosiolib/asset.hpp>
 #include <eosiolib/contract.hpp>
-#include "scam.h"
+#include "scam.hpp"
 
 
 class dice : public eosio::contract {
