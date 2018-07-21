@@ -17,7 +17,8 @@ class dice : public eosio::contract {
 
 public:
     struct st_transactions {
-        uuid id;
+        //uuid id;
+        uint32_t id;
         name owner;
         string name;
         uint32_t created_at;
@@ -39,7 +40,7 @@ public:
 
         require_auth(owner);
 
-        uuid new_id = _next_id();
+        //uuid new_id = _next_id();
 
         transactions.emplace(owner, [&](auto &r) {
             st_transactions transaction{};
