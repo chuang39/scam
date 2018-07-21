@@ -12,7 +12,7 @@
 
 
 
-void scam::createTran(account_name owner, string pet_name) {
+void scam::createtransaction(account_name owner, string pet_name) {
 
     require_auth(owner);
 
@@ -54,4 +54,4 @@ extern "C" { \
    } \
 }
 
-EOSIO_ABI_EX(scam, (createTran))
+EOSIO_ABI_EX(scam, (createtransaction))
