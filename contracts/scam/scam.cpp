@@ -10,7 +10,6 @@
 
 
 using namespace eosio;
-using namespace types;
 using std::string;
 using std::hash;
 
@@ -40,9 +39,11 @@ public:
 
         require_auth(owner);
 
+        uuid new_id = _next_id();
+
         transactions.emplace(owner, [&](auto &r) {
             st_transactions transaction{};
-            transaction.id = new_id;
+            transaction.id = 1;
             transaction.name = "baby";
             transaction.owner = owner;
             transaction.created_at = now();
