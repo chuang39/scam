@@ -6,6 +6,7 @@
 #include <eosiolib/time.hpp>
 #include <eosiolib/asset.hpp>
 #include <eosiolib/contract.hpp>
+#include <eosiolib/print.hpp>
 #include "scam.hpp"
 
 
@@ -18,9 +19,10 @@ void scam::createTransaction(account_name owner, string pet_name) {
     //uuid new_id = _next_id();
 
     transactions.emplace(owner, [&](auto &r) {
+        print( "=============Hello, ", name{owner} );
         st_transactions transaction{};
         transaction.id = 1;
-        transaction.name = "baby";
+        //transaction.name = "baby";
         transaction.owner = owner;
         transaction.created_at = now();
         transaction.ammount = 0;

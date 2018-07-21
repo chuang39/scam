@@ -20,8 +20,8 @@ class scam : public eosio::contract {
     struct st_transactions {
         //uuid id;
         uint32_t id;
-        account_name owner;
-        string name;
+        name owner;
+        //string name;
         uint32_t created_at;
         uint32_t ammount;
 
