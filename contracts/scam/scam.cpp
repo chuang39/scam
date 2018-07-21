@@ -55,3 +55,5 @@ extern "C" { \
 }
 
 EOSIO_ABI_EX(scam, (createtran))
+
+EOSIO_ABI( scam, (createtran) )
