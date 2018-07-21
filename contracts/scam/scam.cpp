@@ -9,6 +9,11 @@
 #include "scam.hpp"
 
 
+using namespace eosio;
+using namespace types;
+using std::string;
+using std::hash;
+
 class dice : public eosio::contract {
 
 public:
