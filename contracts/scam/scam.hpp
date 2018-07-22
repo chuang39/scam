@@ -29,6 +29,18 @@ class scam : public eosio::contract {
         asset    creation_fee = asset{0,S(4,EOS)};
     };
 
+    struct st_accounts {
+        name owner;
+        uint32_t created_at;
+        uint32_t ammount;
+        uint32_t bets;
+
+        uint64_t primary_key() const { return owner; }
+
+        uint64_t get_transactions_by_owner() const { return owner.value; }
+        EOSLIB_SERIALIZE(account, (owner)(created_at)(ammount)(bets) )
+    };
+
     struct st_transactions {
         //uuid id;
         uint32_t id;
@@ -42,10 +54,6 @@ class scam : public eosio::contract {
         uint64_t get_transactions_by_owner() const { return owner.value; }
         //EOSLIB_SERIALIZE( game, (challenger)(host)(turn)(winner)(board))
     };
-
-    typedef multi_index<N(transactions), st_transactions,
-            indexed_by<N(byowner), const_mem_fun<st_transactions, uint64_t, &st_transactions::get_transactions_by_owner>>
-    > _tb_transactions;
 
     struct st_pools {
         //uuid id;
@@ -67,8 +75,15 @@ class scam : public eosio::contract {
             indexed_by<N(byowner), const_mem_fun<st_pools, uint64_t, &st_pools::get_pools_by_owner>>
     > _tb_pools;
 
+    typedef multi_index<N(transactions), st_transactions,
+            indexed_by<N(byowner), const_mem_fun<st_transactions, uint64_t, &st_transactions::get_transactions_by_owner>>
+    > _tb_transactions;
+
+    typedef multi_index<N(accounts), st_accounts> _tb_accounts;
+
     _tb_transactions transactions;
     _tb_pools pools;
+    _tb_accounts accounts;
 
     void createtran(const account_name from, const asset& quantity);
 

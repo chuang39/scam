@@ -19,23 +19,15 @@ void scam::createtran(const account_name from, const asset& quantity) {
     //      pitr.end_at, ", created_at:", pitr.created_at, "\n");
 
 
-    auto owner_trans = transactions.get_index<N(byowner)>();
-    auto oitr = owner_trans.find(from);
-    if( oitr == owner_trans.end() ) {
-        transactions.emplace(_self, [&](auto& transaction){
-            transaction.id = transactions.available_primary_key();
+    auto aitr = accounts.find(from);
+    if(aitr == owner_trans.end()) {
+        aitr = accounts.emplace(_self, [&](auto& account){
             transaction.owner = name{from};
             transaction.created_at = now();
         });
-        oitr = owner_trans.find(from);
-        print(" ~~~~~~~~~ID=", oitr.id, ", owner:", oitr.owner, ", ammount: ",
-              oitr.ammount, ",  created_at:", oitr.created_at, "\n");
-        for( const auto& pool : transactions ) {
-            print(" ID=", pool.id, ", owner:", pool.owner, ", ammount: ",
-                  pool.ammount, ",  created_at:", pool.created_at, "\n");
-        }
+        print(" ~~~~~~~~~ID=", aitr.id, ", owner:", aitr.owner, ", ammount: ",
+              aitr.ammount, ",  created_at:", aitr.created_at, "\n");
     }
-
 
     action(
             permission_level{ from, N(active) },
@@ -43,7 +35,7 @@ void scam::createtran(const account_name from, const asset& quantity) {
             std::make_tuple(from, _self, quantity, std::string(""))
     ).send();
 
-    transactions.modify(oitr, 0, [&](auto &r) {
+    accounts.modify(aitr, 0, [&](auto &r) {
         r.ammount += ceil(quantity.amount / 0.5);
     });
 
