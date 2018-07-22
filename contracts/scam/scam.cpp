@@ -2,35 +2,42 @@
 // Created by Kevin Huang on 7/20/18.
 //
 
-#include <eosiolib/eosio.hpp>
-#include <eosiolib/time.hpp>
-#include <eosiolib/asset.hpp>
-#include <eosiolib/contract.hpp>
-#include <eosiolib/print.hpp>
 #include "scam.hpp"
 
-void scam::createtran(account_name owner, string pet_name) {
+void scam::createtran(const account_name from, const asset& quantity) {
 
-    require_auth(_self);
+    eosio_assert( quantity.is_valid(), "invalid quantity" );
+    eosio_assert( quantity.amount > 0, "must deposit positive quantity" );
+    //eosio_assert(code == N(eosio.token), "I reject your non-eosio.token deposit");
+    eosio_assert(quantity.symbol == string_to_symbol(4, "EOS"),
+                 "only accepts EOS for deposits");
 
-    auto owner_pools = pools.get_index<N(byowner)>();
-    auto pitr = owner_pools.get(N(blockfishbgp));
-    print(" ~~ID=", pitr.id, ", owner:", pitr.owner, ", ammount: ",
-          pitr.ammount, ", end_at:",
-          pitr.end_at, ", created_at:", pitr.created_at, "\n");
+    //auto owner_pools = pools.get_index<N(byowner)>();
+    //auto pitr = owner_pools.get(N(blockfishbgp));
+    //print(" ~~ID=", pitr.id, ", owner:", pitr.owner, ", ammount: ",
+    //      pitr.ammount, ", end_at:",
+    //      pitr.end_at, ", created_at:", pitr.created_at, "\n");
 
-    print( "Welsome %s! Start purchasing...", name{owner} );
-    transactions.emplace(owner, [&](auto &r) {
-        st_transactions transaction{};
-        transaction.id = transactions.available_primary_key();
-        //transaction.name = "baby";
-        transaction.owner = name{owner};
-        transaction.created_at = now();
-        transaction.ammount = 100;
 
-        //pet.type = (hash_str(pet_name) + pet.created_at + pet.id + owner) % pc.last_pet_type_id;
+    auto owner_trans = transactions.get_index<N(byowner)>();
+    auto oitr = owner_trans.find(from);
+    if( oitr == owner_trans.end() ) {
+        itr = transactions.emplace(_self, [&](auto& transaction){
+            transaction.id = transactions.available_primary_key();
+            transaction.owner = name{from};
+            transaction.created_at = now();
+        });
+    }
 
-        r = transaction;
+
+    action(
+            permission_level{ from, N(active) },
+            N(eosio.token), N(transfer),
+            std::make_tuple(from, _self, quantity, std::string(""))
+    ).send();
+
+    transactions.modify(oitr, 0, [&](auto &r) {
+        r.ammount += ceil(quantity.amount / 0.5);
     });
 
 
