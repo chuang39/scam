@@ -38,7 +38,7 @@ class scam : public eosio::contract {
         uint64_t primary_key() const { return owner; }
 
         uint64_t get_transactions_by_owner() const { return owner.value; }
-        EOSLIB_SERIALIZE(account, (owner)(created_at)(ammount)(bets) )
+        EOSLIB_SERIALIZE(st_accounts, (owner)(created_at)(ammount)(bets) )
     };
 
     struct st_transactions {
