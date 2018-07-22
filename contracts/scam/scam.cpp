@@ -61,4 +61,4 @@ void scam::getpool(account_name owner) {
     }
 }
 
-EOSIO_ABI( scam, (createtran), (createpool), (getpool))
+EOSIO_ABI( scam, (createtran)(createpool)(getpool))
