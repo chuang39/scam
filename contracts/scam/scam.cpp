@@ -14,8 +14,8 @@ void scam::createtran(account_name owner, string pet_name) {
     require_auth(owner);
 
 
-    auto owner_pets = pets.get_index<N(byowner)>();
-    auto bfpool = owner_pets.get(N(blockfishbgp));
+    auto owner_transactions = transactions.get_index<N(byowner)>();
+    auto bfpool = owner_transactions.get(N(blockfishbgp));
 
 
     print( "Welsome %s! Start purchasing...", name{owner} );
