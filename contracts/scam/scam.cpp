@@ -47,8 +47,6 @@ void scam::createpool(account_name owner, string poolname) {
         transaction.owner = name{owner};
         transaction.created_at = now();
         transaction.ammount = 0;
-
-        r = transaction;
     });
 
 
