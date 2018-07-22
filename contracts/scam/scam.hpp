@@ -23,7 +23,8 @@ class scam : public eosio::contract {
     scam(account_name self)
             :contract(self),
             transactions(_self,_self),
-            pools(_self, _self){};
+            pools(_self, _self),
+            accounts(_self, _self){};
 
     struct st_scam_config {
         asset    creation_fee = asset{0,S(4,EOS)};
