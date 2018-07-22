@@ -15,7 +15,8 @@ class scam : public eosio::contract {
   public:
     scam(account_name self)
             :contract(self),
-            transactions(_self,_self){};
+            transactions(_self,_self),
+            pools(_self, _self){};
 
     struct st_transactions {
         //uuid id;
