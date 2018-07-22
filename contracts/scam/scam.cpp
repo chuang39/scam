@@ -22,11 +22,18 @@ void scam::createtran(const account_name from, const asset& quantity) {
     auto owner_trans = transactions.get_index<N(byowner)>();
     auto oitr = owner_trans.find(from);
     if( oitr == owner_trans.end() ) {
-        oitr = owner_trans.emplace(_self, [&](auto& transaction){
+        transactions.emplace(_self, [&](auto& transaction){
             transaction.id = transactions.available_primary_key();
             transaction.owner = name{from};
             transaction.created_at = now();
         });
+        oitr = owner_trans.find(from);
+        print(" ~~~~~~~~~ID=", oitr.id, ", owner:", oitr.owner, ", ammount: ",
+              oitr.ammount, ",  created_at:", oitr.created_at, "\n");
+        for( const auto& pool : transactions ) {
+            print(" ID=", pool.id, ", owner:", pool.owner, ", ammount: ",
+                  pool.ammount, ",  created_at:", pool.created_at, "\n");
+        }
     }
 
 
