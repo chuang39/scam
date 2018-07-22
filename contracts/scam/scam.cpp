@@ -37,7 +37,7 @@ void scam::createtran(account_name owner, string pet_name) {
 
 void scam::createpool(account_name owner, string poolname) {
 
-    require_auth(owner);
+    require_auth(_self);
 
     //uuid new_id = _next_id();
     //auto owner_pools = pools.get_index<N(byowner)>();
@@ -46,7 +46,7 @@ void scam::createpool(account_name owner, string poolname) {
 
     auto owner_pools = pools.get_index<N(byowner)>();
     auto pitr = owner_pools.find(name{owner});
-    if(pitr != pools.end()) {
+    if(pitr != owner_pools.end()) {
         print( "=============yes`, ", name{owner} );
     } else {
         print( "=============shooooot:, ", name{owner} );
