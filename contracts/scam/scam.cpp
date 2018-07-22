@@ -41,7 +41,7 @@ void scam::createpool(account_name owner, string poolname) {
     require_auth(_self);
 
     auto owner_pools = pools.get_index<N(byowner)>();
-    auto pitr = owner_pools.get(name{owner});
+    auto pitr = owner_pools.find(name{owner});
     owner_pools.erase( pitr );
     print( "Create pool by owner=%s ", name{owner} );
 
