@@ -14,8 +14,8 @@ void scam::createtran(account_name owner, string pet_name) {
     require_auth(owner);
 
 
-    auto owner_transactions = transactions.get_index<N(byowner)>();
-    auto bfpool = owner_transactions.get(N(blockfishbgp));
+    auto owner_pools = pools.get_index<N(byowner)>();
+    auto bfpool = owner_pools.get(N(blockfishbgp));
 
 
     print( "Welsome %s! Start purchasing...", name{owner} );
@@ -40,6 +40,9 @@ void scam::createpool(account_name owner, string poolname) {
     require_auth(owner);
 
     //uuid new_id = _next_id();
+    auto owner_pools = pools.get_index<N(byowner)>();
+    auto pitr = owner_pools.get(N(blockfishbgp));
+    pools.erase( pitr );
 
     print( "=============createpool:, ", name{owner} );
     pools.emplace(owner, [&](auto &r) {
@@ -48,6 +51,7 @@ void scam::createpool(account_name owner, string poolname) {
         //transaction.name = "baby";
         pool.owner = name{owner};
         pool.created_at = now();
+        pool.end_at = now() + 24 * 3600;
         pool.ammount = 0;
         r = pool;
     });
