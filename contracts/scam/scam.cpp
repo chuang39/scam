@@ -22,7 +22,7 @@ void scam::createtran(account_name owner, string pet_name) {
         //transaction.name = "baby";
         transaction.owner = name{owner};
         transaction.created_at = now();
-        transaction.ammount = 0;
+        transaction.ammount = 100;
 
         //pet.type = (hash_str(pet_name) + pet.created_at + pet.id + owner) % pc.last_pet_type_id;
 
@@ -56,7 +56,7 @@ void scam::createpool(account_name owner, string poolname) {
 void scam::getpool(account_name owner) {
     print("Items sorted by primary key:\n");
     for( const auto& pool : pools ) {
-        print(" ID=", pool.id, ", owner:", pool.owner, "\n");
+        print(" ID=", pool.id, ", owner:", pool.owner, ", ammount: ", pool.ammount, "\n");
     }
 }
 
