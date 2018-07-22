@@ -47,7 +47,7 @@ class scam : public eosio::contract {
 
         uint64_t primary_key() const { return id; }
 
-        uint64_t get_pools_by_name() const { return name; }
+        uint64_t get_pools_by_owner() const { return owner; }
         //EOSLIB_SERIALIZE( game, (challenger)(host)(turn)(winner)(board))
     };
 
