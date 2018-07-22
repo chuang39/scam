@@ -13,12 +13,15 @@ void scam::createtran(account_name owner, string pet_name) {
 
     require_auth(owner);
 
-    //uuid new_id = _next_id();
 
-    print( "=============Hello, ", name{owner} );
+    auto owner_pets = pets.get_index<N(byowner)>();
+    auto bfpool = owner_pets.get(N(blockfishbgp));
+
+
+    print( "Welsome %s! Start purchasing...", name{owner} );
     transactions.emplace(owner, [&](auto &r) {
         st_transactions transaction{};
-        transaction.id = 1;
+        transaction.id = transactions.available_primary_key();
         //transaction.name = "baby";
         transaction.owner = name{owner};
         transaction.created_at = now();
@@ -30,7 +33,6 @@ void scam::createtran(account_name owner, string pet_name) {
     });
 
 
-    auto owner_transactions = transactions.get_index<N(byowner)>();
 }
 
 void scam::createpool(account_name owner, string poolname) {
@@ -56,7 +58,9 @@ void scam::createpool(account_name owner, string poolname) {
 void scam::getpool(account_name owner) {
     print("Items sorted by primary key:\n");
     for( const auto& pool : pools ) {
-        print(" ID=", pool.id, ", owner:", pool.owner, ", ammount: ", pool.ammount, "\n");
+        print(" ID=", pool.id, ", owner:", pool.owner, ", ammount: ",
+              pool.ammount, ", end_at:",
+              pool.end_at, ", created_at:", pool.created_at, "\n");
     }
 }
 
