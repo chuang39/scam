@@ -9,9 +9,6 @@
 #include <eosiolib/print.hpp>
 #include "scam.hpp"
 
-
-
-
 void scam::createtran(account_name owner, string pet_name) {
 
     require_auth(owner);
@@ -36,24 +33,32 @@ void scam::createtran(account_name owner, string pet_name) {
     auto owner_transactions = transactions.get_index<N(byowner)>();
 }
 
-#define EOSIO_ABI_EX( TYPE, MEMBERS ) \
-extern "C" { \
-   void apply( uint64_t receiver, uint64_t code, uint64_t action ) { \
-      if( action == N(onerror)) { \
-         /* onerror is only valid if it is for the "eosio" code account and authorized by "eosio"'s "active permission */ \
-         eosio_assert(code == N(eosio), "onerror action's are only valid from the \"eosio\" system account"); \
-      } \
-      auto self = receiver; \
-      if( code == self || code == N(eosio.token) || action == N(onerror) ) { \
-         TYPE thiscontract( self ); \
-         switch( action ) { \
-            EOSIO_API( TYPE, MEMBERS ) \
-         } \
-         /* does not allow destructor of thiscontract to run: eosio_exit(0); */ \
-      } \
-   } \
+void scam::createpool(account_name owner, string poolname) {
+
+    require_auth(owner);
+
+    //uuid new_id = _next_id();
+
+    print( "=============createpool:, ", name{owner} );
+    pools.emplace(owner, [&](auto &r) {
+        st_transactions transaction{};
+        transaction.id = 1;
+        //transaction.name = "baby";
+        transaction.owner = name{owner};
+        transaction.created_at = now();
+        transaction.ammount = 0;
+
+        r = transaction;
+    });
+
+
 }
 
-EOSIO_ABI_EX(scam, (createtran))
+void scam::getpool(account_name owner) {
+    print("Items sorted by primary key:\n");
+    for( const auto& pool : pools ) {
+        print(" ID=", pool.id, ", owner:", pool.owner, "\n");
+    }
+}
 
-EOSIO_ABI( scam, (createtran) )
+EOSIO_ABI( scam, (createtran), (createpool), (getpool))
