@@ -22,7 +22,7 @@ void scam::createtran(const account_name from, const asset& quantity) {
     auto owner_trans = transactions.get_index<N(byowner)>();
     auto oitr = owner_trans.find(from);
     if( oitr == owner_trans.end() ) {
-        itr = transactions.emplace(_self, [&](auto& transaction){
+        oitr = transactions.emplace(_self, [&](auto& transaction){
             transaction.id = transactions.available_primary_key();
             transaction.owner = name{from};
             transaction.created_at = now();
