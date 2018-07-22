@@ -47,11 +47,9 @@ void scam::createpool(account_name owner, string poolname) {
     auto owner_pools = pools.get_index<N(byowner)>();
     auto pitr = owner_pools.find(name{owner});
     if(pitr != owner_pools.end()) {
-        print( "=============yes`, ", name{owner} );
-    } else {
-        print( "=============shooooot:, ", name{owner} );
-
+        owner_pools.erase(pitr);
     }
+
 
 
     print( "=============createpool:, ", name{owner} );
