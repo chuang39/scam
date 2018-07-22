@@ -52,7 +52,7 @@ void scam::createpool(account_name owner, string poolname) {
         pool.owner = name{owner};
         pool.created_at = now();
         pool.end_at = now() + 24 * 3600;
-        pool.ammount = 0;
+        pool.ammount = 10;
         r = pool;
     });
 
