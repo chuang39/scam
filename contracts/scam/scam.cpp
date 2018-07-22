@@ -25,7 +25,7 @@ void scam::createtran(const account_name from, const asset& quantity) {
             account.owner = name{from};
             account.created_at = now();
         });
-        print(" ~~~~~~~~~ID=", aitr->id, ", owner:", aitr->owner, ", ammount: ",
+        print(" ~~~~~~~~~owner:", aitr->owner, ", ammount: ",
               aitr->ammount, ",  created_at:", aitr->created_at, "\n");
     }
 
