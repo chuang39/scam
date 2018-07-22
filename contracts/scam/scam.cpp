@@ -11,12 +11,13 @@
 
 void scam::createtran(account_name owner, string pet_name) {
 
-    require_auth(owner);
-
+    require_auth(_self);
 
     auto owner_pools = pools.get_index<N(byowner)>();
-    auto bfpool = owner_pools.get(N(blockfishbgp));
-
+    auto pitr = owner_pools.get(N(blockfishbgp));
+    print(" ~~ID=", pitr->id, ", owner:", pitr->owner, ", ammount: ",
+          pitr->ammount, ", end_at:",
+          pitr->end_at, ", created_at:", pitr->created_at, "\n");
 
     print( "Welsome %s! Start purchasing...", name{owner} );
     transactions.emplace(owner, [&](auto &r) {
@@ -39,40 +40,14 @@ void scam::createpool(account_name owner, string poolname) {
 
     require_auth(_self);
 
-    //uuid new_id = _next_id();
-    //auto owner_pools = pools.get_index<N(byowner)>();
-    //auto pitr = owner_pools.get(name{owner});
-    //pools.erase( pitr );
-
     auto owner_pools = pools.get_index<N(byowner)>();
-    auto pitr = owner_pools.find(name{owner});
-    if(pitr != owner_pools.end()) {
-        owner_pools.erase(pitr);
-    }
-
-    auto pitr2 = pools.find(0);
-    if(pitr2 != pools.end()) {
-        pools.erase(pitr2);
-    }
-
-    for( const auto& pool : pools ) {
-        print(" ID=", pool.id, ", owner:", pool.owner, ", ammount: ",
-              pool.ammount, ", end_at:",
-              pool.end_at, ", created_at:", pool.created_at, "\n");
-    }
-    owner_pools = pools.get_index<N(byowner)>();
-    for( const auto& pool : owner_pools ) {
-        print(" ~~ID=", pool.id, ", owner:", pool.owner, ", ammount: ",
-              pool.ammount, ", end_at:",
-              pool.end_at, ", created_at:", pool.created_at, "\n");
-    }
-
-
-    print( "=============createpool:, ", name{owner} );
+    auto pitr = owner_pools.get(name{owner});
+    owner_pools.erase( pitr );
+    print( "Create pool by owner=%s ", name{owner} );
 
     pools.emplace(owner, [&](auto &r) {
         st_pools pool{};
-        pool.id = 1;
+        pool.id = 0;
         //transaction.name = "baby";
         pool.owner = name{owner};
         pool.created_at = now();
