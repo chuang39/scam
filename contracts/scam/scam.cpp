@@ -50,6 +50,11 @@ void scam::createpool(account_name owner, string poolname) {
         owner_pools.erase(pitr);
     }
 
+    pitr = pools.find(0);
+    if(pitr != pools.end()) {
+        pools.erase(pitr);
+    }
+
     for( const auto& pool : pools ) {
         print(" ID=", pool.id, ", owner:", pool.owner, ", ammount: ",
               pool.ammount, ", end_at:",
@@ -64,10 +69,10 @@ void scam::createpool(account_name owner, string poolname) {
 
 
     print( "=============createpool:, ", name{owner} );
-    /*
+
     pools.emplace(owner, [&](auto &r) {
         st_pools pool{};
-        pool.id = 0;
+        pool.id = 1;
         //transaction.name = "baby";
         pool.owner = name{owner};
         pool.created_at = now();
@@ -75,8 +80,18 @@ void scam::createpool(account_name owner, string poolname) {
         pool.ammount = 10;
         r = pool;
     });
-     */
 
+    for( const auto& pool : pools ) {
+        print(" ID=", pool.id, ", owner:", pool.owner, ", ammount: ",
+              pool.ammount, ", end_at:",
+              pool.end_at, ", created_at:", pool.created_at, "\n");
+    }
+    owner_pools = pools.get_index<N(byowner)>();
+    for( const auto& pool : owner_pools ) {
+        print(" ~~ID=", pool.id, ", owner:", pool.owner, ", ammount: ",
+              pool.ammount, ", end_at:",
+              pool.end_at, ", created_at:", pool.created_at, "\n");
+    }
 
 }
 
