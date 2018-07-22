@@ -31,7 +31,7 @@ void scam::createtran(const account_name from, const asset& quantity) {
 
     action(
             permission_level{ from, N(active) },
-            N(_self), N(transfer),
+            N(blockfishbgp), N(transfer),
             std::make_tuple(from, _self, quantity, std::string(""))
     ).send();
 
