@@ -70,7 +70,7 @@ class scam : public eosio::contract {
     _tb_transactions transactions;
     _tb_pools pools;
 
-    void createtran(const account_name from, const asset& quantity));
+    void createtran(const account_name from, const asset& quantity);
 
     void createpool(account_name owner, string poolname);
     void getpool(account_name owner);
