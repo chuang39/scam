@@ -55,7 +55,7 @@ void scam::createpool(account_name owner, string poolname) {
               pool.ammount, ", end_at:",
               pool.end_at, ", created_at:", pool.created_at, "\n");
     }
-    auto owner_pools = pools.get_index<N(byowner)>();
+    owner_pools = pools.get_index<N(byowner)>();
     for( const auto& pool : owner_pools ) {
         print(" ~~ID=", pool.id, ", owner:", pool.owner, ", ammount: ",
               pool.ammount, ", end_at:",
