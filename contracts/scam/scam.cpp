@@ -15,9 +15,9 @@ void scam::createtran(account_name owner, string pet_name) {
 
     auto owner_pools = pools.get_index<N(byowner)>();
     auto pitr = owner_pools.get(N(blockfishbgp));
-    print(" ~~ID=", pitr->id, ", owner:", pitr->owner, ", ammount: ",
-          pitr->ammount, ", end_at:",
-          pitr->end_at, ", created_at:", pitr->created_at, "\n");
+    print(" ~~ID=", pitr.id, ", owner:", pitr.owner, ", ammount: ",
+          pitr.ammount, ", end_at:",
+          pitr.end_at, ", created_at:", pitr.created_at, "\n");
 
     print( "Welsome %s! Start purchasing...", name{owner} );
     transactions.emplace(owner, [&](auto &r) {
