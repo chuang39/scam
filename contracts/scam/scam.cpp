@@ -41,12 +41,13 @@ void scam::createpool(account_name owner, string poolname) {
 
     print( "=============createpool:, ", name{owner} );
     pools.emplace(owner, [&](auto &r) {
-        st_transactions transaction{};
-        transaction.id = 1;
+        st_pools pool{};
+        pool.id = 1;
         //transaction.name = "baby";
-        transaction.owner = name{owner};
-        transaction.created_at = now();
-        transaction.ammount = 0;
+        pool.owner = name{owner};
+        pool.created_at = now();
+        pool.ammount = 0;
+        r = pool;
     });
 
 
