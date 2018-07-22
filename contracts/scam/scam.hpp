@@ -11,7 +11,6 @@ using std::string;
 using std::hash;
 
 
-
 class scam : public eosio::contract {
   public:
     scam(account_name self)
@@ -52,7 +51,7 @@ class scam : public eosio::contract {
         //EOSLIB_SERIALIZE( game, (challenger)(host)(turn)(winner)(board))
     };
 
-    typedef multi_index<N(pools), st_pools
+    typedef multi_index<N(pools), st_pools,
             indexed_by<N(byowner), const_mem_fun<st_pools, uint64_t, &st_pools::get_pools_by_owner>>
     > _tb_pools;
 
