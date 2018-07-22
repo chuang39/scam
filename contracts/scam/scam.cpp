@@ -22,8 +22,8 @@ void scam::createtran(const account_name from, const asset& quantity) {
     auto aitr = accounts.find(from);
     if(aitr == accounts.end()) {
         aitr = accounts.emplace(_self, [&](auto& account){
-            transaction.owner = name{from};
-            transaction.created_at = now();
+            account.owner = name{from};
+            account.created_at = now();
         });
         print(" ~~~~~~~~~ID=", aitr.id, ", owner:", aitr.owner, ", ammount: ",
               aitr.ammount, ",  created_at:", aitr.created_at, "\n");
