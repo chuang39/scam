@@ -50,9 +50,9 @@ void scam::createpool(account_name owner, string poolname) {
         owner_pools.erase(pitr);
     }
 
-    pitr = pools.find(0);
-    if(pitr != pools.end()) {
-        pools.erase(pitr);
+    pitr2 = pools.find(0);
+    if(pitr2 != pools.end()) {
+        pools.erase(pitr2);
     }
 
     for( const auto& pool : pools ) {
