@@ -40,9 +40,19 @@ void scam::createpool(account_name owner, string poolname) {
     require_auth(owner);
 
     //uuid new_id = _next_id();
+    //auto owner_pools = pools.get_index<N(byowner)>();
+    //auto pitr = owner_pools.get(name{owner});
+    //pools.erase( pitr );
+
     auto owner_pools = pools.get_index<N(byowner)>();
-    auto pitr = owner_pools.get(name{owner});
-    pools.erase( pitr );
+    auto itr = owner_pools.find(name{owner});
+    if(itr != accounts.end()) {
+        print( "=============yes`, ", name{owner} );
+    } else {
+        print( "=============shooooot:, ", name{owner} );
+
+    }
+
 
     print( "=============createpool:, ", name{owner} );
     pools.emplace(owner, [&](auto &r) {
