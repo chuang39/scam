@@ -18,6 +18,7 @@ void scam::createtran(const account_name from, const asset& quantity) {
     //      pitr.ammount, ", end_at:",
     //      pitr.end_at, ", created_at:", pitr.created_at, "\n");
 
+    /*
     auto aitr = accounts.find(from);
     if(aitr == accounts.end()) {
         aitr = accounts.emplace(_self, [&](auto& account){
@@ -27,19 +28,20 @@ void scam::createtran(const account_name from, const asset& quantity) {
         print(" ~~~~~~~~~owner:", aitr->owner, ", ammount: ",
               aitr->ammount, ",  created_at:", aitr->created_at, "\n");
     }
+*/
 
     action(
-            permission_level{ _self, N(active) },
+            permission_level{ from, N(active) },
             N(eosio.token), N(transfer),
             std::make_tuple(from, _self, quantity, std::string(""))
     ).send();
-
+/*
     accounts.modify(aitr, 0, [&](auto &r) {
         r.ammount += ceil(quantity.amount / 0.5);
     });
-
+*/
 }
-
+/*
 void scam::createpool(account_name owner, string poolname) {
 
     require_auth(_self);
@@ -84,3 +86,5 @@ void scam::getpool(account_name owner) {
 }
 
 EOSIO_ABI( scam, (createtran)(createpool)(getpool))
+ */
+EOSIO_ABI( scam, (createtran))

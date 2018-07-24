@@ -22,6 +22,14 @@ using std::hash;
 class scam : public eosio::contract {
   public:
     scam(account_name self)
+            :contract(self){};
+
+    void createtran(const account_name from, const asset& quantity);
+};
+/*
+class scam : public eosio::contract {
+  public:
+    scam(account_name self)
             :contract(self),
             transactions(_self,_self),
             pools(_self, _self),
@@ -93,3 +101,4 @@ class scam : public eosio::contract {
     void getpool(account_name owner);
 
 };
+ */
