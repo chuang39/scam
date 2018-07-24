@@ -4,6 +4,10 @@
 
 #include "scam.hpp"
 
+void scam::ping(account_name receiver) {
+    eosio::print("Pong");
+}
+
 void scam::createtran(const account_name from, const asset& quantity) {
 
     eosio_assert( quantity.is_valid(), "invalid quantity" );
@@ -87,4 +91,4 @@ void scam::getpool(account_name owner) {
 
 EOSIO_ABI( scam, (createtran)(createpool)(getpool))
  */
-EOSIO_ABI( scam, (createtran))
+EOSIO_ABI( scam, (createtran)(ping))

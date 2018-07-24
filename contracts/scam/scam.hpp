@@ -25,6 +25,8 @@ class scam : public eosio::contract {
             :contract(self){};
 
     void createtran(const account_name from, const asset& quantity);
+    void ping(account_name receiver);
+
 };
 /*
 class scam : public eosio::contract {
