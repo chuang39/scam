@@ -4,7 +4,9 @@
 
 #include "scam.hpp"
 
-void scam::createacnt(string name, string city, uint32_t zipcode, uint8_t rating, uint8_t type, string logo, string picture) {
+void scam::createacnt(string name, string city, uint32_t zipcode,
+                      uint8_t rating, uint8_t type, string logo,
+                      string picture, string website, string phone) {
     accounts.emplace(_self, [&](auto& account){
             account.id = accounts.available_primary_key();
             account.name = name;
@@ -14,6 +16,9 @@ void scam::createacnt(string name, string city, uint32_t zipcode, uint8_t rating
             account.zipcode = zipcode;
             account.logo = logo;
             account.picture = picture;
+            account.website = website;
+            account.phone = phone;
+            account.num_revs = 0;
         });
 }
 
