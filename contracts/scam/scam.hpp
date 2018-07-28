@@ -21,7 +21,7 @@ using std::hash;
 
 class scam : public eosio::contract {
 public:
-    scam(account_name self):contract(self),accounts(_self, _self,_self,_self,_self){};
+    scam(account_name self):contract(self),accounts(_self, _self){};
 
     struct st_accounts {
         uint32_t id;
