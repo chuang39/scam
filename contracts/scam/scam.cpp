@@ -4,10 +4,6 @@
 
 #include "scam.hpp"
 
-void scam::ping(account_name receiver) {
-    eosio::print("Pong");
-}
-
 void scam::createacnt(string name, string city, uint32_t zipcode, uint32_t rating, uint32_t type) {
     accounts.emplace(_self, [&](auto& account){
             account.id = 0;
