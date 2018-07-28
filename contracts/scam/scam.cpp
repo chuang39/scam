@@ -15,7 +15,7 @@ void scam::createacnt(string name, string city, uint32_t zipcode, uint8_t rating
         });
 }
 
-void createrevw(string user, string business, uint32_t rating, string line) {
+void scam::createrevw(string user, string business, uint32_t rating, string line) {
     reviews.emplace(_self, [&](auto& review){
             review.id = reviews.available_primary_key();
             review.user = user;
