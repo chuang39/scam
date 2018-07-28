@@ -4,14 +4,14 @@
 
 #include "scam.hpp"
 
-void scam::createacnt(string name, string city, uint32_t zipcode, uint32_t rating, uint32_t type) {
+void scam::createacnt(string name, string city, uint32_t zipcode, uint8_t rating, uint8_t type) {
     accounts.emplace(_self, [&](auto& account){
-            account.id = 0;
-            account.name = "innospring";
-            account.city = "palo alto";
-            account.rating = 5;
-            account.type = 1;
-            account.zipcode = 94306;
+            account.id = accounts.available_primary_key();
+            account.name = name;
+            account.city = city;
+            account.rating = rating;
+            account.type = type;
+            account.zipcode = zipcode;
         });
 
 }
