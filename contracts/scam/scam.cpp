@@ -15,7 +15,16 @@ void scam::createacnt(string name, string city, uint32_t zipcode, uint8_t rating
         });
 }
 
-EOSIO_ABI( scam, (createacnt))
+void createrevw(string user, string business, uint32_t rating, string line) {
+    reviews.emplace(_self, [&](auto& review){
+            review.id = reviews.available_primary_key();
+            review.user = user;
+            review.business = business;
+            review.rating = rating;
+            review.line = line;
+        });
+}
+EOSIO_ABI( scam, (createacnt)(createrevw))
 
 /*
 void scam::createtran(const account_name from, const asset& quantity) {

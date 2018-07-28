@@ -39,27 +39,25 @@ public:
 
     typedef multi_index<N(accounts), st_accounts> _tb_accounts;
     _tb_accounts accounts;
-/*
+
     // @abi table reviews i64
     struct st_reviews {
         uint64_t id;
         string user;
         string business;
         uint8_t rating;
-        string reviews;
+        string line;
 
         uint64_t primary_key() const { return id; }
 
-        EOSLIB_SERIALIZE(st_reviews, (id)(user)(business)(rating)(reviews))
+        EOSLIB_SERIALIZE(st_reviews, (id)(user)(business)(rating)(line))
     };
 
     typedef multi_index<N(reviews), st_reviews> _tb_reviews;
     _tb_reviews reviews;
-*/
+
     void createacnt(string name, string city, uint32_t zipcode, uint8_t rating, uint8_t type);
-    //void createrevw(string user, string business, uint32_t rating, string reviews);
-
-
+    void createrevw(string user, string business, uint32_t rating, string line);
 
 /*
   public:
