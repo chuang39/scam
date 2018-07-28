@@ -23,15 +23,16 @@ class scam : public eosio::contract {
 public:
     scam(account_name self):contract(self),accounts(_self, _self){};
 
+    // @abi table st_accounts i64
     struct st_accounts {
-        uint32_t id;
+        uint64_t id;
         string name;
         string city;
         uint32_t zipcode;
         uint32_t rating;
         uint32_t type;
 
-        uint32_t primary_key() const { return id; }
+        uint64_t primary_key() const { return id; }
 
         EOSLIB_SERIALIZE(st_accounts, (id)(name)(city)(zipcode)(rating)(type))
     };
