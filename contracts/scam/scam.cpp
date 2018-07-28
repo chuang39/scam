@@ -8,6 +8,21 @@ void scam::ping(account_name receiver) {
     eosio::print("Pong");
 }
 
+void scam::createaccount(string name, string city, unit32_t zipcode, uint32_t rating, unit32_t type) {
+    accounts.emplace(_self, [&](auto& account){
+            account.id = 0;
+            account.name = "innospring";
+            account.city = "palo alto";
+            account.rating = 5;
+            account.type = 1;
+            account.zip = 94306;
+        });
+
+}
+
+EOSIO_ABI( scam, (createaccount)(ping))
+
+/*
 void scam::createtran(const account_name from, const asset& quantity) {
 
     eosio_assert( quantity.is_valid(), "invalid quantity" );
@@ -106,3 +121,4 @@ void scam::getpool(account_name owner) {
 }
 
 EOSIO_ABI( scam, (createtran)(createpool)(getpool)(ping))
+*/
