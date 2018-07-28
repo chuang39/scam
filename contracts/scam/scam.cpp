@@ -15,7 +15,7 @@ void scam::createacnt(string name, string city, uint32_t zipcode, uint8_t rating
         });
 }
 
-EOSIO_ABI( scam, (createacnt)(createrevw))
+EOSIO_ABI( scam, (createacnt))
 
 /*
 void scam::createtran(const account_name from, const asset& quantity) {
