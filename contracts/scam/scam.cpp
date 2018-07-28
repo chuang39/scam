@@ -16,13 +16,12 @@ void scam::createtran(const account_name from, const asset& quantity) {
     eosio_assert(quantity.symbol == string_to_symbol(4, "EOS"),
                  "only accepts EOS for deposits");
 
-    //auto owner_pools = pools.get_index<N(byowner)>();
-    //auto pitr = owner_pools.get(N(blockfishbgp));
-    //print(" ~~ID=", pitr.id, ", owner:", pitr.owner, ", ammount: ",
-    //      pitr.ammount, ", end_at:",
-    //      pitr.end_at, ", created_at:", pitr.created_at, "\n");
+    // get pool. Check if the pool is expired or not.
+    auto owner_pools = pools.get_index<N(byowner)>();
+    auto pitr = owner_pools.get(N(blockfishbgp));
+    eosio_assert(pitr != owner_pools.end(), "E404|Invalid pool");
+    eosio_assert(pitr->status == 1, "E404|The scam has ended.");
 
-    /*
     auto aitr = accounts.find(from);
     if(aitr == accounts.end()) {
         aitr = accounts.emplace(_self, [&](auto& account){
@@ -32,20 +31,37 @@ void scam::createtran(const account_name from, const asset& quantity) {
         print(" ~~~~~~~~~owner:", aitr->owner, ", ammount: ",
               aitr->ammount, ",  created_at:", aitr->created_at, "\n");
     }
-*/
 
     action(
             permission_level{ from, N(active) },
             N(eosio.token), N(transfer),
             std::make_tuple(from, _self, quantity, std::string(""))
     ).send();
-/*
+
+    // add key to user account
     accounts.modify(aitr, 0, [&](auto &r) {
-        r.ammount += ceil(quantity.amount / 0.5);
+        r.key_balance += ceil(quantity.amount / 0.5);
     });
-*/
+
+    // update pool
+    pitr->eos
+
+    //print(" ~~ID=", pitr.id, ", owner:", pitr.owner, ", ammount: ",
+    //      pitr.ammount, ", end_at:",
+    //      pitr.end_at, ", created_at:", pitr.created_at, "\n");
+
+
+    // update dividend for account
+
+    //auto owner_pools = pools.get_index<N(byowner)>();
+    //auto pitr = owner_pools.get(N(blockfishbgp));
+    //print(" ~~ID=", pitr.id, ", owner:", pitr.owner, ", ammount: ",
+    //      pitr.ammount, ", end_at:",
+    //      pitr.end_at, ", created_at:", pitr.created_at, "\n");
+
+
 }
-/*
+
 void scam::createpool(account_name owner, string poolname) {
 
     require_auth(_self);
@@ -89,6 +105,4 @@ void scam::getpool(account_name owner) {
     }
 }
 
-EOSIO_ABI( scam, (createtran)(createpool)(getpool))
- */
-EOSIO_ABI( scam, (createtran)(ping))
+EOSIO_ABI( scam, (createtran)(createpool)(getpool)(ping))

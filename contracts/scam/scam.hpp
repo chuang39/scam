@@ -20,16 +20,28 @@ using std::hash;
 
 
 class scam : public eosio::contract {
-  public:
-    scam(account_name self)
-            :contract(self){};
+public:
+    scam(account_name self):contract(self){};
 
-    void createtran(const account_name from, const asset& quantity);
-    void ping(account_name receiver);
+    struct st_accounts {
+        uint32_t id;
+        string name;
+        string city;
+        unit32_t zipcode;
+        uint32_t rating;
+        uint32_t type;
 
-};
+        uint32_t primary_key() const { return id; }
+
+        EOSLIB_SERIALIZE(st_accounts, (id)(name)(city)(zipcode)(rating)(type))
+    };
+
+    typedef multi_index<N(accounts), st_accounts> _tb_accounts;
+    void createaccount(string name, string city, unit32_t zipcode, uint32_t rating, unit32_t type);
+
+
+
 /*
-class scam : public eosio::contract {
   public:
     scam(account_name self)
             :contract(self),
@@ -44,13 +56,13 @@ class scam : public eosio::contract {
     struct st_accounts {
         name owner;
         uint32_t created_at;
-        uint32_t ammount;
-        uint32_t bets;
+        uint32_t key_balance;
+        asset eos_balance;
 
         uint64_t primary_key() const { return owner; }
 
         uint64_t get_transactions_by_owner() const { return owner.value; }
-        EOSLIB_SERIALIZE(st_accounts, (owner)(created_at)(ammount)(bets) )
+        EOSLIB_SERIALIZE(st_accounts, (owner)(created_at)(key_balance)(eos_balance))
     };
 
     struct st_transactions {
@@ -73,14 +85,16 @@ class scam : public eosio::contract {
         // TODO: use name
         //string name;
         name owner;
+        uint8_t status; // 0 for inactive; 1 for active
         uint32_t created_at;
         uint32_t end_at;
-        uint32_t ammount;
+        uint32_t key_balance;
+        asset eos_balance;
 
         uint64_t primary_key() const { return id; }
 
         uint64_t get_pools_by_owner() const { return owner; }
-        //EOSLIB_SERIALIZE( game, (challenger)(host)(turn)(winner)(board))
+        EOSLIB_SERIALIZE(st_pools, (id)(owner)(status)(created_at)(end_at)(key_balance)(eos_balance))
     };
 
     typedef multi_index<N(pools), st_pools,
@@ -101,6 +115,6 @@ class scam : public eosio::contract {
 
     void createpool(account_name owner, string poolname);
     void getpool(account_name owner);
-
+    void ping(account_name receiver);
+*/
 };
- */
