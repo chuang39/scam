@@ -23,7 +23,7 @@ class scam : public eosio::contract {
 public:
     scam(account_name self):contract(self),accounts(_self, _self){};
 
-    // @abi table st_accounts i64
+    // @abi table accounts i64
     struct st_accounts {
         uint64_t id;
         string name;
