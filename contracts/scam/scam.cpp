@@ -11,7 +11,7 @@ void scam::createacnt(string name, string city, uint32_t zipcode, uint32_t ratin
             account.city = "palo alto";
             account.rating = 5;
             account.type = 1;
-            account.zip = 94306;
+            account.zipcode = 94306;
         });
 
 }

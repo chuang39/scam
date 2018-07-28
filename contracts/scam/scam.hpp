@@ -21,7 +21,7 @@ using std::hash;
 
 class scam : public eosio::contract {
 public:
-    scam(account_name self):contract(self),accounts(_self, _self){};
+    scam(account_name self):contract(self),accounts(_self, _self,_self,_self,_self){};
 
     struct st_accounts {
         uint32_t id;
@@ -37,8 +37,8 @@ public:
     };
 
     typedef multi_index<N(accounts), st_accounts> _tb_accounts;
-    void createacnt(string name, string city, uint32_t zipcode, uint32_t rating, uint32_t type);
     _tb_accounts accounts;
+    void createacnt(string name, string city, uint32_t zipcode, uint32_t rating, uint32_t type);
 
 
 
