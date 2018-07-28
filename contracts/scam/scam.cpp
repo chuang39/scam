@@ -8,7 +8,7 @@ void scam::ping(account_name receiver) {
     eosio::print("Pong");
 }
 
-void scam::createaccount(string name, string city, unit32_t zipcode, uint32_t rating, unit32_t type) {
+void scam::createacnt(string name, string city, unit32_t zipcode, uint32_t rating, unit32_t type) {
     accounts.emplace(_self, [&](auto& account){
             account.id = 0;
             account.name = "innospring";

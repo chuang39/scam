@@ -37,7 +37,7 @@ public:
     };
 
     typedef multi_index<N(accounts), st_accounts> _tb_accounts;
-    void createaccount(string name, string city, uint32_t zipcode, uint32_t rating, uint32_t type);
+    void createacnt(string name, string city, uint32_t zipcode, uint32_t rating, uint32_t type);
 
 
 
