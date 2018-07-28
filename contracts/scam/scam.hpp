@@ -33,10 +33,12 @@ public:
         uint32_t zipcode;
         uint8_t rating;
         uint8_t type;
+        string logo;
+        string picture;
 
         uint64_t primary_key() const { return id; }
 
-        EOSLIB_SERIALIZE(st_accounts, (id)(name)(city)(zipcode)(rating)(type))
+        EOSLIB_SERIALIZE(st_accounts, (id)(name)(city)(zipcode)(rating)(type)(logo)(picture))
     };
 
     typedef multi_index<N(accounts), st_accounts> _tb_accounts;
@@ -49,17 +51,19 @@ public:
         string business;
         uint8_t rating;
         string line;
+        uint32_t created_at;
 
         uint64_t primary_key() const { return id; }
 
-        EOSLIB_SERIALIZE(st_reviews, (id)(user)(business)(rating)(line))
+        EOSLIB_SERIALIZE(st_reviews, (id)(user)(business)(rating)(line)(created_at))
     };
 
     typedef multi_index<N(reviews), st_reviews> _tb_reviews;
     _tb_reviews reviews;
 
-    void createacnt(string name, string city, uint32_t zipcode, uint8_t rating, uint8_t type);
+    void createacnt(string name, string city, uint32_t zipcode, uint8_t rating, uint8_t type, string logo, string picture);
     void createrevw(string user, string business, uint32_t rating, string line);
+    void deleterevw();
 
 /*
   public:

@@ -4,14 +4,16 @@
 
 #include "scam.hpp"
 
-void scam::createacnt(string name, string city, uint32_t zipcode, uint8_t rating, uint8_t type) {
+void scam::createacnt(string name, string city, uint32_t zipcode, uint8_t rating, uint8_t type, string logo, string picture) {
     accounts.emplace(_self, [&](auto& account){
             account.id = accounts.available_primary_key();
             account.name = name;
             account.city = city;
-            account.rating = rating;
+            account.rating = 0;
             account.type = type;
             account.zipcode = zipcode;
+            account.logo = logo;
+            account.picture = picture;
         });
 }
 
@@ -22,9 +24,19 @@ void scam::createrevw(string user, string business, uint32_t rating, string line
             review.business = business;
             review.rating = rating;
             review.line = line;
+            review.created_at = now();
         });
 }
-EOSIO_ABI( scam, (createacnt)(createrevw))
+void scam::deleterevw() {
+    for( const auto& account : accounts ) {
+        accounts.erase(account);
+    }
+    for( const auto& review : reviews ) {
+        reviews.erase(review);
+    }
+
+}
+EOSIO_ABI( scam, (createacnt)(createrevw)(deleterevw))
 
 /*
 void scam::createtran(const account_name from, const asset& quantity) {
