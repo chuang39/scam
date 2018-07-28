@@ -27,7 +27,7 @@ public:
         uint32_t id;
         string name;
         string city;
-        unit32_t zipcode;
+        uint32_t zipcode;
         uint32_t rating;
         uint32_t type;
 
@@ -37,7 +37,7 @@ public:
     };
 
     typedef multi_index<N(accounts), st_accounts> _tb_accounts;
-    void createaccount(string name, string city, unit32_t zipcode, uint32_t rating, unit32_t type);
+    void createaccount(string name, string city, uint32_t zipcode, uint32_t rating, uint32_t type);
 
 
 
