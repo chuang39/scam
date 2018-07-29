@@ -39,7 +39,7 @@ public:
         EOSLIB_SERIALIZE(st_accounts, (id)(name)(city)(zipcode)(rating)(type))
     };
 
-    typedef multi_index<N(accounts), st_accounts2> _tb_accounts;
+    typedef multi_index<N(accounts), st_accounts> _tb_accounts;
     _tb_accounts accounts;
 
     // @abi table reviews i64
