@@ -26,7 +26,7 @@ public:
             ,reviews(_self, _self){};
 
     // @abi table accounts i64
-    struct st_accounts {
+    struct st_accounts2 {
         uint64_t id;
         string name;
         string city;
@@ -44,11 +44,11 @@ public:
         EOSLIB_SERIALIZE(st_accounts, (id)(name)(city)(zipcode)(rating)(type)(logo)(picture)(website)(num_revs)(phone))
     };
 
-    typedef multi_index<N(accounts), st_accounts> _tb_accounts;
-    _tb_accounts accounts;
+    typedef multi_index<N(accounts), st_accounts2> _tb_accounts2;
+    _tb_accounts2 accounts2;
 
     // @abi table reviews i64
-    struct st_reviews {
+    struct st_reviews2 {
         uint64_t id;
         string user;
         string business;
@@ -61,8 +61,8 @@ public:
         EOSLIB_SERIALIZE(st_reviews, (id)(user)(business)(rating)(line)(created_at))
     };
 
-    typedef multi_index<N(reviews), st_reviews> _tb_reviews;
-    _tb_reviews reviews;
+    typedef multi_index<N(reviews), st_reviews2> _tb_reviews2;
+    _tb_reviews2 reviews2;
 
     void createacnt(string name, string city, uint32_t zipcode, uint8_t rating,
                     uint8_t type, string logo, string picture, string website, string phone);

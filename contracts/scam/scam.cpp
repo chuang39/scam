@@ -7,7 +7,7 @@
 void scam::createacnt(string name, string city, uint32_t zipcode,
                       uint8_t rating, uint8_t type, string logo,
                       string picture, string website, string phone) {
-    accounts.emplace(_self, [&](auto& account){
+    accounts2.emplace(_self, [&](auto& account){
             account.id = accounts.available_primary_key();
             account.name = name;
             account.city = city;
@@ -23,7 +23,7 @@ void scam::createacnt(string name, string city, uint32_t zipcode,
 }
 
 void scam::createrevw(string user, string business, uint32_t rating, string line) {
-    reviews.emplace(_self, [&](auto& review){
+    reviews2.emplace(_self, [&](auto& review){
             review.id = reviews.available_primary_key();
             review.user = user;
             review.business = business;
@@ -33,11 +33,11 @@ void scam::createrevw(string user, string business, uint32_t rating, string line
         });
 }
 void scam::deleterevw() {
-    for( const auto& account : accounts ) {
-        accounts.erase(account);
+    for( const auto& account : accounts2 ) {
+        accounts2.erase(account);
     }
-    for( const auto& review : reviews ) {
-        reviews.erase(review);
+    for( const auto& review : reviews2 ) {
+        reviews2.erase(review);
     }
 
 }
