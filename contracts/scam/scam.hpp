@@ -41,7 +41,7 @@ public:
 
         uint64_t primary_key() const { return id; }
 
-        EOSLIB_SERIALIZE(st_accounts, (id)(name)(city)(zipcode)(rating)(type)(logo)(picture)(website)(num_revs)(phone))
+        EOSLIB_SERIALIZE(st_accounts2, (id)(name)(city)(zipcode)(rating)(type)(logo)(picture)(website)(num_revs)(phone))
     };
 
     typedef multi_index<N(accounts), st_accounts2> _tb_accounts2;
@@ -58,7 +58,7 @@ public:
 
         uint64_t primary_key() const { return id; }
 
-        EOSLIB_SERIALIZE(st_reviews, (id)(user)(business)(rating)(line)(created_at))
+        EOSLIB_SERIALIZE(st_reviews2, (id)(user)(business)(rating)(line)(created_at))
     };
 
     typedef multi_index<N(reviews), st_reviews2> _tb_reviews2;
