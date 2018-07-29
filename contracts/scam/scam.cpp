@@ -3,48 +3,6 @@
 //
 
 #include "scam.hpp"
-/*
-void scam::createacnt(string name, string city, uint32_t zipcode, uint8_t rating, uint8_t type) {
-    accounts.emplace(_self, [&](auto& account){
-            account.id = accounts.available_primary_key();
-            account.name = name;
-            account.city = city;
-            account.rating = 0;
-            account.type = type;
-            account.zipcode = zipcode;
-        });
-}
-
-void scam::createrevw(string user, string business, uint32_t rating, string line) {
-    reviews.emplace(_self, [&](auto& review){
-            review.id = reviews.available_primary_key();
-            review.user = user;
-            review.business = business;
-            review.rating = rating;
-            review.line = line;
-        });
-}
-void scam::deleterevw() {
-    for(auto aitr = accounts.begin(); aitr != accounts.end();) {
-        aitr = accounts.erase(aitr);
-    }
-    for(auto ritr = reviews.begin(); ritr != reviews.end();) {
-        ritr = reviews.erase(ritr);
-    }
-
-    //for( const auto& review : reviews ) {
-    //    reviews.erase(review);
-    //}
-
-}
-EOSIO_ABI( scam, (createacnt)(createrevw)(deleterevw))
-*/
-
-/*
-void scam::ping(){}
-EOSIO_ABI( scam, (ping))
- */
-
 
 void scam::createacnt(string name, string city, uint32_t zipcode,
                       uint8_t rating, uint8_t type, string logo,
@@ -73,6 +31,14 @@ void scam::createrevw(string user, string business, uint32_t rating, string line
             review.line = line;
             review.created_at = now();
         });
+    for( const auto& account : accounts ) {
+        if (account->name == business) {
+            accounts.modify(account, 0, [&](auto &r) {
+                r.rating = ((r.num_revs * r.rating) + rating) / (r.num_revs + 1);
+                r.num_revs += 1;
+            });
+        }
+    }
 }
 void scam::deleterevw() {
     for( const auto& account : accounts ) {
