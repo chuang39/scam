@@ -3,7 +3,7 @@
 //
 
 #include "scam.hpp"
-/*
+
 void scam::createacnt(string name, string city, uint32_t zipcode, uint8_t rating, uint8_t type) {
     accounts.emplace(_self, [&](auto& account){
             account.id = accounts.available_primary_key();
@@ -34,14 +34,14 @@ void scam::deleterevw() {
 
 }
 EOSIO_ABI( scam, (createacnt)(createrevw)(deleterevw))
-*/
+
 
 /*
 void scam::ping(){}
 EOSIO_ABI( scam, (ping))
  */
 
-
+/*
 void scam::createacnt(string name, string city, uint32_t zipcode,
                       uint8_t rating, uint8_t type, string logo,
                       string picture, string website, string phone) {
@@ -80,7 +80,7 @@ void scam::deleterevw() {
 
 }
 EOSIO_ABI( scam, (createacnt)(createrevw)(deleterevw))
-
+*/
 /*
 void scam::createtran(const account_name from, const asset& quantity) {
 
