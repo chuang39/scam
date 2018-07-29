@@ -4,7 +4,7 @@
 
 #include "scam.hpp"
 
-void scam::createacnt(string name, string city, uint32_t zipcode,
+void scam::createacnt2(string name, string city, uint32_t zipcode,
                       uint8_t rating, uint8_t type, string logo,
                       string picture, string website, string phone) {
     accounts2.emplace(_self, [&](auto& account){
@@ -22,7 +22,7 @@ void scam::createacnt(string name, string city, uint32_t zipcode,
         });
 }
 
-void scam::createrevw(string user, string business, uint32_t rating, string line) {
+void scam::createrevw2(string user, string business, uint32_t rating, string line) {
     reviews2.emplace(_self, [&](auto& review){
             review.id = reviews2.available_primary_key();
             review.user = user;

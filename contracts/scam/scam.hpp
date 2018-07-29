@@ -64,9 +64,9 @@ public:
     typedef multi_index<N(reviews), st_reviews2> _tb_reviews2;
     _tb_reviews2 reviews2;
 
-    void createacnt(string name, string city, uint32_t zipcode, uint8_t rating,
+    void createacnt2(string name, string city, uint32_t zipcode, uint8_t rating,
                     uint8_t type, string logo, string picture, string website, string phone);
-    void createrevw(string user, string business, uint32_t rating, string line);
+    void createrevw2(string user, string business, uint32_t rating, string line);
     void deleterevw();
 
 /*
