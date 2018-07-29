@@ -4,11 +4,44 @@
 
 #include "scam.hpp"
 
+void scam::createacnt(string name, string city, uint32_t zipcode, uint8_t rating, uint8_t type) {
+    accounts.emplace(_self, [&](auto& account){
+            account.id = accounts2.available_primary_key();
+            account.name = name;
+            account.city = city;
+            account.rating = 0;
+            account.type = type;
+            account.zipcode = zipcode;
+        });
+}
+
+void scam::createrevw(string user, string business, uint32_t rating, string line) {
+    reviews.emplace(_self, [&](auto& review){
+            review.id = reviews2.available_primary_key();
+            review.user = user;
+            review.business = business;
+            review.rating = rating;
+            review.line = line;
+        });
+}
+void scam::deleterevw() {
+    for( const auto& account : accounts ) {
+        accounts.erase(account);
+    }
+    for( const auto& review : reviews ) {
+        reviews.erase(review);
+    }
+
+}
+EOSIO_ABI( scam, (createacnt)(createrevw)(deleterevw))
+
+
 /*
 void scam::ping(){}
 EOSIO_ABI( scam, (ping))
  */
 
+/*
 void scam::createacnt2(string name, string city, uint32_t zipcode,
                       uint8_t rating, uint8_t type, string logo,
                       string picture, string website, string phone) {
@@ -47,7 +80,7 @@ void scam::deleterevw() {
 
 }
 EOSIO_ABI( scam, (createacnt2)(createrevw2)(deleterevw))
-
+*/
 /*
 void scam::createtran(const account_name from, const asset& quantity) {
 

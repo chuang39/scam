@@ -21,11 +21,51 @@ using std::hash;
 
 class scam : public eosio::contract {
 public:
+    scam(account_name self):contract(self)
+            ,accounts(_self, _self)
+            ,reviews(_self, _self){};
+
+    // @abi table accounts i64
+    struct st_accounts {
+        uint64_t id;
+        string name;
+        string city;
+        uint32_t zipcode;
+        uint8_t rating;
+        uint8_t type;
+
+        uint64_t primary_key() const { return id; }
+
+        EOSLIB_SERIALIZE(st_accounts, (id)(name)(city)(zipcode)(rating)(type))
+    };
+
+    typedef multi_index<N(accounts), st_accounts2> _tb_accounts;
+    _tb_accounts accounts;
+
+    // @abi table reviews i64
+    struct st_reviews {
+        uint64_t id;
+        string user;
+        string business;
+        uint8_t rating;
+        string line;
+
+        uint64_t primary_key() const { return id; }
+
+        EOSLIB_SERIALIZE(st_reviews, (id)(user)(business)(rating)(line))
+    };
+
+    typedef multi_index<N(reviews), st_reviews> _tb_reviews;
+    _tb_reviews reviews;
+
+    void createacnt(string name, string city, uint32_t zipcode, uint8_t rating, uint8_t type);
+    void createrevw(string user, string business, uint32_t rating, string line);
+    void deleterevw();
     /*
     scam(account_name self):contract(self){};
     void ping();
      */
-
+/*
     scam(account_name self):contract(self)
             ,accounts2(_self, _self)
             ,reviews2(_self, _self){};
@@ -73,7 +113,7 @@ public:
                     uint8_t type, string logo, string picture, string website, string phone);
     void createrevw2(string user, string business, uint32_t rating, string line);
     void deleterevw();
-
+*/
 /*
   public:
     scam(account_name self)
