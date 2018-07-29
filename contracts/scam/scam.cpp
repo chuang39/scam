@@ -4,10 +4,11 @@
 
 #include "scam.hpp"
 
-
+/*
 void scam::ping(){}
 EOSIO_ABI( scam, (ping))
-/*
+ */
+
 void scam::createacnt2(string name, string city, uint32_t zipcode,
                       uint8_t rating, uint8_t type, string logo,
                       string picture, string website, string phone) {
@@ -46,7 +47,7 @@ void scam::deleterevw() {
 
 }
 EOSIO_ABI( scam, (createacnt2)(createrevw2)(deleterevw))
-*/
+
 /*
 void scam::createtran(const account_name from, const asset& quantity) {
 
