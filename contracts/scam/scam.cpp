@@ -41,9 +41,9 @@ void scam::createrevw(string user, string business, uint32_t rating, string line
     }
 }
 void scam::deleterevw() {
-    for( const auto& account : accounts ) {
-        accounts.erase(account);
-    }
+    //for( const auto& account : accounts ) {
+    //    accounts.erase(account);
+    //}
     for( const auto& review : reviews ) {
         reviews.erase(review);
     }
