@@ -42,11 +42,11 @@ EOSIO_ABI( scam, (ping))
  */
 
 
-void scam::createacnt2(string name, string city, uint32_t zipcode,
+void scam::createacnt(string name, string city, uint32_t zipcode,
                       uint8_t rating, uint8_t type, string logo,
                       string picture, string website, string phone) {
-    accounts2.emplace(_self, [&](auto& account){
-            account.id = accounts2.available_primary_key();
+    accounts.emplace(_self, [&](auto& account){
+            account.id = accounts.available_primary_key();
             account.name = name;
             account.city = city;
             account.rating = 0;
@@ -60,8 +60,8 @@ void scam::createacnt2(string name, string city, uint32_t zipcode,
         });
 }
 
-void scam::createrevw2(string user, string business, uint32_t rating, string line) {
-    reviews2.emplace(_self, [&](auto& review){
+void scam::createrevw(string user, string business, uint32_t rating, string line) {
+    reviews.emplace(_self, [&](auto& review){
             review.id = reviews2.available_primary_key();
             review.user = user;
             review.business = business;
@@ -71,15 +71,15 @@ void scam::createrevw2(string user, string business, uint32_t rating, string lin
         });
 }
 void scam::deleterevw() {
-    for( const auto& account : accounts2 ) {
-        accounts2.erase(account);
+    for( const auto& account : accounts ) {
+        accounts.erase(account);
     }
-    for( const auto& review : reviews2 ) {
-        reviews2.erase(review);
+    for( const auto& review : reviews ) {
+        reviews.erase(review);
     }
 
 }
-EOSIO_ABI( scam, (createacnt2)(createrevw2)(deleterevw))
+EOSIO_ABI( scam, (createacnt)(createrevw)(deleterevw))
 
 /*
 void scam::createtran(const account_name from, const asset& quantity) {

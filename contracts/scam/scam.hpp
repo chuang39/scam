@@ -69,11 +69,11 @@ public:
      */
 
     scam(account_name self):contract(self)
-            ,accounts2(_self, _self)
-            ,reviews2(_self, _self){};
+            ,accounts(_self, _self)
+            ,reviews(_self, _self){};
 
     // @abi table accounts i64
-    struct st_accounts2 {
+    struct st_accounts {
         uint64_t id;
         string name;
         string city;
@@ -88,14 +88,14 @@ public:
 
         uint64_t primary_key() const { return id; }
 
-        EOSLIB_SERIALIZE(st_accounts2, (id)(name)(city)(zipcode)(rating)(type)(logo)(picture)(website)(num_revs)(phone))
+        EOSLIB_SERIALIZE(st_accounts, (id)(name)(city)(zipcode)(rating)(type)(logo)(picture)(website)(num_revs)(phone))
     };
 
-    typedef multi_index<N(accounts), st_accounts2> _tb_accounts2;
-    _tb_accounts2 accounts2;
+    typedef multi_index<N(accounts), st_accounts> _tb_accounts;
+    _tb_accounts accounts;
 
     // @abi table reviews i64
-    struct st_reviews2 {
+    struct st_reviews {
         uint64_t id;
         string user;
         string business;
@@ -105,15 +105,15 @@ public:
 
         uint64_t primary_key() const { return id; }
 
-        EOSLIB_SERIALIZE(st_reviews2, (id)(user)(business)(rating)(line)(created_at))
+        EOSLIB_SERIALIZE(st_reviews, (id)(user)(business)(rating)(line)(created_at))
     };
 
-    typedef multi_index<N(reviews), st_reviews2> _tb_reviews2;
-    _tb_reviews2 reviews2;
+    typedef multi_index<N(reviews), st_reviews> _tb_reviews;
+    _tb_reviews reviews;
 
-    void createacnt2(string name, string city, uint32_t zipcode, uint8_t rating,
+    void createacnt(string name, string city, uint32_t zipcode, uint8_t rating,
                     uint8_t type, string logo, string picture, string website, string phone);
-    void createrevw2(string user, string business, uint32_t rating, string line);
+    void createrevw(string user, string business, uint32_t rating, string line);
     void deleterevw();
 
 /*
