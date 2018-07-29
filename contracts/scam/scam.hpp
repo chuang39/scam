@@ -22,6 +22,7 @@ using std::hash;
 class scam : public eosio::contract {
 public:
 
+    /*
     scam(account_name self):contract(self)
             ,accounts(_self, _self)
             ,reviews(_self, _self){};
@@ -62,12 +63,12 @@ public:
     void createacnt(string name, string city, uint32_t zipcode, uint8_t rating, uint8_t type);
     void createrevw(string user, string business, uint32_t rating, string line);
     void deleterevw();
-
+*/
     /*
     scam(account_name self):contract(self){};
     void ping();
      */
-/*
+
     scam(account_name self):contract(self)
             ,accounts(_self, _self)
             ,reviews(_self, _self){};
@@ -115,7 +116,7 @@ public:
                     uint8_t type, string logo, string picture, string website, string phone);
     void createrevw(string user, string business, uint32_t rating, string line);
     void deleterevw();
-*/
+
 /*
   public:
     scam(account_name self)
