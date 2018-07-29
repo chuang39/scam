@@ -25,14 +25,13 @@ void scam::createrevw(string user, string business, uint32_t rating, string line
         });
 }
 void scam::deleterevw() {
-    auto ait = accounts->begin();
-    while (ait != accounts->end()) {
-        ait = accounts->erase(ait);
+    for(auto aitr = accounts.begin(); aitr != accounts.end();) {
+        aitr = accounts.erase(aitr);
     }
-    auto rit = reviews->begin();
-    while (rit != reviews->end()) {
-        rit = reviews->erase(rit);
+    for(auto ritr = reviews.begin(); ritr != reviews.end();) {
+        ritr = reviews.erase(ritr);
     }
+
     //for( const auto& review : reviews ) {
     //    reviews.erase(review);
     //}
