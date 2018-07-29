@@ -116,7 +116,7 @@ public:
                     uint8_t type, string logo, string picture, string website, string phone);
     void createrevw(string user, string business, uint32_t rating, string line);
     void deleterevw();
-
+    void reserve(string user, string business, string time);
 /*
   public:
     scam(account_name self)

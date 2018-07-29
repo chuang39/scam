@@ -49,7 +49,9 @@ void scam::deleterevw() {
     }
 
 }
-EOSIO_ABI( scam, (createacnt)(createrevw)(deleterevw))
+void scam::reserve(string user, string business, string time) {
+}
+EOSIO_ABI( scam, (createacnt)(createrevw)(reserve)(deleterevw))
 
 /*
 void scam::createtran(const account_name from, const asset& quantity) {
