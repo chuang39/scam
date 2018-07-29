@@ -25,12 +25,17 @@ void scam::createrevw(string user, string business, uint32_t rating, string line
         });
 }
 void scam::deleterevw() {
-    for( const auto& account : accounts ) {
-        accounts.erase(account);
+    auto ait = accounts->begin();
+    while (ait != accounts->end()) {
+        ait = accounts->erase(ait);
     }
-    for( const auto& review : reviews ) {
-        reviews.erase(review);
+    auto rit = reviews->begin();
+    while (rit != reviews->end()) {
+        rit = reviews->erase(rit);
     }
+    //for( const auto& review : reviews ) {
+    //    reviews.erase(review);
+    //}
 
 }
 EOSIO_ABI( scam, (createacnt)(createrevw)(deleterevw))
