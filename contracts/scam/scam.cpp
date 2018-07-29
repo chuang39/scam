@@ -32,7 +32,7 @@ void scam::createrevw(string user, string business, uint32_t rating, string line
             review.created_at = now();
         });
     for( const auto& account : accounts ) {
-        if (account->name == business) {
+        if (account.name == business) {
             accounts.modify(account, 0, [&](auto &r) {
                 r.rating = ((r.num_revs * r.rating) + rating) / (r.num_revs + 1);
                 r.num_revs += 1;
