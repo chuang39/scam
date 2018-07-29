@@ -8,7 +8,7 @@ void scam::createacnt(string name, string city, uint32_t zipcode,
                       uint8_t rating, uint8_t type, string logo,
                       string picture, string website, string phone) {
     accounts2.emplace(_self, [&](auto& account){
-            account.id = accounts.available_primary_key();
+            account.id = accounts2.available_primary_key();
             account.name = name;
             account.city = city;
             account.rating = 0;
@@ -24,7 +24,7 @@ void scam::createacnt(string name, string city, uint32_t zipcode,
 
 void scam::createrevw(string user, string business, uint32_t rating, string line) {
     reviews2.emplace(_self, [&](auto& review){
-            review.id = reviews.available_primary_key();
+            review.id = reviews2.available_primary_key();
             review.user = user;
             review.business = business;
             review.rating = rating;
