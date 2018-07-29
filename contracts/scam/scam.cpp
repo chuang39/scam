@@ -3,6 +3,10 @@
 //
 
 #include "scam.hpp"
+
+EOSIO_ABI( scam, ())
+
+void scam::ping(){}
 /*
 void scam::createacnt2(string name, string city, uint32_t zipcode,
                       uint8_t rating, uint8_t type, string logo,
