@@ -21,5 +21,6 @@ using std::hash;
 
 class scam : public eosio::contract {
 public:
+    scam(account_name self):contract(self){};
     void ping(account_name receiver);
 };
