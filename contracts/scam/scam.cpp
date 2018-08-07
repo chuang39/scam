@@ -48,7 +48,7 @@ void scam::deleterevw() {
     //    reviews.erase(review);
     //}
 
-    ite = reviews.begin();
+    auto ite = reviews.begin();
     while(ite != reviews.end()) {
         ite = reviews.erase(ite);
     }
