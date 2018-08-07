@@ -48,10 +48,14 @@ void scam::deleterevw() {
     //    reviews.erase(review);
     //}
 
-    auto ite = reviews.begin();
-    while(ite != reviews.end()) {
-        ite = reviews.erase(ite);
+    auto ite = accounts.begin();
+    while(ite != accounts.end()) {
+        ite = accounts.erase(ite);
     }
+    //auto ite = reviews.begin();
+    //while(ite != reviews.end()) {
+    //    ite = reviews.erase(ite);
+    //}
 
 }
 void scam::reserve(string user, string business, string time) {
