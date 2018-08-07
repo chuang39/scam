@@ -4,4 +4,7 @@
 
 #include "scam.hpp"
 
-EOSIO_ABI( scam, )
+void scam::ping(account_name receiver) {
+}
+EOSIO_ABI( scam, (ping))
+
