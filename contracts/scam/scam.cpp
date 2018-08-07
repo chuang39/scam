@@ -4,3 +4,4 @@
 
 #include "scam.hpp"
 
+EOSIO_ABI( scam, )
