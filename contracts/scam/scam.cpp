@@ -44,8 +44,13 @@ void scam::deleterevw() {
     //for( const auto& account : accounts ) {
     //    accounts.erase(account);
     //}
-    for( const auto& review : reviews ) {
-        reviews.erase(review);
+    //for( const auto& review : reviews ) {
+    //    reviews.erase(review);
+    //}
+
+    ite = reviews.begin();
+    while(ite != reviews.end()) {
+        ite = reviews.erase(ite);
     }
 
 }
