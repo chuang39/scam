@@ -71,7 +71,7 @@ void scam::deposit(const name from, const asset& quantity) {
 }
 
 
-EOSIO_ABI( scam, (deposit))
+EOSIO_ABI( scam, (deposit)(createpool))
 
 /*
 void scam::createtran(const account_name from, const asset& quantity) {
