@@ -11,15 +11,13 @@ void scam::createpool(const name owner, const string poolname) {
     print( "Create pool %s by owner=%s ", poolname, name{owner} );
 
     pools.emplace(owner, [&](auto &r) {
-        st_pools pool{};
-        pool.id = pools.available_primary_key();
-        pool.poolname = poolname;
-        pool.owner = name{owner};
-        pool.created_at = now();
-        pool.end_at = now() + 24 * 3600;
-        pool.key_balance = 10;
-        pool.eos_balance = asset(0.1220);
-        r = pool;
+        r.id = pools.available_primary_key();
+        r.poolname = poolname;
+        r.owner = name{owner};
+        r.created_at = now();
+        r.end_at = now() + 24 * 3600;
+        r.key_balance = 10;
+        r.eos_balance = asset(0.1220);
     });
 }
 
