@@ -121,6 +121,9 @@ public:
 
   public:
     scam(account_name self)
+            :contract(self){};
+    /*
+    scam(account_name self)
             :contract(self),
             transactions(_self,_self),
             pools(_self, _self),
@@ -184,11 +187,10 @@ public:
     _tb_transactions transactions;
     _tb_pools pools;
     _tb_accounts accounts;
-
+*/
     void deposit(const name from, const asset& quantity);
 
     //void createpool(account_name owner, string poolname);
     //void getpool(account_name owner);
     //void ping(account_name receiver);
-
 };
