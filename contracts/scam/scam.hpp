@@ -126,7 +126,7 @@ public:
 
     struct st_pools {
         uint32_t id;
-        string name;
+        string poolname;
         name owner;
         uint8_t status; // 0 for inactive; 1 for active
         uint32_t created_at;
