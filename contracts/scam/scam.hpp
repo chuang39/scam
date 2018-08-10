@@ -6,7 +6,7 @@
 #define PROJECT_SCAM_H
 #endif //PROJECT_SCAM_H
 
-#include <math.h>
+//#include <math.h>
 #include <eosiolib/asset.hpp>
 #include <eosiolib/contract.hpp>
 #include <eosiolib/eosio.hpp>
