@@ -4,63 +4,46 @@
 
 #include "scam.hpp"
 
-void scam::createacnt(string name, string city, uint32_t zipcode,
-                      uint8_t rating, uint8_t type, string logo,
-                      string picture, string website, string phone) {
-    accounts.emplace(_self, [&](auto& account){
-            account.id = accounts.available_primary_key();
-            account.name = name;
-            account.city = city;
-            account.rating = 0;
-            account.type = type;
-            account.zipcode = zipcode;
-            account.logo = logo;
-            account.picture = picture;
-            account.website = website;
-            account.phone = phone;
-            account.num_revs = 0;
-        });
-}
 
-void scam::createrevw(string user, string business, uint32_t rating, string line) {
-    reviews.emplace(_self, [&](auto& review){
-            review.id = reviews.available_primary_key();
-            review.user = user;
-            review.business = business;
-            review.rating = rating;
-            review.line = line;
-            review.created_at = now();
-        });
-    for( const auto& account : accounts ) {
-        if (account.name == business) {
-            accounts.modify(account, 0, [&](auto &r) {
-                r.rating = ((r.num_revs * r.rating) + rating) / (r.num_revs + 1);
-                r.num_revs += 1;
-            });
-        }
+//void scam::deposit(uint64_t sender, uint64_t receiver, ) {
+void scam::deposit(const name from, const asset& quantity) {
+    print("\n>>> sender >>>", from, " - name: ", name{from});
+/*
+    auto transfer_data = unpack_action_data<st_transfer>();
+    if(transfer_data.from == _self || transfer_data.to != _self) {
+        return;
     }
-}
-void scam::deleterevw() {
-    //for( const auto& account : accounts ) {
-    //    accounts.erase(account);
-    //}
-    //for( const auto& review : reviews ) {
-    //    reviews.erase(review);
-    //}
+    print("\n>>> transfer data quantity >>> ", transfer_data.quantity);
 
-    auto ite = accounts.begin();
-    while(ite != accounts.end()) {
-        ite = accounts.erase(ite);
+    eosio_assert(transfer_data.quantity.symbol == string_to_symbol(4, "EOS"),
+                 "MonsterEOS only accepts EOS for deposits");
+    eosio_assert(transfer_data.quantity.is_valid(), "Invalid token transfer");
+    eosio_assert(transfer_data.quantity.amount > 0, "Quantity must be positive");
+
+    //_tb_accounts accounts(_self, transfer_data.from);
+    _tb_accounts accounts(_self, _self);
+    asset new_balance;
+    auto itr_balance = accounts.find(transfer_data.quantity.symbol.name());
+    if(itr_balance != accounts.end()) {
+        accounts.modify(itr_balance, transfer_data.from, [&](auto& r){
+            // Assumption: total currency issued by eosio.token will not overflow asset
+            r.balance += transfer_data.quantity;
+            new_balance = r.balance;
+        });
+    } else {
+        accounts.emplace(transfer_data.from, [&](auto& r){
+            r.balance = transfer_data.quantity;
+            new_balance = r.balance;
+        });
     }
-    //auto ite = reviews.begin();
-    //while(ite != reviews.end()) {
-    //    ite = reviews.erase(ite);
-    //}
 
+    print("\n", name{transfer_data.from}, " deposited:       ", transfer_data.quantity);
+    print("\n", name{transfer_data.from}, " funds available: ", new_balance);
+*/
 }
-void scam::reserve(string user, string business, string time) {
-}
-EOSIO_ABI( scam, (createacnt)(createrevw)(reserve)(deleterevw))
+
+
+EOSIO_ABI( scam, (deposit))
 
 /*
 void scam::createtran(const account_name from, const asset& quantity) {

@@ -68,7 +68,7 @@ class tic_tac_toe : public eosio::contract {
 
          // Reset game
          void reset_game() {
-            initialize_board();
+            initialize_board())
             turn = host;
             winner = N(none);
          }

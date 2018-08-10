@@ -21,7 +21,6 @@ using std::hash;
 
 class scam : public eosio::contract {
 public:
-
     /*
     scam(account_name self):contract(self)
             ,accounts(_self, _self)
@@ -68,7 +67,7 @@ public:
     scam(account_name self):contract(self){};
     void ping();
      */
-
+/*
     scam(account_name self):contract(self)
             ,accounts(_self, _self)
             ,reviews(_self, _self){};
@@ -117,7 +116,9 @@ public:
     void createrevw(string user, string business, uint32_t rating, string line);
     void deleterevw();
     void reserve(string user, string business, string time);
-/*
+
+*/
+
   public:
     scam(account_name self)
             :contract(self),
@@ -137,12 +138,10 @@ public:
 
         uint64_t primary_key() const { return owner; }
 
-        uint64_t get_transactions_by_owner() const { return owner.value; }
         EOSLIB_SERIALIZE(st_accounts, (owner)(created_at)(key_balance)(eos_balance))
     };
 
     struct st_transactions {
-        //uuid id;
         uint32_t id;
         name owner;
         //string name;
@@ -152,14 +151,13 @@ public:
         uint64_t primary_key() const { return id; }
 
         uint64_t get_transactions_by_owner() const { return owner.value; }
-        //EOSLIB_SERIALIZE( game, (challenger)(host)(turn)(winner)(board))
+        EOSLIB_SERIALIZE( game, (challenger)(host)(turn)(winner)(board))
     };
 
     struct st_pools {
         //uuid id;
         uint32_t id;
-        // TODO: use name
-        //string name;
+        string pool_name;
         name owner;
         uint8_t status; // 0 for inactive; 1 for active
         uint32_t created_at;
@@ -187,10 +185,10 @@ public:
     _tb_pools pools;
     _tb_accounts accounts;
 
-    void createtran(const account_name from, const asset& quantity);
+    void deposit(const name from, const asset& quantity);
 
-    void createpool(account_name owner, string poolname);
-    void getpool(account_name owner);
-    void ping(account_name receiver);
-*/
+    //void createpool(account_name owner, string poolname);
+    //void getpool(account_name owner);
+    //void ping(account_name receiver);
+
 };
