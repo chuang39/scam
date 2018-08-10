@@ -4,10 +4,40 @@
 
 #include "scam.hpp"
 
+void scam::createpool(const name owner, const string poolname) {
+    require_auth(_self);
+
+    // TODO: should only allow one active pool
+    print( "Create pool %s by owner=%s ", poolname, name{owner} );
+
+    pools.emplace(owner, [&](auto &r) {
+        st_pools pool{};
+        pool.id = pools.available_primary_key();;
+        pool.name = poolname;
+        pool.owner = name{owner};
+        pool.created_at = now();
+        pool.end_at = now() + 24 * 3600;
+        pool.key_balance = 10;
+        pool.eos_balance = asset(0.1220);
+        r = pool;
+    });
+}
 
 //void scam::deposit(uint64_t sender, uint64_t receiver, ) {
 void scam::deposit(const name from, const asset& quantity) {
     print("\n>>> sender >>>", from, " - name: ", name{from});
+
+
+
+    // adjust pool: key price
+
+
+
+
+
+
+
+
 /*
     auto transfer_data = unpack_action_data<st_transfer>();
     if(transfer_data.from == _self || transfer_data.to != _self) {

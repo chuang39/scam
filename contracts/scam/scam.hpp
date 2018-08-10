@@ -121,7 +121,30 @@ public:
 
   public:
     scam(account_name self)
-            :contract(self){};
+            :contract(self),
+             pools(_self, _self){};
+
+    struct st_pools {
+        uint32_t id;
+        string name;
+        name owner;
+        uint8_t status; // 0 for inactive; 1 for active
+        uint32_t created_at;
+        uint32_t end_at;
+        uint32_t key_balance;
+        asset eos_balance;
+        asset key_price;
+
+        uint64_t primary_key() const { return id; }
+
+        uint64_t get_pools_by_owner() const { return owner; }
+        EOSLIB_SERIALIZE(st_pools, (id)(name)(owner)(status)(created_at)(end_at)(key_balance)(eos_balance)(key_price))
+    };
+    typedef multi_index<N(pools), st_pools,
+            indexed_by<N(byowner), const_mem_fun<st_pools, uint64_t, &st_pools::get_pools_by_owner>>
+    > _tb_pools;
+    _tb_pools pools;
+
     /*
     scam(account_name self)
             :contract(self),
@@ -157,26 +180,6 @@ public:
         EOSLIB_SERIALIZE( game, (challenger)(host)(turn)(winner)(board))
     };
 
-    struct st_pools {
-        //uuid id;
-        uint32_t id;
-        string pool_name;
-        name owner;
-        uint8_t status; // 0 for inactive; 1 for active
-        uint32_t created_at;
-        uint32_t end_at;
-        uint32_t key_balance;
-        asset eos_balance;
-
-        uint64_t primary_key() const { return id; }
-
-        uint64_t get_pools_by_owner() const { return owner; }
-        EOSLIB_SERIALIZE(st_pools, (id)(owner)(status)(created_at)(end_at)(key_balance)(eos_balance))
-    };
-
-    typedef multi_index<N(pools), st_pools,
-            indexed_by<N(byowner), const_mem_fun<st_pools, uint64_t, &st_pools::get_pools_by_owner>>
-    > _tb_pools;
 
     typedef multi_index<N(transactions), st_transactions,
             indexed_by<N(byowner), const_mem_fun<st_transactions, uint64_t, &st_transactions::get_transactions_by_owner>>
@@ -185,12 +188,10 @@ public:
     typedef multi_index<N(accounts), st_accounts> _tb_accounts;
 
     _tb_transactions transactions;
-    _tb_pools pools;
     _tb_accounts accounts;
 */
     void deposit(const name from, const asset& quantity);
-
-    //void createpool(account_name owner, string poolname);
+    void createpool(const name owner, const string poolname);
     //void getpool(account_name owner);
     //void ping(account_name receiver);
 };
