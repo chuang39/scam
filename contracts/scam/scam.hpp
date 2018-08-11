@@ -124,7 +124,7 @@ class scam : public eosio::contract {
              pools(_self, _self){};
     // @abi table
     struct st_pools {
-        uint32_t id;
+        uint64_t id;
         string poolname;
         name owner;
         uint8_t status; // 0 for inactive; 1 for active
