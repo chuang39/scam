@@ -12,7 +12,7 @@ void scam::createpool(const name owner, const string poolname) {
 
     pools.emplace(owner, [&](auto &pool) {
         pool.id = pools.available_primary_key();
-        pool.poolname = string(poolname);
+        //pool.poolname = string(poolname);
         pool.owner = name{owner};
         pool.status = 1;
         pool.created_at = now();
