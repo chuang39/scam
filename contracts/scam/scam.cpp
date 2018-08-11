@@ -9,7 +9,7 @@ void scam::createpool(const name owner, const string poolname) {
 
     // TODO: should only allow one active pool
     //print( "Create pool %s by owner=%s ", poolname, name{owner} );
-
+/*
     pools.emplace(_self, [&](auto &r) {
         r.id = pools.available_primary_key();
         r.poolname = poolname;
@@ -20,6 +20,7 @@ void scam::createpool(const name owner, const string poolname) {
         //r.eos_balance = asset(0, symbol_type(S(4, EOS)));
         //r.key_price = asset(1220, symbol_type(S(4, EOS)));
     });
+    */
 }
 
 //void scam::deposit(uint64_t sender, uint64_t receiver, ) {
