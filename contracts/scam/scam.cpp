@@ -12,14 +12,14 @@ void scam::createpool(const name owner, const string poolname) {
 
     pools.emplace(owner, [&](auto &pool) {
         pool.id = pools.available_primary_key();
-        //pool.poolname = string(poolname);
+        pool.poolname = string(poolname);
         pool.owner = name{owner};
-        //pool.status = 1;
-        //pool.created_at = now();
-        //pool.end_at = now();
-        //pool.key_balance = 10;
-        //r.eos_balance = asset(0, symbol_type(S(4, EOS)));
-        //r.key_price = asset(1220, symbol_type(S(4, EOS)));
+        pool.status = 1;
+        pool.created_at = now();
+        pool.end_at = now();
+        pool.key_balance = 10;
+        pool.eos_balance = asset(0, symbol_type(S(4, EOS)));
+        pool.key_price = asset(1220, symbol_type(S(4, EOS)));
     });
     auto owner_pools = pools.get_index<N(byowner)>();
     for( const auto& pool : owner_pools ) {
