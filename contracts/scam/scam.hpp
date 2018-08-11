@@ -118,7 +118,7 @@ class scam : public eosio::contract {
 
 */
 
-  public:
+  private:
     scam(account_name self)
             :contract(self),
              pools(_self, _self){};
