@@ -42,6 +42,7 @@ void scam::deposit(const name from, const asset& quantity) {
 
 //@abi action
 void withdraw(const account_name to, const asset& quantity) {
+/*
     require_auth(to);
 
     eosio_assert(quantity.is_valid(), "invalid quantity");
@@ -56,15 +57,11 @@ void withdraw(const account_name to, const asset& quantity) {
         acnt.eos_balance -= quantity;
     });
 
-    action(
-        permission_level{ _self, N(active) },
-        N(eosio.token), N(transfer),
-        std::make_tuple(_self, to, quantity, std::string(""))
-    ).send();
 
     if( itr->is_empty() ) {
         accounts.erase(itr);
     }
+    */
 }
 
 void scam::reset() {
