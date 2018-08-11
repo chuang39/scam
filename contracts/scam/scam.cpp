@@ -10,7 +10,7 @@ void scam::createpool(const name owner, const string poolname) {
     // TODO: should only allow one active pool
     //print( "Create pool %s by owner=%s ", poolname, name{owner} );
 
-    pools.emplace(owner, [&](auto &r) {
+    pools.emplace(_self, [&](auto &r) {
         r.id = pools.available_primary_key();
         r.poolname = poolname;
         r.owner = name{owner};
