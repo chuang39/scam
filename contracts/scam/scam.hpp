@@ -118,10 +118,15 @@ class scam : public eosio::contract {
 
 */
 
-  private:
+  public:
     scam(account_name self)
             :contract(self),
              pools(_self, _self){};
+
+
+    // TODO: don't expose end_at in the table
+    // TODO: create read method for table filed (limit access)
+    // TODO: withdraw
     // @abi table pools i64
     struct st_pools {
         uint64_t id;

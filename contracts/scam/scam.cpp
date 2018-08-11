@@ -25,7 +25,6 @@ void scam::createpool(const name owner, const string poolname) {
     for( const auto& pool : owner_pools ) {
         print(" ~~ID=", pool.id, ", owner:", pool.owner);
     }
-
 }
 
 //void scam::deposit(uint64_t sender, uint64_t receiver, ) {
