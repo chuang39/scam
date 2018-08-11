@@ -9,18 +9,18 @@ void scam::createpool(const name owner, const string poolname) {
 
     // TODO: should only allow one active pool
     print( "Create pool ", poolname, " by owner= ", name{owner} );
-/*
-    pools.emplace(_self, [&](auto &r) {
-        r.id = pools.available_primary_key();
-        r.poolname = poolname;
-        r.owner = name{owner};
-        r.created_at = now();
-        r.end_at = now() + 24 * 3600;
-        r.key_balance = 10;
+
+    pools.emplace(owner, [&](auto &pool) {
+        pool.id = pools.available_primary_key();
+        pool.poolname = poolname;
+        pool.owner = name{owner};
+        pool.created_at = now();
+        pool.end_at = now() + 24 * 3600;
+        pool.key_balance = 10;
         //r.eos_balance = asset(0, symbol_type(S(4, EOS)));
         //r.key_price = asset(1220, symbol_type(S(4, EOS)));
     });
-    */
+
 }
 
 //void scam::deposit(uint64_t sender, uint64_t receiver, ) {
