@@ -5,7 +5,7 @@
 #include "scam.hpp"
 
 void scam::createpool(const name owner, const string poolname) {
-    //require_auth(_self);
+    require_auth(_self);
 
     // TODO: should only allow one active pool
     print( "Create pool ", poolname, " by owner= ", name{owner} );
