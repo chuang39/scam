@@ -8,6 +8,7 @@ void scam::createpool(const name owner, const string poolname) {
     require_auth(_self);
 
     // TODO: should only allow one active pool
+    // TODO: add a method to control pool state
     print( "Create pool ", poolname, " by owner= ", name{owner} );
 
     pools.emplace(owner, [&](auto &pool) {
@@ -16,7 +17,7 @@ void scam::createpool(const name owner, const string poolname) {
         pool.owner = name{owner};
         pool.status = 1;
         pool.created_at = now();
-        pool.end_at = now();
+        pool.end_at = now() + 24 * 3600;
         pool.key_balance = 10;
         pool.eos_balance = asset(0, symbol_type(S(4, EOS)));
         pool.key_price = asset(1220, symbol_type(S(4, EOS)));
@@ -26,6 +27,20 @@ void scam::createpool(const name owner, const string poolname) {
         print(" ~~ID=", pool.id, ", owner:", pool.owner);
     }
 }
+
+uint32_t scam::get_pool_endtime(const name owner) {
+    require_auth(owner);
+
+    // TODO: user owner + poolname as argument
+    // TODO: create a index in the pool which is owner+pool. Can be indexed.
+    for( const auto& pool : pools ) {
+        print("Start time: ", pool.created_at, " End time: ", pool.end_at);
+        return pool.end_at;
+    }
+}
+
+
+
 
 //void scam::deposit(uint64_t sender, uint64_t receiver, ) {
 void scam::deposit(const name from, const asset& quantity) {

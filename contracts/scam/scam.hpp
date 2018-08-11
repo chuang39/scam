@@ -127,6 +127,7 @@ class scam : public eosio::contract {
     // TODO: don't expose end_at in the table
     // TODO: create read method for table filed (limit access)
     // TODO: withdraw
+    // TODO: guarantee the price and key bundle
     // @abi table pools i64
     struct st_pools {
         uint64_t id;
