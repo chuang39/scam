@@ -28,6 +28,7 @@ void scam::createpool(const name owner, const string poolname) {
     }
 }
 
+/* No way to return value
 uint32_t scam::getendtime(const name owner) {
     require_auth(owner);
 
@@ -38,7 +39,7 @@ uint32_t scam::getendtime(const name owner) {
         return pool.end_at;
     }
 }
-
+*/
 
 
 
@@ -98,7 +99,7 @@ void scam::reset() {
     }
 }
 
-EOSIO_ABI( scam, (deposit)(createpool)(reset)(getendtime))
+EOSIO_ABI( scam, (deposit)(createpool)(reset))
 
 /*
 void scam::createtran(const account_name from, const asset& quantity) {
@@ -198,5 +199,5 @@ void scam::getpool(account_name owner) {
     }
 }
 
-EOSIO_ABI( scam, (createtran)(createpool)(getpool)(ping))
+EOSIO_ABI( scam, (createtran)(createpool)getpool)(ping))
 */

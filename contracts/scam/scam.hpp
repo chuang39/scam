@@ -199,7 +199,6 @@ class scam : public eosio::contract {
     void deposit(const name from, const asset& quantity);
     void createpool(const name owner, const string poolname);
     void reset();
-    uint32_t getendtime(const name owner);
     //void getpool(account_name owner);
     //void ping(account_name receiver);
 };
