@@ -122,7 +122,7 @@ class scam : public eosio::contract {
     scam(account_name self)
             :contract(self),
              pools(_self, _self){};
-    // @abi table
+    // @abi table pools i64
     struct st_pools {
         uint64_t id;
         //string poolname;
