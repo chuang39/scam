@@ -52,6 +52,7 @@ class scam : public eosio::contract {
     > _tb_pools;
     _tb_pools pools;
 
+    /*
     // @abi table accounts i64
     struct st_accounts {
         name owner;
@@ -63,7 +64,7 @@ class scam : public eosio::contract {
     };
     typedef multi_index<N(accounts), st_accounts> _tb_accounts;
     _tb_accounts accounts;
-
+    */
 
 
 

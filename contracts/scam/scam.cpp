@@ -37,7 +37,12 @@ void scam::deposit(const name from, const asset& quantity) {
     eosio_assert(quantity.is_valid(), "Invalid token transfer");
     eosio_assert(quantity.amount > 0, "Quantity must be positive");
 
-    SEND_INLINE_ACTION(*this, transfer, {from, N(active)}, {from, _self, quantity, "deposit"});
+    action(
+            permission_level{from, N(active)},
+            N(eosio.token),
+            N(transfer),
+            make_tuple(from, _self, quantity, string("deposit"))
+    ).send();
 }
 
 //@abi action
