@@ -14,6 +14,7 @@ void scam::createpool(const name owner, const string poolname) {
         pool.id = pools.available_primary_key();
         pool.poolname = string(poolname);
         pool.owner = name{owner};
+        pool.status = 1;
         pool.created_at = now();
         pool.end_at = now();
         pool.key_balance = 10;
