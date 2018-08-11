@@ -15,7 +15,7 @@ void scam::createpool(const name owner, const string poolname) {
         pool.poolname = string(poolname);
         pool.owner = name{owner};
         pool.created_at = now();
-        pool.end_at = now() + 24 * 3600;
+        pool.end_at = now();
         pool.key_balance = 10;
         //r.eos_balance = asset(0, symbol_type(S(4, EOS)));
         //r.key_price = asset(1220, symbol_type(S(4, EOS)));
