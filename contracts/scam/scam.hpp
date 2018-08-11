@@ -125,12 +125,12 @@ class scam : public eosio::contract {
     // @abi table
     struct st_pools {
         uint64_t id;
-        string poolname;
+        //string poolname;
         name owner;
-        uint8_t status; // 0 for inactive; 1 for active
-        uint32_t created_at;
-        uint32_t end_at;
-        uint32_t key_balance;
+        //uint8_t status; // 0 for inactive; 1 for active
+        //uint32_t created_at;
+        //uint32_t end_at;
+        //uint32_t key_balance;
         //asset eos_balance;
         //asset key_price;
 
@@ -138,7 +138,7 @@ class scam : public eosio::contract {
 
         uint64_t get_pools_by_owner() const { return owner; }
         //EOSLIB_SERIALIZE(st_pools, (id)(poolname)(owner)(status)(created_at)(end_at)(key_balance)(eos_balance)(key_price))
-        EOSLIB_SERIALIZE(st_pools, (id)(poolname)(owner)(status)(created_at)(end_at)(key_balance))
+        EOSLIB_SERIALIZE(st_pools, (id)(owner))
     };
 
     typedef multi_index<N(pools), st_pools,
