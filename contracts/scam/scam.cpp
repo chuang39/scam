@@ -27,11 +27,12 @@ void scam::createpool(const name owner, const string poolname) {
 //void scam::deposit(uint64_t sender, uint64_t receiver, ) {
 //@abi action
 void scam::deposit(const name from, const asset& quantity) {
-    print("\n>>> sender >>>", from, " - name: ", name{from});
 
     if(from == _self) {
         return;
     }
+    require_auth(from);
+    print("\n>>> sender >>>", from, " - name: ", name{from});
 
     eosio_assert(quantity.symbol == string_to_symbol(4, "EOS"), "Only accepts EOS for deposits");
     eosio_assert(quantity.is_valid(), "Invalid token transfer");
