@@ -76,8 +76,14 @@ void scam::deposit(const name from, const asset& quantity) {
 */
 }
 
+void scam::reset() {
+    auto itr = pools.begin();
+    while (itr != pools.end()) {
+        itr = pools.erase(itr);
+    }
+}
 
-EOSIO_ABI( scam, (deposit)(createpool))
+EOSIO_ABI( scam, (deposit)(createpool)(reset))
 
 /*
 void scam::createtran(const account_name from, const asset& quantity) {
