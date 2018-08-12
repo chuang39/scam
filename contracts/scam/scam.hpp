@@ -37,7 +37,8 @@ class scam : public eosio::contract {
   public:
     scam(account_name self)
             :contract(self),
-             pools(_self, _self){};
+             pools(_self, _self),
+             accounts(_self, _self){};
 
     void deposit(const name from, const asset& quantity);
     void withdraw( const account_name to, const asset& quantity);
