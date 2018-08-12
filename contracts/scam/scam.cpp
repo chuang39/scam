@@ -29,6 +29,17 @@ void scam::createpool(const name owner, const string poolname) {
 
 void scam::checkpool() {
     auto pool = pools.begin();
+    if (pool == pools.end()) {
+        print(">>> no pool is found");
+        return;
+    } else {
+        print(">>> found the poolname: ", pool->poolname);
+        print(">>> found the round: ", pool->round);
+        print(">>> found the onwer: ", pool->owner);
+        print(">>> found the end_at: ", pool->end_at);
+        print(">>> found the key_balance: ", pool->key_balance);
+        print(">>> found the eos_balance: ", pool->eos_balance);
+    }
 
     if (pool->end_at <= now()) {
         auto winner = pool->lastbuyer;
