@@ -25,6 +25,10 @@ class scam : public eosio::contract {
             :contract(self),
              pools(_self, _self){};
 
+    void deposit(const name from, const asset& quantity);
+    void createpool(const name owner, const string poolname);
+    void withdraw( const account_name to, const asset& quantity);
+    void reset();
 
   private:
     // TODO: don't expose end_at in the table
@@ -62,10 +66,4 @@ class scam : public eosio::contract {
     typedef multi_index<N(accounts), st_accounts> _tb_accounts;
     _tb_accounts accounts;
 
-
-
-    void deposit(const name from, const asset& quantity);
-    void createpool(const name owner, const string poolname);
-    void withdraw( const account_name to, const asset& quantity);
-    void reset();
 };
