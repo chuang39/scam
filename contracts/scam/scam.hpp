@@ -26,7 +26,9 @@ extern "C" { \
       auto self = receiver; \
       if( code == self || code == N(eosio.token) || action == N(onerror) ) { \
          TYPE thiscontract(self); \
-         thiscontract.apply(code, action); \
+         switch( action ) { \
+            EOSIO_API( TYPE, MEMBERS ) \
+         } \
          eosio_exit(0); \
       } \
    } \
