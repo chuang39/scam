@@ -19,8 +19,7 @@ void scam::createpool(const name owner, const string poolname) {
         pool.eos_balance = asset(0, symbol_type(S(4, EOS)));
         pool.key_price = asset(1220, symbol_type(S(4, EOS)));
     });
-    auto owner_pools = pools.get_index<N(byowner)>();
-    for( const auto& pool : owner_pools ) {
+    for( const auto& pool : pools ) {
         print(" ~~ID=", pool.id, ", owner:", pool.owner);
     }
 }
