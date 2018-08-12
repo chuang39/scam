@@ -50,7 +50,7 @@ void scam::checkpool() {
         }
 
         // start new round
-        pools.emplace(owner, [&](auto &pool) {
+        pools.emplace(_self, [&](auto &pool) {
             pool.id = pools.available_primary_key();
             pool.poolname = string(poolname);
             pool.owner = _self;
@@ -69,7 +69,7 @@ void scam::checkpool() {
 
 
 void scam::deposit(const currency::transfer &t, account_name code) {
-    if(from == _self) {
+    if(code == _self) {
         return;
     }
 
