@@ -138,11 +138,11 @@ extern "C" { \
          eosio_assert(code == N(eosio), "onerror action's are only valid from the \"eosio\" system account"); \
       } \
       if(code == self || code == N(eosio.token) || action == N(onerror)) { \
-         if (act == N(transfer)) { \
+         if (action == N(transfer)) { \
              deposit(unpack_action_data<currency::transfer>(), contract); \
              return; \
          } \
-         if (act == N(withdraw)) { \
+         if (action == N(withdraw)) { \
             runwithdraw(contract); \
             return; \
          } \
