@@ -57,7 +57,6 @@ void scam::deposit(const currency::transfer &t, account_name code) {
 
 }
 
-//@abi action
 void scam::withdraw(const account_name to) {
     require_auth(to);
 
