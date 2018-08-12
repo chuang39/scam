@@ -22,14 +22,13 @@ using std::hash;
 
 #define EOSIO_ABI_EX( TYPE, MEMBERS ) \
 extern "C" { \
-   void apply( uint64_t receiver, uint64_t code, uint64_t action ) { \
+   void apply(uint64_t receiver, uint64_t code, uint64_t action) { \
       auto self = receiver; \
-      if( code == self || code == N(eosio.token) || action == N(onerror) ) { \
+      if(code == self || code == N(eosio.token) || action == N(onerror)) { \
          TYPE thiscontract(self); \
-         switch( action ) { \
-            EOSIO_API( TYPE, MEMBERS ) \
+         switch(action) { \
+            EOSIO_API(TYPE, MEMBERS) \
          } \
-         eosio_exit(0); \
       } \
    } \
 }
