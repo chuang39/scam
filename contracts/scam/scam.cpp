@@ -26,24 +26,35 @@ void scam::createpool(const name owner, const string poolname) {
 
 //void scam::deposit(uint64_t sender, uint64_t receiver, ) {
 //@abi action
-void scam::deposit(const name from, const asset& quantity) {
-
+void scam::deposit(const name from, const asset& quantity, const uint32_t keycnt) {
     if(from == _self) {
         return;
     }
-    require_auth(from);
+    require_auth(_self);
     print("\n>>> sender >>>", from, " - name: ", name{from});
 
     eosio_assert(quantity.symbol == string_to_symbol(4, "EOS"), "Only accepts EOS for deposits");
     eosio_assert(quantity.is_valid(), "Invalid token transfer");
     eosio_assert(quantity.amount > 0, "Quantity must be positive");
 
-    action(
-            permission_level{from, N(active)},
-            N(eosio.token),
-            N(transfer),
-            make_tuple(from, _self, quantity, string("deposit"))
-    ).send();
+    // find account
+    auto itr_acnt = accounts.find(from);
+    if(itr_acnt != accounts.end()) {
+        accounts.modify(itr_acnt, _self, [&](auto& r){
+            // Assumption: total currency issued by eosio.token will not overflow asset
+            r.balance += transfer_data.quantity;
+            new_balance = r.balance;
+        });
+    } else {
+        accounts.emplace(_self, [&](auto& r){
+            r.balance = transfer_data.quantity;
+            new_balance = r.balance;
+        });
+    }
+
+
+
+
 }
 
 //@abi action
@@ -71,6 +82,11 @@ void withdraw(const account_name to, const asset& quantity) {
 }
 
 void scam::reset() {
+    auto itr = pools.begin();
+    while (itr != pools.end()) {
+        itr = pools.erase(itr);
+    }
+
     auto itr = pools.begin();
     while (itr != pools.end()) {
         itr = pools.erase(itr);

@@ -26,6 +26,7 @@ class scam : public eosio::contract {
              pools(_self, _self){};
 
 
+  private:
     // TODO: don't expose end_at in the table
     // TODO: create read method for table filed (limit access)
     // TODO: withdraw
@@ -35,6 +36,7 @@ class scam : public eosio::contract {
         uint64_t id;
         string poolname;
         name owner;
+        uint8_t round;
         uint8_t status; // 0 for inactive; 1 for active
         uint32_t created_at;
         uint32_t end_at;
@@ -44,27 +46,21 @@ class scam : public eosio::contract {
 
         uint64_t primary_key() const { return id; }
 
-        uint64_t get_pools_by_owner() const { return owner; }
-        EOSLIB_SERIALIZE(st_pools, (id)(poolname)(owner)(status)(created_at)(end_at)(key_balance)(eos_balance)(key_price))
+        EOSLIB_SERIALIZE(st_pools, (id)(poolname)(owner)(round)(status)(created_at)(end_at)(key_balance)(eos_balance)(key_price))
     };
-    typedef multi_index<N(pools), st_pools,
-            indexed_by<N(byowner), const_mem_fun<st_pools, uint64_t, &st_pools::get_pools_by_owner>>
-    > _tb_pools;
+    typedef multi_index<N(pools), st_pools> _tb_pools;
     _tb_pools pools;
 
-    /*
     // @abi table accounts i64
     struct st_accounts {
         name owner;
-        uint32_t created_at;
         uint32_t key_balance;
         asset eos_balance;
         uint64_t primary_key() const {return owner;}
-        EOSLIB_SERIALIZE(st_accounts, (owner)(created_at)(key_balance)(eos_balance))
+        EOSLIB_SERIALIZE(st_accounts, (owner)(key_balance)(eos_balance))
     };
     typedef multi_index<N(accounts), st_accounts> _tb_accounts;
     _tb_accounts accounts;
-    */
 
 
 
