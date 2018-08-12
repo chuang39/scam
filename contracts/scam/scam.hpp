@@ -41,7 +41,7 @@ class scam : public eosio::contract {
              pools(_self, _self),
              accounts(_self, _self){};
 
-    void deposit(const name from, const asset& quantity);
+    void deposit(const currency::transfer &t, account_name code);
     void withdraw( const account_name to, const asset& quantity);
     void createpool(const name owner, const string poolname);
     void deleteall();
