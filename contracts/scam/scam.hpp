@@ -27,12 +27,16 @@ class scam : public eosio::contract {
              pools(_self, _self),
              accounts(_self, _self){};
 
-    void deposit(const currency::transfer &t, account_name code);
-    void withdraw(const account_name to);
-    void runwithdraw(const account_name to);
+    //@abi action
     void createpool(const name owner, const string poolname);
+    //@abi action
     void deleteall();
+    //@abi action
     void reset();
+    //@abi action
+    void withdraw(const account_name to);
+    void deposit(const currency::transfer &t, account_name code);
+    void runwithdraw(const account_name to);
     void apply(account_name contract, account_name act);
 
     struct st_withdraw {

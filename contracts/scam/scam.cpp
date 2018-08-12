@@ -1,7 +1,6 @@
 #include "scam.hpp"
 
 
-//@abi action
 void scam::createpool(const name owner, const string poolname) {
     require_auth(_self);
 
@@ -59,7 +58,6 @@ void scam::deposit(const currency::transfer &t, account_name code) {
 
 }
 
-//@abi action
 void scam::withdraw(const account_name to) {
     require_auth(to);
 
@@ -105,7 +103,6 @@ void scam::deleteall() {
     }
 }
 
-//@abi action
 void scam::reset() {
     require_auth(_self);
 
