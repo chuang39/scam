@@ -26,8 +26,8 @@ extern "C" { \
       auto self = receiver; \
       if( code == self || code == N(eosio.token) || action == N(onerror) ) { \
          TYPE thiscontract(self); \
-         thiscontract.apply(code, action) \
-         /* TODO: does not allow destructor of thiscontract to run: eosio_exit(0); */ \
+         thiscontract.apply(code, action); \
+         eosio_exit(0); \
       } \
    } \
 }
