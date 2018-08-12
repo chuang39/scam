@@ -50,19 +50,19 @@ void scam::checkpool() {
         }
 
         // start new round
-        pools.emplace(_self, [&](auto &pool) {
-            pool.id = pools.available_primary_key();
-            pool.poolname = string(poolname);
-            pool.owner = _self;
-            pool.lastbuyer = _self;
-            pool.status = 1;
-            pool.round = next_round;
-            pool.created_at = now();
-            pool.end_at = now() + 24 * 3600;
-            pool.key_balance = 10;
-            pool.eos_balance = asset(0, symbol_type(S(4, EOS)));
-            pool.key_price = asset(1000, symbol_type(S(4, EOS)));
-            pool.eos_total = asset(0, symbol_type(S(4, EOS)));
+        pools.emplace(_self, [&](auto &p) {
+            p.id = pools.available_primary_key();
+            p.poolname = string(poolname);
+            p.owner = name{_self};
+            p.lastbuyer = name{_self};
+            p.status = 1;
+            p.round = next_round;
+            p.created_at = now();
+            p.end_at = now() + 24 * 3600;
+            p.key_balance = 10;
+            p.eos_balance = asset(0, symbol_type(S(4, EOS)));
+            p.key_price = asset(1000, symbol_type(S(4, EOS)));
+            p.eos_total = asset(0, symbol_type(S(4, EOS)));
         });
     }
 }
