@@ -1,5 +1,7 @@
 #include "scam.hpp"
 
+
+//@abi action
 void scam::createpool(const name owner, const string poolname) {
     require_auth(_self);
 
@@ -57,6 +59,7 @@ void scam::deposit(const currency::transfer &t, account_name code) {
 
 }
 
+//@abi action
 void scam::withdraw(const account_name to) {
     require_auth(to);
 
@@ -87,6 +90,7 @@ void scam::runwithdraw(const account_name to) {
 
 }
 
+//@abi action
 void scam::deleteall() {
     require_auth(_self);
 
@@ -101,6 +105,7 @@ void scam::deleteall() {
     }
 }
 
+//@abi action
 void scam::reset() {
     require_auth(_self);
 
@@ -123,7 +128,7 @@ void scam::apply(account_name contract, account_name act) {
     }
 
     auto &thiscontract = *this;
-    switch (act) { EOSIO_API(scam, (deposit)(createpool)(deleteall)(reset)); };
+    switch (act) { EOSIO_API(scam, (createpool)(createpool)(deleteall)(reset)); };
 }
 
-EOSIO_ABI_EX(scam, (deposit)(withdraw)(createpool)(deleteall)(reset))
+EOSIO_ABI_EX(scam, (withdraw)(createpool)(deleteall)(reset))
