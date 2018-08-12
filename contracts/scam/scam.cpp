@@ -58,7 +58,8 @@ void scam::deposit(const currency::transfer &t, account_name code) {
 }
 
 //@abi action
-void withdraw(const account_name to, const asset& quantity) {
+void scam::withdraw(const account_name to) {
+    require_auth(to);
 
 
 /*
@@ -80,6 +81,11 @@ void withdraw(const account_name to, const asset& quantity) {
         accounts.erase(itr);
     }
     */
+}
+
+void scam::runwithdraw(const account_name to) {
+    print(">>> withdraw:", to);
+
 }
 
 void scam::deleteall() {
@@ -108,11 +114,17 @@ void scam::apply(account_name contract, account_name act) {
         return;
     }
 
-    if (contract != _self)
+    if (act == N(withdraw)) {
+        runwithdraw(contract);
         return;
+    }
+
+    if (contract != _self) {
+        return;
+    }
 
     auto &thiscontract = *this;
     switch (act) { EOSIO_API(scam, (deposit)(createpool)(deleteall)(reset)); };
 }
 
-EOSIO_ABI_EX(scam, (deposit)(createpool)(deleteall)(reset))
+EOSIO_ABI_EX(scam, (deposit)(withdraw)(createpool)(deleteall)(reset))
