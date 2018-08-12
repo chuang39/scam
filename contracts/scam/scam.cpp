@@ -85,7 +85,7 @@ void scam::withdraw(const account_name to) {
 }
 
 void scam::runwithdraw(const account_name to) {
-    print(">>> withdraw:", to);
+    print(">>> withdraw:", name{to});
 
 }
 
