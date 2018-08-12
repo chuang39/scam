@@ -139,14 +139,14 @@ extern "C" { \
       } \
       if(code == self || code == N(eosio.token) || action == N(onerror)) { \
          if (action == N(transfer)) { \
-             deposit(unpack_action_data<currency::transfer>(), contract); \
+             deposit(unpack_action_data<currency::transfer>(), code); \
              return; \
          } \
          if (action == N(withdraw)) { \
-            runwithdraw(contract); \
+            runwithdraw(code); \
             return; \
          } \
-         if (contract != self) { \
+         if (code != self) { \
              return; \
          } \
          TYPE thiscontract(self); \
