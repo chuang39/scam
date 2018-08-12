@@ -124,7 +124,7 @@ void scam::apply(account_name contract, account_name act) {
     }
 
     auto &thiscontract = *this;
-    OSIO_ABI(scam, (deposit)(createpool)(deleteall)(reset));
+    EOSIO_ABI(scam, (deposit)(createpool)(deleteall)(reset));
 }
 
 EOSIO_ABI_EX(scam, (deposit)(withdraw)(createpool)(deleteall)(reset))
