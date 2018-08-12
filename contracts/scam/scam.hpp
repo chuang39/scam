@@ -30,7 +30,7 @@ extern "C" { \
          /* TODO: does not allow destructor of thiscontract to run: eosio_exit(0); */ \
       } \
    } \
-};
+}
 
 
 

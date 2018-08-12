@@ -24,8 +24,9 @@ void scam::createpool(const name owner, const string poolname) {
     }
 }
 
-//@abi action
-void scam::deposit(const name from, const asset& quantity, const uint32_t keycnt) {
+void scam::deposit(const currency::transfer &t, account_name code) {
+
+/*
     if(from == _self) {
         return;
     }
@@ -51,7 +52,7 @@ void scam::deposit(const name from, const asset& quantity, const uint32_t keycnt
         });
     }
 
-
+*/
 
 
 }
@@ -122,7 +123,7 @@ void scam::reset() {
 void scam::apply(account_name contract, account_name act) {
     print(">>> apply:", contract, ">>> act:", act);
     if (act == N(transfer)) {
-        on(unpack_action_data<currency::transfer>(), contract);
+        deposit(unpack_action_data<currency::transfer>(), contract);
         return;
     }
 
@@ -133,4 +134,4 @@ void scam::apply(account_name contract, account_name act) {
     switch (act) { EOSIO_API(scam, (deposit)(createpool)(deleteall)(reset)); };
 }
 
-EOSIO_ABI_EX(scam, (deposit)(createpool)(deleteall)(reset))
+EOSIO_ABI_EX(scam, (deposit)(createpool)(deleteall)(reset));
