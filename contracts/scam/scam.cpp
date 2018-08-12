@@ -11,6 +11,7 @@ void scam::createpool(const name owner, const string poolname) {
         pool.id = pools.available_primary_key();
         pool.poolname = string(poolname);
         pool.owner = name{owner};
+        pool.lastbuyer = name{owner};
         pool.status = 1;
         pool.created_at = now();
         pool.end_at = now() + 24 * 3600;
@@ -24,7 +25,6 @@ void scam::createpool(const name owner, const string poolname) {
     }
 }
 
-//void scam::deposit(uint64_t sender, uint64_t receiver, ) {
 //@abi action
 void scam::deposit(const name from, const asset& quantity, const uint32_t keycnt) {
     if(from == _self) {
@@ -59,8 +59,28 @@ void scam::deposit(const name from, const asset& quantity, const uint32_t keycnt
 
 //@abi action
 void withdraw(const account_name to, const asset& quantity) {
-/*
+
     require_auth(to);
+
+    // find user
+    auto itr = accounts.find(account);
+    eosio_assert(itr != _balance.end(), "user does not exist");
+
+    // set quantity
+    eosio_assert(quantity.amount + itr->balance > quantity.amount,
+                 "integer overflow adding withdraw balance");
+    quantity.amount += itr->balance;
+
+    // clear balance
+    _balance.modify(itr, _this_contract, [&](auto &p) { p.balance = 0; });
+
+    // withdraw
+    action(permission_level{_this_contract, N(active)}, N(eosio.token),
+           N(transfer), std::make_tuple(_this_contract, account, quantity,
+                                        std::string("from eosday.io")))
+            .send();
+
+/*
 
     eosio_assert(quantity.is_valid(), "invalid quantity");
     eosio_assert(code == N(eosio.token);
@@ -81,7 +101,9 @@ void withdraw(const account_name to, const asset& quantity) {
     */
 }
 
-void scam::reset() {
+void scam::deleteall() {
+    require_auth(_self);
+
     auto itr = pools.begin();
     while (itr != pools.end()) {
         itr = pools.erase(itr);
@@ -93,4 +115,23 @@ void scam::reset() {
     }
 }
 
-EOSIO_ABI( scam, (deposit)(createpool)(reset))
+void scam::reset() {
+    require_auth(_self);
+
+}
+
+void scam::apply(account_name contract, account_name act) {
+    print(">>> apply:", contract, ">>> act:", act);
+    if (act == N(transfer)) {
+        on(unpack_action_data<currency::transfer>(), contract);
+        return;
+    }
+
+    if (contract != _self)
+        return;
+
+    auto &thiscontract = *this;
+    switch (act) { EOSIO_API(scam, (deposit)(createpool)(deleteall)(reset)); };
+}
+
+EOSIO_ABI_EX(scam, (deposit)(createpool)(deleteall)(reset))

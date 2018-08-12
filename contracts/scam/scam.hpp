@@ -19,6 +19,20 @@ using std::string;
 using std::hash;
 
 
+#define EOSIO_ABI_EX( TYPE, MEMBERS ) \
+extern "C" { \
+   void apply( uint64_t receiver, uint64_t code, uint64_t action ) { \
+      auto self = receiver; \
+      if( code == self || code == N(eosio.token) || action == N(onerror) ) { \
+         TYPE thiscontract(self); \
+         thiscontract.apply(code, action) \
+         /* TODO: does not allow destructor of thiscontract to run: eosio_exit(0); */ \
+      } \
+   } \
+}
+
+
+
 class scam : public eosio::contract {
   public:
     scam(account_name self)
@@ -26,9 +40,11 @@ class scam : public eosio::contract {
              pools(_self, _self){};
 
     void deposit(const name from, const asset& quantity);
-    void createpool(const name owner, const string poolname);
     void withdraw( const account_name to, const asset& quantity);
+    void createpool(const name owner, const string poolname);
+    void deleteall();
     void reset();
+    void apply(account_name contract, account_name act);
 
   private:
     // TODO: don't expose end_at in the table
@@ -40,7 +56,7 @@ class scam : public eosio::contract {
         uint64_t id;
         string poolname;
         name owner;
-        uint8_t round;
+        name lastbuyer;
         uint8_t status; // 0 for inactive; 1 for active
         uint32_t created_at;
         uint32_t end_at;
@@ -50,7 +66,7 @@ class scam : public eosio::contract {
 
         uint64_t primary_key() const { return id; }
 
-        EOSLIB_SERIALIZE(st_pools, (id)(poolname)(owner)(round)(status)(created_at)(end_at)(key_balance)(eos_balance)(key_price))
+        EOSLIB_SERIALIZE(st_pools, (id)(poolname)(owner)(status)(created_at)(end_at)(key_balance)(eos_balance)(key_price))
     };
     typedef multi_index<N(pools), st_pools> _tb_pools;
     _tb_pools pools;
