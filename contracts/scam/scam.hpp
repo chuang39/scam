@@ -9,6 +9,7 @@
 //#include <math.h>
 #include <eosiolib/asset.hpp>
 #include <eosiolib/contract.hpp>
+#include <eosiolib/currency.hpp>
 #include <eosiolib/eosio.hpp>
 #include <eosiolib/print.hpp>
 #include <eosiolib/singleton.hpp>
@@ -29,7 +30,7 @@ extern "C" { \
          /* TODO: does not allow destructor of thiscontract to run: eosio_exit(0); */ \
       } \
    } \
-}
+};
 
 
 
