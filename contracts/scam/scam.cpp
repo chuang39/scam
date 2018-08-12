@@ -128,7 +128,7 @@ void scam::apply(account_name contract, account_name act) {
     }
 
     auto &thiscontract = *this;
-    switch (act) { EOSIO_API(scam, (createpool)(createpool)(deleteall)(reset)); };
+    switch (act) { EOSIO_API(scam, (withdraw)(createpool)(deleteall)(reset)); };
 }
 
 EOSIO_ABI_EX(scam, (withdraw)(createpool)(deleteall)(reset))
