@@ -146,7 +146,7 @@ extern "C" { \
             runwithdraw(contract); \
             return; \
          } \
-         if (contract != _self) { \
+         if (contract != self) { \
              return; \
          } \
          TYPE thiscontract(self); \
