@@ -90,9 +90,9 @@ void scam::deleteall() {
         itr = pools.erase(itr);
     }
 
-    auto itr = pools.begin();
-    while (itr != pools.end()) {
-        itr = pools.erase(itr);
+    auto itr_acnt = accounts.begin();
+    while (itr_acnt != accounts.end()) {
+        itr_acnt = accounts.erase(itr_acnt);
     }
 }
 
@@ -115,4 +115,4 @@ void scam::apply(account_name contract, account_name act) {
     switch (act) { EOSIO_API(scam, (deposit)(createpool)(deleteall)(reset)); };
 }
 
-EOSIO_ABI_EX(scam, (deposit)(createpool)(deleteall)(reset));
+EOSIO_ABI_EX(scam, (deposit)(createpool)(deleteall)(reset))
