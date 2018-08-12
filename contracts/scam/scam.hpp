@@ -35,6 +35,9 @@ class scam : public eosio::contract {
     void reset();
     //@abi action
     void withdraw(const account_name to);
+    //@abi action
+    void checkpool();
+
     void deposit(const currency::transfer &t, account_name code);
     void runwithdraw(const account_name to);
     void apply(account_name contract, account_name act);
@@ -55,15 +58,17 @@ class scam : public eosio::contract {
         name owner;
         name lastbuyer;
         uint8_t status; // 0 for inactive; 1 for active
+        uint32_t round;
         uint32_t created_at;
         uint32_t end_at;
         uint32_t key_balance;
         asset eos_balance;
         asset key_price;
+        asset eos_total;    // total incoming money
 
         uint64_t primary_key() const { return id; }
 
-        EOSLIB_SERIALIZE(st_pools, (id)(poolname)(owner)(status)(created_at)(end_at)(key_balance)(eos_balance)(key_price))
+        EOSLIB_SERIALIZE(st_pools, (id)(poolname)(owner)(status)(round)(created_at)(end_at)(key_balance)(eos_balance)(key_price))
     };
     typedef multi_index<N(pools), st_pools> _tb_pools;
     _tb_pools pools;

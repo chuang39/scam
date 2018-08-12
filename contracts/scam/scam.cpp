@@ -14,25 +14,67 @@ void scam::createpool(const name owner, const string poolname) {
         pool.owner = name{owner};
         pool.lastbuyer = name{owner};
         pool.status = 1;
+        pool.round = 1;
         pool.created_at = now();
         pool.end_at = now() + 24 * 3600;
-        pool.key_balance = 10;
+        pool.key_balance = 0;
         pool.eos_balance = asset(0, symbol_type(S(4, EOS)));
-        pool.key_price = asset(1220, symbol_type(S(4, EOS)));
+        pool.key_price = asset(1000, symbol_type(S(4, EOS)));
+        pool.eos_total = asset(0, symbol_type(S(4, EOS)));
     });
     for( const auto& pool : pools ) {
         print(" ~~ID=", pool.id, ", owner:", pool.owner);
     }
 }
 
-void scam::deposit(const currency::transfer &t, account_name code) {
-    print(">>> deposit:");
+void scam::checkpool() {
+    auto pool = pools.begin();
 
-/*
+    if (pool->end_at <= now()) {
+        auto winner = pool->lastbuyer;
+        auto itr_winner = accounts.find(winner);
+        if (itr_winner != accounts.end()) {
+            accounts.modify(itr_winner, _self, [&](auto &p){
+                p.eos_balance += pool->eos_balance;
+            });
+        }
+
+        // get value from last pool to create next pool
+        uint32_t next_round = pool->round + 1;
+        string poolname = pool->poolname;
+
+        // erase table
+        auto itr = pools.begin();
+        while (itr != pools.end()) {
+            itr = pools.erase(itr);
+        }
+
+        // start new round
+        pools.emplace(owner, [&](auto &pool) {
+            pool.id = pools.available_primary_key();
+            pool.poolname = string(poolname);
+            pool.owner = _self;
+            pool.lastbuyer = _self;
+            pool.status = 1;
+            pool.round = next_round;
+            pool.created_at = now();
+            pool.end_at = now() + 24 * 3600;
+            pool.key_balance = 10;
+            pool.eos_balance = asset(0, symbol_type(S(4, EOS)));
+            pool.key_price = asset(1000, symbol_type(S(4, EOS)));
+            pool.eos_total = asset(0, symbol_type(S(4, EOS)));
+        });
+    }
+}
+
+
+void scam::deposit(const currency::transfer &t, account_name code) {
     if(from == _self) {
         return;
     }
-    require_auth(_self);
+
+    checkpool();
+
     print("\n>>> sender >>>", from, " - name: ", name{from});
 
     eosio_assert(quantity.symbol == string_to_symbol(4, "EOS"), "Only accepts EOS for deposits");
@@ -53,10 +95,6 @@ void scam::deposit(const currency::transfer &t, account_name code) {
             new_balance = r.balance;
         });
     }
-
-*/
-
-
 }
 
 void scam::withdraw(const account_name to) {
@@ -157,4 +195,4 @@ extern "C" { \
    } \
 }
 
-EOSIO_ABI_EX(scam, (withdraw)(createpool)(deleteall)(reset))
+EOSIO_ABI_EX(scam, (withdraw)(checkpool)(createpool)(deleteall)(reset))
