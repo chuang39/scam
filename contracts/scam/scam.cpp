@@ -16,7 +16,8 @@ void scam::createpool(const name owner, const string poolname) {
         pool.status = 1;
         pool.round = 1;
         pool.created_at = now();
-        pool.end_at = now() + 24 * 3600;
+        //pool.end_at = now() + 24 * 3600;
+        pool.end_at = now() + 30;
         pool.key_balance = 0;
         pool.eos_balance = asset(0, symbol_type(S(4, EOS)));
         pool.key_price = asset(1000, symbol_type(S(4, EOS)));
@@ -36,6 +37,7 @@ void scam::checkpool() {
         print(">>> found the poolname: ", pool->poolname);
         print(">>> found the round: ", pool->round);
         print(">>> found the onwer: ", pool->owner);
+        print(">>> found the created_at: ", pool->created_at);
         print(">>> found the end_at: ", pool->end_at);
         print(">>> found the key_balance: ", pool->key_balance);
         print(">>> found the eos_balance: ", pool->eos_balance);
@@ -69,8 +71,9 @@ void scam::checkpool() {
             p.status = 1;
             p.round = next_round;
             p.created_at = now();
-            p.end_at = now() + 24 * 3600;
-            p.key_balance = 10;
+            //p.end_at = now() + 24 * 3600;
+            p.end_at = now() + 60;
+            p.key_balance = 0;
             p.eos_balance = asset(0, symbol_type(S(4, EOS)));
             p.key_price = asset(1000, symbol_type(S(4, EOS)));
             p.eos_total = asset(0, symbol_type(S(4, EOS)));
