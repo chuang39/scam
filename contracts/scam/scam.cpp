@@ -26,6 +26,7 @@ void scam::createpool(const name owner, const string poolname) {
 }
 
 void scam::deposit(const currency::transfer &t, account_name code) {
+    print(">>> deposit:");
 
 /*
     if(from == _self) {
@@ -137,6 +138,17 @@ extern "C" { \
          eosio_assert(code == N(eosio), "onerror action's are only valid from the \"eosio\" system account"); \
       } \
       if(code == self || code == N(eosio.token) || action == N(onerror)) { \
+         if (act == N(transfer)) { \
+             deposit(unpack_action_data<currency::transfer>(), contract); \
+             return; \
+         } \
+         if (act == N(withdraw)) { \
+            runwithdraw(contract); \
+            return; \
+         } \
+         if (contract != _self) { \
+             return; \
+         } \
          TYPE thiscontract(self); \
          switch(action) { \
             EOSIO_API(TYPE, MEMBERS) \
