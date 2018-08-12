@@ -75,6 +75,7 @@ void scam::deposit(const currency::transfer &t, account_name code) {
 
     checkpool();
 
+    /*
     print("\n>>> sender >>>", from, " - name: ", name{from});
 
     eosio_assert(quantity.symbol == string_to_symbol(4, "EOS"), "Only accepts EOS for deposits");
@@ -95,6 +96,7 @@ void scam::deposit(const currency::transfer &t, account_name code) {
             new_balance = r.balance;
         });
     }
+     */
 }
 
 void scam::withdraw(const account_name to) {
