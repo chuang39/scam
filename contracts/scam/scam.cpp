@@ -1,6 +1,25 @@
 #include "scam.hpp"
 
 
+uint64_t pricemap[8][2] = {{100000 * 16, 100},
+                                {100000 * 32, 200},
+                                {100000 * 64, 400},
+                                {100000 * 128, 800},
+                                {100000 * 256, 1600},
+                                {100000 * 512, 3200},
+                                {100000 * 1024, 6400},
+                                {100000 * 2048, 12800}};
+
+uint64_t get_price(uint64_t sold_keys) {
+    for (int i = 0; i < 8; i++) {
+        if (sold_keys < pricemap[i][0]) {
+            return pricemap[i][1];
+        }
+    }
+    return 25600;
+}
+
+
 void scam::createpool(const name owner, const string poolname) {
     require_auth(_self);
 
@@ -16,12 +35,13 @@ void scam::createpool(const name owner, const string poolname) {
         pool.status = 1;
         pool.round = 1;
         pool.created_at = now();
-        pool.end_at = now() + 24 * 3600;
+        //pool.end_at = now() + 24 * 3600;
         pool.end_at = now() + 30;
+        p.last_buy_time = now();
         pool.key_balance = 0;
-        pool.eos_balance = asset(0, symbol_type(S(4, EOS)));
-        pool.key_price = asset(1000, symbol_type(S(4, EOS)));
-        pool.eos_total = asset(0, symbol_type(S(4, EOS)));
+        pool.eos_balance = 0;
+        pool.key_price = 1000;
+        pool.eos_total = 0;
     });
     for( const auto& pool : pools ) {
         print(" ~~ID=", pool.id, ", owner:", pool.owner);
@@ -74,10 +94,11 @@ void scam::checkpool() {
             p.created_at = now();
             //p.end_at = now() + 24 * 3600;
             p.end_at = now() + 60;
+            p.last_buy_time = now();
             p.key_balance = 0;
-            p.eos_balance = asset(0, symbol_type(S(4, EOS)));
-            p.key_price = asset(1000, symbol_type(S(4, EOS)));
-            p.eos_total = asset(0, symbol_type(S(4, EOS)));
+            p.eos_balance = 0;
+            p.key_price = 1000;
+            p.eos_total = 0;
         });
     }
 }
@@ -90,58 +111,106 @@ void scam::deposit(const currency::transfer &t, account_name code) {
 
     checkpool();
 
-    /*
-    print("\n>>> sender >>>", from, " - name: ", name{from});
-
+    eosio_assert(code == N(eosio.token), "Transfer not from eosio.token");
+    eosio_assert(t.to == _self, "Transfer not made to this contract");
     eosio_assert(quantity.symbol == string_to_symbol(4, "EOS"), "Only accepts EOS for deposits");
     eosio_assert(quantity.is_valid(), "Invalid token transfer");
     eosio_assert(quantity.amount > 0, "Quantity must be positive");
 
-    // find account
-    auto itr_acnt = accounts.find(from);
-    if(itr_acnt != accounts.end()) {
-        accounts.modify(itr_acnt, _self, [&](auto& r){
-            // Assumption: total currency issued by eosio.token will not overflow asset
-            r.balance += transfer_data.quantity;
-            new_balance = r.balance;
-        });
-    } else {
-        accounts.emplace(_self, [&](auto& r){
-            r.balance = transfer_data.quantity;
-            new_balance = r.balance;
+    // find pool
+    auto pool = pools.begin();
+    if (pool == pools.end()) {
+        print(">>> no pool is found");
+        return;
+    }
+
+    auto user = t.from;
+    auto amount = t.quantity.amount;
+    uint64_t keybal = pool->key_balance;
+    uint64_t cur_price = get_price(keybal);
+    uint64_t keycnt = amount / cur_price;
+    uint64_t new_price = get_price(keybal + keycnt);
+
+    // pay dividend
+    const uint64_t dividend =
+            _players.begin() == _players.end() ? 0 : (amount * DIVIDEND_SIZE);
+
+    uint64_t dividend = accounts.begin() == accounts.end() ? 0 : (ammount * DIVIDEND_PERCENT);
+    for (auto itr = accounts.begin(); itr != accounts.end(); itr++) {
+        auto share = dividend * ((double)itr->key_balance / (double)keybal);
+        accounts.modify(itr, _self, [&](auto &p){
+            p.eos_balance += share;
         });
     }
-     */
+
+    // TODO: pay referral. Need to change team dividend too
+    //uint64_t ref_bonus = ammount * REFERRAL_PERCENT;
+    uint64_t ref_bonus = 0;
+
+
+    // add or update user
+    auto itr_user = accounts.find(user);
+    if (itr_user == accounts.end()) {
+        itr_user = accounts.emplace(_self, [&](auto &p){
+            p.owner = name{user};
+            p.key_balance = 0;
+            p.eos_balance = 0;
+        });
+    }
+    accounts.modify(itr_user, _self, [&](auto &p){
+        p.key_balance += keycnt;
+    });
+
+    // update pool
+    uint64_t prize_share = ammount * FINAL_PRIZE_PERCENT;
+    pools.modify(pool, _self,  [&](auto &p) {
+        p.lastbuyer = name{user};
+        p.last_buy_ts = now();
+        p.end_at = std::min(p.end_at + TIME_INC, p.last_buy_time + MAX_TIME_INC);
+
+        p.key_balance += keycnt;
+        p.eos_balance += prize_share;
+        p.eos_total += amount;
+        if (p.key_price != new_price) {
+            p.key_price = new_price;
+        }
+    });
+
+    // pay team
+    uint64_t team_share = amount - dividend - ref_bonus - prize_share;
+    auto team = accounts.find(_self);
+    if (team == accounts.end()) {
+        team = accounts.emplace(_self, [&](auto &p) {
+            p.owner = name{_self};
+            p.key_balance = 0;
+            p.eos_balance = 0;
+        });
+    }
+    accounts.modify(team, _self, [&](auto &p) {
+       p.eos_balance += team_share;
+    });
 }
 
 void scam::withdraw(const account_name to) {
     require_auth(to);
-
-
-/*
-
-    eosio_assert(quantity.is_valid(), "invalid quantity");
-    eosio_assert(code == N(eosio.token);
-    eosio_assert(quantity.amount > 0, "must withdraw positive quantity");
-
-    auto itr = accounts.find(to);
-    eosio_assert(itr != accounts.end(), "unknown account");
-
-    accounts.modify( itr, 0, [&]( auto& acnt ) {
-        eosio_assert( acnt.eos_balance >= quantity, "insufficient balance" );
-        acnt.eos_balance -= quantity;
-    });
-
-
-    if( itr->is_empty() ) {
-        accounts.erase(itr);
-    }
-    */
 }
 
 void scam::runwithdraw(const account_name to) {
     print(">>> withdraw:", name{to});
 
+    // find user
+    auto itr = accounts.find(name{to});
+    eosio_assert(itr != accounts.end(), "user not found");
+
+    // clear balance
+    asset bal = asset(itr->eos_balance, symbol_type(S(4, EOS)));
+    accounts.modify(itr, _self, [&](auto &p) { p.eos_balance = 0; });
+
+    // withdraw
+    action(permission_level{_self, N(active)}, N(eosio.token),
+           N(transfer), std::make_tuple(_self, to, bal,
+                                        std::string("Money exit from EosScam")))
+            .send();
 }
 
 //@abi action

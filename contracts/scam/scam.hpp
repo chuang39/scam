@@ -47,6 +47,15 @@ class scam : public eosio::contract {
     };
 
   private:
+
+    const static uint64_t DAY_IN_SEC = 3600 * 24;
+    constexpr static uint64_t TIME_INC = 30;
+    constexpr static double DIVIDEND_PERCENT = 0.50;
+    constexpr static double TEAM_REWARD_PERCENT = 0.25;
+    constexpr static double TEAM_REWARD_PERCENT_REFER = 0.15;
+    constexpr static double REFERRAL_PERCENT = 0.1;
+    constexpr static double FINAL_PRIZE_PERCENT = 0.25;
+
     // TODO: don't expose end_at in the table
     // TODO: create read method for table filed (limit access)
     // TODO: withdraw
@@ -61,14 +70,15 @@ class scam : public eosio::contract {
         uint32_t round;
         uint32_t created_at;
         uint32_t end_at;
-        uint32_t key_balance;
-        asset eos_balance;
-        asset key_price;
-        asset eos_total;    // total incoming money
+        uint32_t last_buy_ts;
+        uint64_t key_balance;
+        uint64_t eos_balance;   // final prize
+        uint64_t key_price;
+        uint64_t eos_total;    // total incoming money
 
         uint64_t primary_key() const { return id; }
 
-        EOSLIB_SERIALIZE(st_pools, (id)(poolname)(owner)(lastbuyer)(status)(round)(created_at)(end_at)(key_balance)(eos_balance)(key_price)(eos_total))
+        EOSLIB_SERIALIZE(st_pools, (id)(poolname)(owner)(lastbuyer)(status)(round)(created_at)(end_at)(last_buy_ts)(key_balance)(eos_balance)(key_price)(eos_total))
     };
     typedef multi_index<N(pools), st_pools> _tb_pools;
     _tb_pools pools;
@@ -76,10 +86,11 @@ class scam : public eosio::contract {
     // @abi table accounts i64
     struct st_accounts {
         name owner;
-        uint32_t key_balance;
-        asset eos_balance;
+        uint64_t key_balance;
+        uint64_t eos_balance;   //divident
+        uint64_t ref_balance;   // ref bonus
         uint64_t primary_key() const {return owner;}
-        EOSLIB_SERIALIZE(st_accounts, (owner)(key_balance)(eos_balance))
+        EOSLIB_SERIALIZE(st_accounts, (owner)(key_balance)(eos_balance)(ref_balance))
     };
     typedef multi_index<N(accounts), st_accounts> _tb_accounts;
     _tb_accounts accounts;
