@@ -37,7 +37,7 @@ void scam::createpool(const name owner, const string poolname) {
         pool.created_at = now();
         //pool.end_at = now() + 24 * 3600;
         pool.end_at = now() + 30;
-        p.last_buy_ts = now();
+        pool.last_buy_ts = now();
         pool.key_balance = 0;
         pool.eos_balance = 0;
         pool.key_price = 1000;
@@ -94,7 +94,7 @@ void scam::checkpool() {
             p.created_at = now();
             //p.end_at = now() + 24 * 3600;
             p.end_at = now() + 60;
-            p.last_buy_time = now();
+            p.last_buy_ts = now();
             p.key_balance = 0;
             p.eos_balance = 0;
             p.key_price = 1000;
