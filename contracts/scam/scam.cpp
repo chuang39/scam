@@ -37,7 +37,7 @@ void scam::createpool(const name owner, const string poolname) {
         pool.created_at = now();
         //pool.end_at = now() + 24 * 3600;
         pool.end_at = now() + 30;
-        p.last_buy_time = now();
+        p.last_buy_ts = now();
         pool.key_balance = 0;
         pool.eos_balance = 0;
         pool.key_price = 1000;
@@ -113,9 +113,9 @@ void scam::deposit(const currency::transfer &t, account_name code) {
 
     eosio_assert(code == N(eosio.token), "Transfer not from eosio.token");
     eosio_assert(t.to == _self, "Transfer not made to this contract");
-    eosio_assert(quantity.symbol == string_to_symbol(4, "EOS"), "Only accepts EOS for deposits");
-    eosio_assert(quantity.is_valid(), "Invalid token transfer");
-    eosio_assert(quantity.amount > 0, "Quantity must be positive");
+    eosio_assert(t.quantity.symbol == string_to_symbol(4, "EOS"), "Only accepts EOS for deposits");
+    eosio_assert(t.quantity.is_valid(), "Invalid token transfer");
+    eosio_assert(t.quantity.amount > 0, "Quantity must be positive");
 
     // find pool
     auto pool = pools.begin();
@@ -132,10 +132,7 @@ void scam::deposit(const currency::transfer &t, account_name code) {
     uint64_t new_price = get_price(keybal + keycnt);
 
     // pay dividend
-    const uint64_t dividend =
-            _players.begin() == _players.end() ? 0 : (amount * DIVIDEND_SIZE);
-
-    uint64_t dividend = accounts.begin() == accounts.end() ? 0 : (ammount * DIVIDEND_PERCENT);
+    uint64_t dividend = accounts.begin() == accounts.end() ? 0 : (amount * DIVIDEND_PERCENT);
     for (auto itr = accounts.begin(); itr != accounts.end(); itr++) {
         auto share = dividend * ((double)itr->key_balance / (double)keybal);
         accounts.modify(itr, _self, [&](auto &p){
@@ -144,7 +141,7 @@ void scam::deposit(const currency::transfer &t, account_name code) {
     }
 
     // TODO: pay referral. Need to change team dividend too
-    //uint64_t ref_bonus = ammount * REFERRAL_PERCENT;
+    //uint64_t ref_bonus = amount * REFERRAL_PERCENT;
     uint64_t ref_bonus = 0;
 
 
@@ -162,11 +159,11 @@ void scam::deposit(const currency::transfer &t, account_name code) {
     });
 
     // update pool
-    uint64_t prize_share = ammount * FINAL_PRIZE_PERCENT;
+    uint64_t prize_share = amount * FINAL_PRIZE_PERCENT;
     pools.modify(pool, _self,  [&](auto &p) {
         p.lastbuyer = name{user};
         p.last_buy_ts = now();
-        p.end_at = std::min(p.end_at + TIME_INC, p.last_buy_time + MAX_TIME_INC);
+        p.end_at = std::min(p.end_at + TIME_INC, p.last_buy_ts + DAY_IN_SEC);
 
         p.key_balance += keycnt;
         p.eos_balance += prize_share;
