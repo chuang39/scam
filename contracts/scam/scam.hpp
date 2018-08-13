@@ -68,7 +68,7 @@ class scam : public eosio::contract {
 
         uint64_t primary_key() const { return id; }
 
-        EOSLIB_SERIALIZE(st_pools, (id)(poolname)(owner)(status)(round)(created_at)(end_at)(key_balance)(eos_balance)(key_price))
+        EOSLIB_SERIALIZE(st_pools, (id)(poolname)(owner)(lastbuyer)(status)(round)(created_at)(end_at)(key_balance)(eos_balance)(key_price)(eos_total))
     };
     typedef multi_index<N(pools), st_pools> _tb_pools;
     _tb_pools pools;

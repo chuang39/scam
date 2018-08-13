@@ -11,17 +11,17 @@ void scam::createpool(const name owner, const string poolname) {
     pools.emplace(owner, [&](auto &pool) {
         pool.id = pools.available_primary_key();
         pool.poolname = string(poolname);
-        //pool.owner = name{owner};
-        //pool.lastbuyer = name{owner};
-        //pool.status = 1;
-        //pool.round = 1;
-        //pool.created_at = now();
-        //pool.end_at = now() + 24 * 3600;
-        //pool.end_at = now() + 30;
-        //pool.key_balance = 0;
-        //pool.eos_balance = asset(0, symbol_type(S(4, EOS)));
-        //pool.key_price = asset(1000, symbol_type(S(4, EOS)));
-        //pool.eos_total = asset(0, symbol_type(S(4, EOS)));
+        pool.owner = name{owner};
+        pool.lastbuyer = name{owner};
+        pool.status = 1;
+        pool.round = 1;
+        pool.created_at = now();
+        pool.end_at = now() + 24 * 3600;
+        pool.end_at = now() + 30;
+        pool.key_balance = 0;
+        pool.eos_balance = asset(0, symbol_type(S(4, EOS)));
+        pool.key_price = asset(1000, symbol_type(S(4, EOS)));
+        pool.eos_total = asset(0, symbol_type(S(4, EOS)));
     });
     for( const auto& pool : pools ) {
         print(" ~~ID=", pool.id, ", owner:", pool.owner);
