@@ -1,14 +1,14 @@
 #include "scam.hpp"
 
 
-uint64_t pricemap[8][2] = {{100000 * 16, 100},
-                                {100000 * 32, 200},
-                                {100000 * 64, 400},
-                                {100000 * 128, 800},
-                                {100000 * 256, 1600},
-                                {100000 * 512, 3200},
-                                {100000 * 1024, 6400},
-                                {100000 * 2048, 12800}};
+uint64_t pricemap[8][2] = {{100000 * 16, 1000},
+                                {100000 * 32, 2000},
+                                {100000 * 64, 4000},
+                                {100000 * 128, 8000},
+                                {100000 * 256, 16000},
+                                {100000 * 512, 32000},
+                                {100000 * 1024, 64000},
+                                {100000 * 2048, 128000}};
 
 uint64_t get_price(uint64_t sold_keys) {
     for (int i = 0; i < 8; i++) {
@@ -16,7 +16,7 @@ uint64_t get_price(uint64_t sold_keys) {
             return pricemap[i][1];
         }
     }
-    return 25600;
+    return 256000;
 }
 
 
@@ -35,8 +35,8 @@ void scam::createpool(const name owner, const string poolname) {
         pool.status = 1;
         pool.round = 1;
         pool.created_at = now();
-        //pool.end_at = now() + 24 * 3600;
-        pool.end_at = now() + 30;
+        pool.end_at = now() + 24 * 3600;
+        //pool.end_at = now() + 30;
         pool.last_buy_ts = now();
         pool.key_balance = 0;
         pool.eos_balance = 0;
@@ -92,8 +92,8 @@ void scam::checkpool() {
             p.status = 1;
             p.round = next_round;
             p.created_at = now();
-            //p.end_at = now() + 24 * 3600;
-            p.end_at = now() + 60;
+            p.end_at = now() + 24 * 3600;
+            //p.end_at = now() + 60;
             p.last_buy_ts = now();
             p.key_balance = 0;
             p.eos_balance = 0;
