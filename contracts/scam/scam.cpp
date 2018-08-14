@@ -47,7 +47,7 @@ void scam::createpool(const name owner, const string poolname) {
         pool.last_buy_ts = now();
         pool.key_balance = 0;
         pool.eos_balance = 0;
-        pool.key_price = 1000;
+        pool.key_price = pricemap[0][1];
         pool.eos_total = 0;
         pool.dividend_paid = 0;
         pool.bonus_balance = 0;
@@ -119,8 +119,8 @@ void scam::checkpool() {
             //p.end_at = now() + 60;
             p.last_buy_ts = now();
             p.key_balance = 0;
-            p.eos_balance = 0;
-            p.key_price = 1000;
+            p.eos_balance = p.bonus_balance;
+            p.key_price = pricemap[0][1];
             p.eos_total = 0;
             p.dividend_paid = 0;
             p.bonus_balance = 0;
