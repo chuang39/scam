@@ -201,7 +201,7 @@ void scam::deposit(const currency::transfer &t, account_name code) {
     for (auto itr = accounts.begin(); itr != accounts.end(); itr++) {
         print("==============================4", itr->key_balance);
         print("==============================4", keybal);
-        print("==============================4", divident);
+        print("==============================4", dividend);
         auto share = dividend * ((double)itr->key_balance / (double)keybal);
         dividend_paid += share;
         accounts.modify(itr, _self, [&](auto &p){
