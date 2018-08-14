@@ -1,14 +1,14 @@
 #include "scam.hpp"
 
 
-uint64_t pricemap[8][2] = {{100000 * 16, 1000},
-                                {100000 * 32, 2000},
-                                {100000 * 64, 4000},
-                                {100000 * 128, 8000},
-                                {100000 * 256, 16000},
-                                {100000 * 512, 32000},
-                                {100000 * 1024, 64000},
-                                {100000 * 2048, 128000}};
+uint64_t pricemap[8][2] = {{100000 * 16, 100},
+                                {100000 * 48, 162},
+                                {100000 * 96, 262},
+                                {100000 * 192, 424},
+                                {100000 * 384, 685},
+                                {100000 * 768, 1109},
+                                {100000 * 1536, 1794},
+                                {100000 * 3072, 2903}};
 
 uint64_t get_price(uint64_t sold_keys) {
     for (int i = 0; i < 8; i++) {
@@ -16,15 +16,22 @@ uint64_t get_price(uint64_t sold_keys) {
             return pricemap[i][1];
         }
     }
-    return 256000;
+    return 4697;
+}
+
+uint64_t get_level_keys(uint64_t sold_keys) {
+    for (int i = 0; i < 8; i++) {
+        if (sold_keys < pricemap[i][0]) {
+            return pricemap[i][0] / 2;
+        }
+    }
+    return pricemap[7][0] / 2;
 }
 
 
 void scam::createpool(const name owner, const string poolname) {
     require_auth(_self);
 
-    // TODO: should only allow one active pool
-    // TODO: add a method to control pool state
     print( "Create pool ", poolname, " by owner= ", name{owner} );
 
     pools.emplace(owner, [&](auto &pool) {
@@ -42,10 +49,19 @@ void scam::createpool(const name owner, const string poolname) {
         pool.eos_balance = 0;
         pool.key_price = 1000;
         pool.eos_total = 0;
+        pool.divident_paid = 0;
+        pool.bonus_balance = 0;
+        pool.bonus_keys_needed = pricemap[0][0];
+        pool.total_time_in_sec = 0;
     });
     for( const auto& pool : pools ) {
         print(" ~~ID=", pool.id, ", owner:", pool.owner);
     }
+}
+
+void scam::checkpool() {
+    require_auth(_self);
+    checkpool();
 }
 
 void scam::checkpool() {
@@ -83,6 +99,13 @@ void scam::checkpool() {
             itr = pools.erase(itr);
         }
 
+        // update accounts key_balance for new round
+        for (auto itr = accounts.begin(); itr != accounts.end(); itr++) {
+            accounts.modify(itr, _self, [&](auto &p){
+                uint64_t newkeybal = p.key_balance * KEY_CARRYOVER;
+                p.key_balance = newkeybal;
+            });
+        }
         // start new round
         pools.emplace(_self, [&](auto &p) {
             p.id = pools.available_primary_key();
@@ -99,6 +122,10 @@ void scam::checkpool() {
             p.eos_balance = 0;
             p.key_price = 1000;
             p.eos_total = 0;
+            pool.divident_paid = 0;
+            pool.bonus_balance = 0;
+            pool.bonus_keys_needed = pricemap[0][0];
+            pool.total_time_in_sec = 0;
         });
     }
 }
@@ -131,20 +158,6 @@ void scam::deposit(const currency::transfer &t, account_name code) {
     uint64_t keycnt = amount / cur_price;
     uint64_t new_price = get_price(keybal + keycnt);
 
-    // pay dividend
-    uint64_t dividend = accounts.begin() == accounts.end() ? 0 : (amount * DIVIDEND_PERCENT);
-    for (auto itr = accounts.begin(); itr != accounts.end(); itr++) {
-        auto share = dividend * ((double)itr->key_balance / (double)keybal);
-        accounts.modify(itr, _self, [&](auto &p){
-            p.eos_balance += share;
-        });
-    }
-
-    // TODO: pay referral. Need to change team dividend too
-    //uint64_t ref_bonus = amount * REFERRAL_PERCENT;
-    uint64_t ref_bonus = 0;
-
-
     // add or update user
     auto itr_user = accounts.find(user);
     if (itr_user == accounts.end()) {
@@ -152,14 +165,57 @@ void scam::deposit(const currency::transfer &t, account_name code) {
             p.owner = name{user};
             p.key_balance = 0;
             p.eos_balance = 0;
+            p.ref_balance = 0;
+            p.referee = TEAM_NAME;
         });
     }
+
+    // check if the user win the bonus prize
+    if (pool->bonus_keys_needed < keycnt ) {
+        // congrats to the bonus winner!
+        uint64_t sweetiebonus = pool->bonus_balance;
+        uint64_t next_level_keys = get_level_keys(keybal + keycnt);
+
+        pools.modify(pool, _self,  [&](auto &p) {
+           p.divident_paid += sweetiebonus;
+           p.bonus_balance = 0;
+           p.bonus_keys_needed = next_level_keys;
+        });
+        accounts.modify(itr_user, _self, [&](auto &p){
+            p.eos_balance += sweetiebonus;
+        });
+    }
+
+    // update user keys
     accounts.modify(itr_user, _self, [&](auto &p){
         p.key_balance += keycnt;
     });
 
-    // update pool
+    // pay dividend
+    uint64_t dividend = accounts.begin() == accounts.end() ? 0 : (amount * DIVIDEND_PERCENT);
+    uint64_t dividend_paid = 0;
+    for (auto itr = accounts.begin(); itr != accounts.end(); itr++) {
+        auto share = dividend * ((double)itr->key_balance / (double)keybal);
+        dividend_paid += share;
+        accounts.modify(itr, _self, [&](auto &p){
+            p.eos_balance += share;
+        });
+    }
+
+    // pay referral
+    auto itr_referee = accounts.find(itr_user->referee);
+    uint64_t ref_bonus = 0;
+    if (itr_referee != accounts.end()) {
+        ref_bonus = amount * REFERRAL_PERCENT;
+        accounts.modify(itr_referee, _self, [&](auto &p){
+            p.ref_balance += ref_bonus;
+            p.eos_balance += ref_bonus;
+        });
+    }
+
+    // update pool with final prize and bonus prize
     uint64_t prize_share = amount * FINAL_PRIZE_PERCENT;
+    uint64_t bonus_share = amount * BONUS_PRIZE_PERCET;
     pools.modify(pool, _self,  [&](auto &p) {
         p.lastbuyer = name{user};
         p.last_buy_ts = now();
@@ -167,20 +223,26 @@ void scam::deposit(const currency::transfer &t, account_name code) {
 
         p.key_balance += keycnt;
         p.eos_balance += prize_share;
-        p.eos_total += amount;
         if (p.key_price != new_price) {
             p.key_price = new_price;
         }
+        p.eos_total += amount;
+        p.divident_paid += (ref_bonus + dividend);
+        p.bonus_balance += bonus_share;
+        p.bonus_keys_needed -= keycnt;
+        p.total_time_in_sec += TIME_INC;
     });
 
-    // pay team
-    uint64_t team_share = amount - dividend - ref_bonus - prize_share;
-    auto team = accounts.find(_self);
+    // pay team if all above steps succeed
+    uint64_t team_share = amount - dividend_paid - ref_bonus - prize_share - bonus_share;
+    auto team = accounts.find(TEAM_NAME);
     if (team == accounts.end()) {
         team = accounts.emplace(_self, [&](auto &p) {
-            p.owner = name{_self};
+            p.owner = TEAM_NAME;
             p.key_balance = 0;
             p.eos_balance = 0;
+            p.ref_balance = 0;
+            p.referee = TEAM_NAME;
         });
     }
     accounts.modify(team, _self, [&](auto &p) {
@@ -278,4 +340,4 @@ extern "C" { \
    } \
 }
 
-EOSIO_ABI_EX(scam, (withdraw)(checkpool)(createpool)(deleteall)(reset))
+EOSIO_ABI_EX(scam, (withdraw)(ping)(createpool)(deleteall)(reset))
