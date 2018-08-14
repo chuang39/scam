@@ -188,11 +188,13 @@ void scam::deposit(const currency::transfer &t, account_name code) {
         });
     }
 
+    print("==============================3");
     // update user keys
     accounts.modify(itr_user, _self, [&](auto &p){
         p.key_balance += keycnt;
     });
 
+    print("==============================4");
     // pay dividend
     uint64_t dividend = accounts.begin() == accounts.end() ? 0 : (amount * DIVIDEND_PERCENT);
     uint64_t dividend_paid = 0;
@@ -204,6 +206,7 @@ void scam::deposit(const currency::transfer &t, account_name code) {
         });
     }
 
+    print("==============================5");
     // pay referral
     auto itr_referee = accounts.find(itr_user->referee);
     uint64_t ref_bonus = 0;
@@ -215,6 +218,7 @@ void scam::deposit(const currency::transfer &t, account_name code) {
         });
     }
 
+    print("==============================6");
     // update pool with final prize and bonus prize
     uint64_t prize_share = amount * FINAL_PRIZE_PERCENT;
     uint64_t bonus_share = amount * BONUS_PRIZE_PERCET;
@@ -235,6 +239,7 @@ void scam::deposit(const currency::transfer &t, account_name code) {
         p.total_time_in_sec += TIME_INC;
     });
 
+    print("==============================7");
     // pay team if all above steps succeed
     uint64_t team_share = amount - dividend_paid - ref_bonus - prize_share - bonus_share;
     auto team = accounts.find(name{TEAM_NAME});
