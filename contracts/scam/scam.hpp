@@ -96,7 +96,7 @@ class scam : public eosio::contract {
         name referee;
 
         uint64_t primary_key() const {return owner;}
-        EOSLIB_SERIALIZE(st_accounts, (owner)(key_balance)(eos_balance)(ref_balance))
+        EOSLIB_SERIALIZE(st_accounts, (owner)(key_balance)(eos_balance)(ref_balance)(referee))
     };
     typedef multi_index<N(accounts), st_accounts> _tb_accounts;
     _tb_accounts accounts;
