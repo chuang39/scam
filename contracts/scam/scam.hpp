@@ -56,7 +56,7 @@ class scam : public eosio::contract {
     constexpr static double BONUS_PRIZE_PERCET = 0.05;
     constexpr static double FINAL_PRIZE_PERCENT = 0.33;
     constexpr static double KEY_CARRYOVER = 0.1;
-    constexpr static name TEAM_NAME = name{eosgamesprod};
+    constexpr static name TEAM_NAME = name{"eosgamesprod"};
 
     // @abi table pools i64
     struct st_pools {
