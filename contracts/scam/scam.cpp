@@ -49,7 +49,7 @@ void scam::createpool(const name owner, const string poolname) {
         pool.eos_balance = 0;
         pool.key_price = 1000;
         pool.eos_total = 0;
-        pool.divident_paid = 0;
+        pool.dividend_paid = 0;
         pool.bonus_balance = 0;
         pool.bonus_keys_needed = pricemap[0][0];
         pool.total_time_in_sec = 0;
@@ -122,7 +122,7 @@ void scam::checkpool() {
             p.eos_balance = 0;
             p.key_price = 1000;
             p.eos_total = 0;
-            pool.divident_paid = 0;
+            pool.dividend_paid = 0;
             pool.bonus_balance = 0;
             pool.bonus_keys_needed = pricemap[0][0];
             pool.total_time_in_sec = 0;
@@ -177,7 +177,7 @@ void scam::deposit(const currency::transfer &t, account_name code) {
         uint64_t next_level_keys = get_level_keys(keybal + keycnt);
 
         pools.modify(pool, _self,  [&](auto &p) {
-           p.divident_paid += sweetiebonus;
+           p.dividend_paid += sweetiebonus;
            p.bonus_balance = 0;
            p.bonus_keys_needed = next_level_keys;
         });
@@ -227,7 +227,7 @@ void scam::deposit(const currency::transfer &t, account_name code) {
             p.key_price = new_price;
         }
         p.eos_total += amount;
-        p.divident_paid += (ref_bonus + dividend);
+        p.dividend_paid += (ref_bonus + dividend);
         p.bonus_balance += bonus_share;
         p.bonus_keys_needed -= keycnt;
         p.total_time_in_sec += TIME_INC;
