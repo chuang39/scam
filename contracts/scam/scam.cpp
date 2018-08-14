@@ -59,7 +59,7 @@ void scam::createpool(const name owner, const string poolname) {
     }
 }
 
-void scam::checkpool() {
+void scam::ping() {
     require_auth(_self);
     checkpool();
 }
