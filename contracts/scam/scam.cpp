@@ -266,11 +266,12 @@ void scam::deposit(const currency::transfer &t, account_name code) {
 }
 
 void scam::withdraw(const account_name to) {
+    print(">>> withdraw:", name{to});
     require_auth(to);
 }
 
 void scam::runwithdraw(const account_name to) {
-    print(">>> withdraw:", name{to});
+    print(">>> runwithdraw:", name{to});
 
     // find user
     auto itr = accounts.find(name{to});
