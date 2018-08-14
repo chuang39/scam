@@ -158,6 +158,7 @@ void scam::deposit(const currency::transfer &t, account_name code) {
     uint64_t keycnt = amount / cur_price;
     uint64_t new_price = get_price(keybal + keycnt);
 
+    print("==============================1");
     // add or update user
     auto itr_user = accounts.find(user);
     if (itr_user == accounts.end()) {
@@ -170,6 +171,7 @@ void scam::deposit(const currency::transfer &t, account_name code) {
         });
     }
 
+    print("==============================2");
     // check if the user win the bonus prize
     if (pool->bonus_keys_needed < keycnt ) {
         // congrats to the bonus winner!
