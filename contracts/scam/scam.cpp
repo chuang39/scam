@@ -122,10 +122,10 @@ void scam::checkpool() {
             p.eos_balance = 0;
             p.key_price = 1000;
             p.eos_total = 0;
-            pool.dividend_paid = 0;
-            pool.bonus_balance = 0;
-            pool.bonus_keys_needed = pricemap[0][0];
-            pool.total_time_in_sec = 0;
+            p.dividend_paid = 0;
+            p.bonus_balance = 0;
+            p.bonus_keys_needed = pricemap[0][0];
+            p.total_time_in_sec = 0;
         });
     }
 }
