@@ -158,6 +158,22 @@ void scam::deposit(const currency::transfer &t, account_name code) {
     uint64_t keycnt = amount / cur_price;
     uint64_t new_price = get_price(keybal + keycnt);
 
+    // TODO: user and referee cannot be the same person
+    print("==============================0");
+    // pay dividend
+    uint64_t dividend = accounts.begin() == accounts.end() ? 0 : (amount * DIVIDEND_PERCENT);
+    uint64_t dividend_paid = 0;
+    for (auto itr = accounts.begin(); itr != accounts.end(); itr++) {
+        print("==============================", itr->key_balance);
+        print("==============================", keybal);
+        print("==============================", dividend);
+        auto share = dividend * ((double)itr->key_balance / (double)keybal);
+        dividend_paid += share;
+        accounts.modify(itr, _self, [&](auto &p){
+            p.eos_balance += share;
+        });
+    }
+
     print("==============================1");
     // add or update user
     auto itr_user = accounts.find(user);
@@ -195,19 +211,7 @@ void scam::deposit(const currency::transfer &t, account_name code) {
     });
 
     print("==============================4");
-    // pay dividend
-    uint64_t dividend = accounts.begin() == accounts.end() ? 0 : (amount * DIVIDEND_PERCENT);
-    uint64_t dividend_paid = 0;
-    for (auto itr = accounts.begin(); itr != accounts.end(); itr++) {
-        print("==============================4", itr->key_balance);
-        print("==============================4", keybal);
-        print("==============================4", dividend);
-        auto share = dividend * ((double)itr->key_balance / (double)keybal);
-        dividend_paid += share;
-        accounts.modify(itr, _self, [&](auto &p){
-            p.eos_balance += share;
-        });
-    }
+
 
     print("==============================5");
     // pay referral
