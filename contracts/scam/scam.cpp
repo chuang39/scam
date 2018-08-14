@@ -250,6 +250,7 @@ void scam::deposit(const currency::transfer &t, account_name code) {
     accounts.modify(team, _self, [&](auto &p) {
        p.eos_balance += team_share;
     });
+    print("==============================end");
 }
 
 void scam::withdraw(const account_name to) {
