@@ -166,7 +166,7 @@ void scam::deposit(const currency::transfer &t, account_name code) {
             p.key_balance = 0;
             p.eos_balance = 0;
             p.ref_balance = 0;
-            p.referee = TEAM_NAME;
+            p.referee = name{TEAM_NAME};
         });
     }
 
@@ -235,14 +235,14 @@ void scam::deposit(const currency::transfer &t, account_name code) {
 
     // pay team if all above steps succeed
     uint64_t team_share = amount - dividend_paid - ref_bonus - prize_share - bonus_share;
-    auto team = accounts.find(TEAM_NAME);
+    auto team = accounts.find(name{TEAM_NAME});
     if (team == accounts.end()) {
         team = accounts.emplace(_self, [&](auto &p) {
-            p.owner = TEAM_NAME;
+            p.owner = name{TEAM_NAME};
             p.key_balance = 0;
             p.eos_balance = 0;
             p.ref_balance = 0;
-            p.referee = TEAM_NAME;
+            p.referee = name{TEAM_NAME};
         });
     }
     accounts.modify(team, _self, [&](auto &p) {
