@@ -100,8 +100,4 @@ class scam : public eosio::contract {
     };
     typedef multi_index<N(accounts), st_accounts> _tb_accounts;
     _tb_accounts accounts;
-
-    struct st_withdraw {
-        account_name to;
-    };
 };

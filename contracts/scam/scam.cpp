@@ -270,7 +270,7 @@ void scam::withdraw(const account_name to) {
     require_auth(to);
 }
 
-void scam::runwithdraw(const st_withdraw &toaccount) {
+void scam::runwithdraw(const scam::st_withdraw &toaccount) {
     account_name to = toaccount.to;
     print(">>> runwithdraw:", name{to});
 
@@ -317,7 +317,7 @@ void scam::apply(account_name contract, account_name act) {
     }
 
     if (act == N(withdraw)) {
-        runwithdraw(unpack_action_data<st_withdraw>(), contract);
+        runwithdraw(unpack_action_data<st_withdraw>());
         return;
     }
 
