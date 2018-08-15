@@ -40,7 +40,7 @@ class scam : public eosio::contract {
 
     void checkpool();
     void deposit(const currency::transfer &t, account_name code);
-    void runwithdraw(const account_name to);
+    void runwithdraw(const st_withdraw &toaccount);
     void apply(account_name contract, account_name act);
 
     struct st_withdraw {
@@ -100,4 +100,8 @@ class scam : public eosio::contract {
     };
     typedef multi_index<N(accounts), st_accounts> _tb_accounts;
     _tb_accounts accounts;
+
+    struct st_withdraw {
+        account_name to;
+    };
 };
