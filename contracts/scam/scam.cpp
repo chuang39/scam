@@ -320,7 +320,7 @@ extern "C" { \
       if(code == self || code == N(eosio.token) || action == N(onerror)) { \
          TYPE thiscontract(self); \
          if (action == N(transfer) && ) { \
-             currency::transfer tr = unpack_action_data<currency::transfer>() \
+             currency::transfer tr = unpack_action_data<currency::transfer>(); \
              if (tr.to == self) { \
                  thiscontract.deposit(tr, code); \
              } \
