@@ -21,32 +21,6 @@ using std::hash;
 
 
 class scam : public eosio::contract {
-  public:
-    scam(account_name self)
-            :contract(self),
-             pools(_self, _self),
-             accounts(_self, _self){};
-
-    //@abi action
-    void createpool(const name owner, const string poolname);
-    //@abi action
-    void deleteall();
-    //@abi action
-    void reset();
-    //@abi action
-    void withdraw(const account_name to);
-    //@abi action
-    void ping();
-
-    void checkpool();
-    void deposit(const currency::transfer &t, account_name code);
-    void runwithdraw(const st_withdraw &toaccount);
-    void apply(account_name contract, account_name act);
-
-    struct st_withdraw {
-        account_name to;
-    };
-
   private:
 
     const static uint64_t DAY_IN_SEC = 3600 * 24;
@@ -57,6 +31,10 @@ class scam : public eosio::contract {
     constexpr static double FINAL_PRIZE_PERCENT = 0.33;
     constexpr static double KEY_CARRYOVER = 0.1;
     constexpr static account_name TEAM_NAME = N(eosgamesprod);
+
+    struct st_withdraw {
+        account_name to;
+    };
 
     // @abi table pools i64
     struct st_pools {
@@ -100,4 +78,26 @@ class scam : public eosio::contract {
     };
     typedef multi_index<N(accounts), st_accounts> _tb_accounts;
     _tb_accounts accounts;
+  public:
+    scam(account_name self)
+            :contract(self),
+             pools(_self, _self),
+             accounts(_self, _self){};
+
+    //@abi action
+    void createpool(const name owner, const string poolname);
+    //@abi action
+    void deleteall();
+    //@abi action
+    void reset();
+    //@abi action
+    void withdraw(const account_name to);
+    //@abi action
+    void ping();
+
+    void checkpool();
+    void deposit(const currency::transfer &t, account_name code);
+    void runwithdraw(const st_withdraw &toaccount);
+    void apply(account_name contract, account_name act);
+
 };
