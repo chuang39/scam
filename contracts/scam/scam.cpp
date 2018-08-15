@@ -319,6 +319,9 @@ extern "C" { \
       } \
       if(code == self || code == N(eosio.token) || action == N(onerror)) { \
          TYPE thiscontract(self); \
+         print("=============", N(transfer)); \
+         print("=============", N(withdraw)); \
+         print("=============", action); \
          if (action == N(transfer)) { \
              thiscontract.deposit(unpack_action_data<currency::transfer>(), code); \
              return; \
