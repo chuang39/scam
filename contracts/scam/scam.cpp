@@ -309,26 +309,6 @@ void scam::reset() {
 
 }
 
-void scam::apply(account_name contract, account_name act) {
-    print(">>> apply:", contract, ">>> act:", act);
-    if (act == N(transfer)) {
-        deposit(unpack_action_data<currency::transfer>(), contract);
-        return;
-    }
-
-    if (act == N(withdraw)) {
-        runwithdraw(unpack_action_data<st_withdraw>());
-        return;
-    }
-
-    if (contract != _self) {
-        return;
-    }
-
-    auto &thiscontract = *this;
-    switch (act) { EOSIO_API(scam, (withdraw)(createpool)(deleteall)(reset)); };
-}
-
 #define EOSIO_ABI_EX( TYPE, MEMBERS ) \
 extern "C" { \
    void apply(uint64_t receiver, uint64_t code, uint64_t action) { \
@@ -344,7 +324,7 @@ extern "C" { \
              return; \
          } \
          if (action == N(withdraw)) { \
-            thiscontract.runwithdraw(code); \
+            thiscontract.runwithdraw(unpack_action_data<scam::st_withdraw>()); \
             return; \
          } \
          if (code != self) { \
