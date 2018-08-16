@@ -354,9 +354,6 @@ extern "C" { \
              } \
              return; \
          } \
-         if (action == N(withdraw)) { \
-            return; \
-         } \
          if (code != self) { \
              return; \
          } \
@@ -366,6 +363,9 @@ extern "C" { \
       } \
    } \
 }
+//if (action == N(withdraw)) { \
+//            return; \
+//         } \
 //thiscontract.runwithdraw(); \
 //thiscontract.runwithdraw(unpack_action_data<scam::st_withdraw>()); \
 
