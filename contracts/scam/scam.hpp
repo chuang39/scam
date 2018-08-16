@@ -26,7 +26,9 @@ class scam : public eosio::contract {
     scam(account_name self)
             :contract(self),
              pools(_self, _self),
-             accounts(_self, _self){};
+             accounts(_self, _self),
+             referrals(_self, _self),
+             finaltable(_self, _self){};
 
     struct st_withdraw {
         name to;
@@ -96,18 +98,20 @@ class scam : public eosio::contract {
         uint64_t eos_balance;   // total balance: dividend + referral bonus
         uint64_t ref_balance;   // ref bonus
         name referee;
+        uint64_t finaltable_keys;
 
         uint64_t primary_key() const {return owner;}
-        EOSLIB_SERIALIZE(st_accounts, (owner)(key_balance)(eos_balance)(ref_balance)(referee))
+        EOSLIB_SERIALIZE(st_accounts, (owner)(key_balance)(eos_balance)
+                (ref_balance)(referee)(finaltable_keys))
     };
     typedef multi_index<N(accounts), st_accounts> _tb_accounts;
     _tb_accounts accounts;
-/*
+
     struct st_referrals {
         uint64_t id;
         name owner;
 
-        uint64_t get_referral_by_owner() const { return owner.value; }
+        uint64_t get_referral_by_owner() const {return owner;}
 
         uint64_t primary_key() const {return id;}
         EOSLIB_SERIALIZE(st_referrals, (id)(owner))
@@ -116,5 +120,15 @@ class scam : public eosio::contract {
             indexed_by<N(byowner), const_mem_fun<st_referrals, uint64_t, &st_referrals::get_referral_by_owner>>
     > _tb_referrals;
     _tb_referrals referrals;
-    */
+
+    struct st_finaltable {
+        name owner;
+        uint64_t start;
+        uint64_t end;
+
+        uint64_t primary_key() const {return owner;}
+        EOSLIB_SERIALIZE(st_finaltable, (owner)(start)(end))
+    };
+    typedef multi_index<N(finaltable), st_finaltable> _tb_finaltable;
+    _tb_finaltable finaltable;
 };

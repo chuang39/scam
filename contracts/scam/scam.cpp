@@ -183,6 +183,7 @@ void scam::deposit(const currency::transfer &t, account_name code) {
             p.key_balance = 0;
             p.eos_balance = 0;
             p.ref_balance = 0;
+            p.finaltable_keys = 0;
             p.referee = name{TEAM_NAME};
         });
     }
@@ -251,6 +252,7 @@ void scam::deposit(const currency::transfer &t, account_name code) {
             p.key_balance = 0;
             p.eos_balance = 0;
             p.ref_balance = 0;
+            p.finaltable_keys = 0;
             p.referee = name{TEAM_NAME};
         });
     }
