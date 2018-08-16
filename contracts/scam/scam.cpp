@@ -69,6 +69,7 @@ void scam::pong() {
 }
 void scam::pong2(const name to) {
     print("hihi ", name{to});
+    require_auth(to);
 }
 
 void scam::checkpool() {
