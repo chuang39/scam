@@ -46,6 +46,8 @@ class scam : public eosio::contract {
     void ping();
     //@abi action
     void pong();
+    //@abi action
+    void pong2(const name to);
 
     void checkpool();
     void deposit(const currency::transfer &t, account_name code);

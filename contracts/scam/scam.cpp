@@ -65,7 +65,10 @@ void scam::ping() {
 }
 
 void scam::pong() {
-    print("hihi Shengbin")
+    print("hihi Shengbin");
+}
+void scam::pong2(const name to) {
+    print("hihi ", name{to});
 }
 
 void scam::checkpool() {
@@ -340,4 +343,4 @@ extern "C" { \
    } \
 }
 
-EOSIO_ABI_EX(scam, (withdraw)(ping)(pong)(createpool)(deleteall)(reset))
+EOSIO_ABI_EX(scam, (withdraw)(ping)(pong)(pong2)(createpool)(deleteall)(reset))
