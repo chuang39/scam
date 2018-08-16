@@ -26,7 +26,7 @@ class scam : public eosio::contract {
     scam(account_name self)
             :contract(self),
              pools(_self, _self),
-             accounts(_self, _self){};
+             accounts(_self, _self),
              referrals(_self, _self),
              finaltable(_self, _self){};
 
