@@ -26,9 +26,9 @@ class scam : public eosio::contract {
     scam(account_name self)
             :contract(self),
              pools(_self, _self),
-             accounts(_self, _self),
-             referrals(_self, _self),
-             finaltable(_self, _self){};
+             accounts(_self, _self){};
+             //referrals(_self, _self),
+             //finaltable(_self, _self){};
 
     struct st_withdraw {
         name to;
@@ -44,6 +44,8 @@ class scam : public eosio::contract {
     void withdraw(const name to);
     //@abi action
     void ping();
+    //@abi action
+    void pong();
 
     void checkpool();
     void deposit(const currency::transfer &t, account_name code);
@@ -107,6 +109,7 @@ class scam : public eosio::contract {
     typedef multi_index<N(accounts), st_accounts> _tb_accounts;
     _tb_accounts accounts;
 
+    /*
     struct st_referrals {
         uint64_t id;
         name owner;
@@ -131,4 +134,5 @@ class scam : public eosio::contract {
     };
     typedef multi_index<N(finaltable), st_finaltable> _tb_finaltable;
     _tb_finaltable finaltable;
+     */
 };

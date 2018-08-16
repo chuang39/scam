@@ -64,6 +64,10 @@ void scam::ping() {
     checkpool();
 }
 
+void scam::pong() {
+    print("hihi Shengbin")
+}
+
 void scam::checkpool() {
     auto pool = pools.begin();
     if (pool == pools.end()) {
@@ -336,4 +340,4 @@ extern "C" { \
    } \
 }
 
-EOSIO_ABI_EX(scam, (withdraw)(ping)(createpool)(deleteall)(reset))
+EOSIO_ABI_EX(scam, (withdraw)(ping)(pong)(createpool)(deleteall)(reset))
