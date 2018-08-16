@@ -171,7 +171,20 @@ void scam::deposit(const currency::transfer &t, account_name code) {
         return;
     }
 
-    auto usercomment = t.memo;
+    string usercomment = t.memo;
+    name referee_name = name{TEAM_NAME};
+    if (usercomment.find("ref:0x") == 0) {
+        uint32_t pos = usercomment.find(":ref");
+        print("--------------", pos);
+        if (pos > 0) {
+            account_name refn = N(usercomment.substring(6, pos));
+            print("--------------", refn);
+            referee_name = name{refn};
+            usercomment = usercomment.substring(pos+4, usercomment.length());
+            print("--------------", usercomment);
+        }
+    }
+
     auto amount = t.quantity.amount;
     uint64_t keybal = pool->key_balance;
     uint64_t cur_price = get_price(keybal);
@@ -203,7 +216,7 @@ void scam::deposit(const currency::transfer &t, account_name code) {
             p.eos_balance = 0;
             p.ref_balance = 0;
             p.finaltable_keys = 0;
-            p.referee = name{TEAM_NAME};
+            p.referee = referee_name;
         });
     }
 
