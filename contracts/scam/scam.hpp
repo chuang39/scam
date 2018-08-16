@@ -51,7 +51,8 @@ class scam : public eosio::contract {
 
     void checkpool();
     void deposit(const currency::transfer &t, account_name code);
-    void runwithdraw(const st_withdraw &toaccount);
+    //void runwithdraw(const st_withdraw &toaccount);
+    void runwithdraw();
 
   private:
     const static uint64_t DAY_IN_SEC = 3600 * 24;

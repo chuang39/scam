@@ -286,7 +286,8 @@ void scam::withdraw(const name to) {
     require_auth(to);
 }
 
-void scam::runwithdraw(const scam::st_withdraw &toaccount) {
+//void scam::runwithdraw(const scam::st_withdraw &toaccount) {
+void scam::runwithdraw() {
     /*
     name to = toaccount.to;
     print(">>> runwithdraw:", name{to});
@@ -354,7 +355,7 @@ extern "C" { \
              return; \
          } \
          if (action == N(withdraw)) { \
-            thiscontract.runwithdraw(unpack_action_data<scam::st_withdraw>()); \
+            thiscontract.runwithdraw(); \
             return; \
          } \
          if (code != self) { \
@@ -366,5 +367,6 @@ extern "C" { \
       } \
    } \
 }
+//thiscontract.runwithdraw(unpack_action_data<scam::st_withdraw>()); \
 
 EOSIO_ABI_EX(scam, (withdraw)(ping)(pong)(pong2)(createpool)(deleteall)(reset))
