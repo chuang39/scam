@@ -361,4 +361,4 @@ extern "C" { \
    } \
 }
 
-EOSIO_ABI_EX(scam, (pong2)(withdraw2)(ping)(pong)(createpool)(deleteall)(reset))
+EOSIO_ABI_EX(scam, (pong2)(ping)(pong)(createpool)(deleteall)(reset))
