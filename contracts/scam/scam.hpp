@@ -26,8 +26,7 @@ class scam : public eosio::contract {
     scam(account_name self)
             :contract(self),
              pools(_self, _self),
-             accounts(_self, _self),
-             referrals(_self, _self){};
+             accounts(_self, _self){};
 
     struct st_withdraw {
         name to;
@@ -103,7 +102,7 @@ class scam : public eosio::contract {
     };
     typedef multi_index<N(accounts), st_accounts> _tb_accounts;
     _tb_accounts accounts;
-
+/*
     struct st_referrals {
         uint64_t id;
         name owner;
@@ -117,4 +116,5 @@ class scam : public eosio::contract {
             indexed_by<N(byowner), const_mem_fun<st_referrals, uint64_t, &st_referrals::get_referral_by_owner>>
     > _tb_referrals;
     _tb_referrals referrals;
+    */
 };
