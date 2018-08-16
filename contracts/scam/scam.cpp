@@ -151,6 +151,18 @@ void scam::deposit(const currency::transfer &t, account_name code) {
     eosio_assert(t.quantity.is_valid(), "Invalid token transfer");
     eosio_assert(t.quantity.amount > 0, "Quantity must be positive");
 
+    auto user = t.from;
+    if (t.quentity.amount == 0.001) {
+        auto owner_refs = referrals.get_index<N(byowner)>();
+        auto ref_itr = owner_refs.find(owner);
+        eosio_assert(last_pet_itr == owner_refs.end(), "User already registered");
+        referrals.emplace(_self, [&](auto &p){
+            p.id = referrals.available_primary_key();
+            p.owner = name{user};
+        });
+        return;
+    }
+
     // find pool
     auto pool = pools.begin();
     if (pool == pools.end()) {
@@ -158,7 +170,6 @@ void scam::deposit(const currency::transfer &t, account_name code) {
         return;
     }
 
-    auto user = t.from;
     auto usercomment = t.memo;
     auto amount = t.quantity.amount;
     uint64_t keybal = pool->key_balance;

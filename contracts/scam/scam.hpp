@@ -111,7 +111,6 @@ class scam : public eosio::contract {
     typedef multi_index<N(accounts), st_accounts> _tb_accounts;
     _tb_accounts accounts;
 
-    /*
     struct st_referrals {
         uint64_t id;
         name owner;
@@ -136,5 +135,4 @@ class scam : public eosio::contract {
     };
     typedef multi_index<N(finaltable), st_finaltable> _tb_finaltable;
     _tb_finaltable finaltable;
-     */
 };
