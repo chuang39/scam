@@ -271,7 +271,7 @@ void scam::deposit(const currency::transfer &t, account_name code) {
 
 void scam::withdraw(const name to) {
     print(">>> withdraw:", name{to});
-    //require_auth(to);
+    require_auth(to);
 }
 
 void scam::runwithdraw(const scam::st_withdraw &toaccount) {
