@@ -111,6 +111,7 @@ class scam : public eosio::contract {
     typedef multi_index<N(accounts), st_accounts> _tb_accounts;
     _tb_accounts accounts;
 
+    // @abi table referrals i64
     struct st_referrals {
         uint64_t id;
         name owner;
