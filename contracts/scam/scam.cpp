@@ -317,6 +317,16 @@ void scam::deleteall() {
     while (itr_acnt != accounts.end()) {
         itr_acnt = accounts.erase(itr_acnt);
     }
+
+    auto itr_ref = referrals.begin();
+    while (itr_ref != referrals.end()) {
+        itr_ref = referrals.erase(itr_ref);
+    }
+
+    auto itr_ft = finaltable.begin();
+    while (itr_ft != finaltable.end()) {
+        itr_ft = finaltable.erase(itr_ft);
+    }
 }
 
 void scam::reset() {
