@@ -29,7 +29,7 @@ class scam : public eosio::contract {
              accounts(_self, _self){};
 
     struct st_withdraw {
-        account_name to;
+        name to;
     };
 
     //@abi action
@@ -39,7 +39,7 @@ class scam : public eosio::contract {
     //@abi action
     void reset();
     //@abi action
-    void withdraw(const account_name to);
+    void withdraw(const name to);
     //@abi action
     void ping();
 

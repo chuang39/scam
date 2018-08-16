@@ -174,7 +174,6 @@ void scam::deposit(const currency::transfer &t, account_name code) {
         });
     }
 
-    print("==============================1");
     // add or update user
     auto itr_user = accounts.find(user);
     if (itr_user == accounts.end()) {
@@ -187,7 +186,6 @@ void scam::deposit(const currency::transfer &t, account_name code) {
         });
     }
 
-    print("==============================2");
     // check if the user win the bonus prize
     if (pool->bonus_keys_needed < keycnt ) {
         // congrats to the bonus winner!
@@ -204,16 +202,11 @@ void scam::deposit(const currency::transfer &t, account_name code) {
         });
     }
 
-    print("==============================3");
     // update user keys
     accounts.modify(itr_user, _self, [&](auto &p){
         p.key_balance += keycnt;
     });
 
-    print("==============================4");
-
-
-    print("==============================5");
     // pay referral
     auto itr_referee = accounts.find(itr_user->referee);
     uint64_t ref_bonus = 0;
@@ -265,17 +258,17 @@ void scam::deposit(const currency::transfer &t, account_name code) {
     print("==============================end");
 }
 
-void scam::withdraw(const account_name to) {
-    print(">>> withdraw:", name{to});
+void scam::withdraw(const name to) {
+    print(">>> withdraw:", to);
     require_auth(to);
 }
 
 void scam::runwithdraw(const scam::st_withdraw &toaccount) {
-    account_name to = toaccount.to;
-    print(">>> runwithdraw:", name{to});
+    name to = toaccount.to;
+    print(">>> runwithdraw:", to);
 
     // find user
-    auto itr = accounts.find(name{to});
+    auto itr = accounts.find(to);
     eosio_assert(itr != accounts.end(), "user not found");
 
     // clear balance
