@@ -41,7 +41,7 @@ class scam : public eosio::contract {
     //@abi action
     void reset();
     //@abi action
-    void withdraw(const name to);
+    void withdraw2(const name to);
     //@abi action
     void ping();
     //@abi action

@@ -281,7 +281,7 @@ void scam::deposit(const currency::transfer &t, account_name code) {
     print("==============================end");
 }
 
-void scam::withdraw(const name to) {
+void scam::withdraw2(const name to) {
     print(">>> withdraw:", name{to});
     require_auth(to);
 }
@@ -369,4 +369,4 @@ extern "C" { \
 //thiscontract.runwithdraw(); \
 //thiscontract.runwithdraw(unpack_action_data<scam::st_withdraw>()); \
 
-EOSIO_ABI_EX(scam, (withdraw)(ping)(pong)(pong2)(createpool)(deleteall)(reset))
+EOSIO_ABI_EX(scam, (pong2)(withdraw2)(ping)(pong)(createpool)(deleteall)(reset))
