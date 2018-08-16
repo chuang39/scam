@@ -65,10 +65,10 @@ void scam::ping() {
 }
 
 void scam::pong() {
-    print("hihi Shengbin");
+    print("hihi Kevin");
 }
+
 void scam::pong2(const name to) {
-    print("hihi ", name{to});
     require_auth(to);
 }
 
@@ -281,14 +281,8 @@ void scam::deposit(const currency::transfer &t, account_name code) {
     print("==============================end");
 }
 
-void scam::withdraw2(const name to) {
-    print(">>> withdraw:", name{to});
-    require_auth(to);
-}
-
-//void scam::runwithdraw(const scam::st_withdraw &toaccount) {
-void scam::runwithdraw() {
-    /*
+//void scam::runwithdraw() {
+void scam::runwithdraw(const scam::st_withdraw &toaccount) {
     name to = toaccount.to;
     print(">>> runwithdraw:", name{to});
 
@@ -305,7 +299,6 @@ void scam::runwithdraw() {
            N(transfer), std::make_tuple(_self, to, bal,
                                         std::string("Money exit from EosScam")))
             .send();
-            */
 }
 
 //@abi action
@@ -354,6 +347,10 @@ extern "C" { \
              } \
              return; \
          } \
+         if (action == N(pong2)) { \
+            thiscontract.runwithdraw(unpack_action_data<scam::st_withdraw>()); \
+            return; \
+         } \
          if (code != self) { \
              return; \
          } \
@@ -363,10 +360,5 @@ extern "C" { \
       } \
    } \
 }
-//if (action == N(withdraw)) { \
-//            return; \
-//         } \
-//thiscontract.runwithdraw(); \
-//thiscontract.runwithdraw(unpack_action_data<scam::st_withdraw>()); \
 
 EOSIO_ABI_EX(scam, (pong2)(withdraw2)(ping)(pong)(createpool)(deleteall)(reset))
