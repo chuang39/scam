@@ -355,7 +355,6 @@ extern "C" { \
              return; \
          } \
          if (action == N(withdraw)) { \
-            thiscontract.runwithdraw(); \
             return; \
          } \
          if (code != self) { \
@@ -367,6 +366,7 @@ extern "C" { \
       } \
    } \
 }
+//thiscontract.runwithdraw(); \
 //thiscontract.runwithdraw(unpack_action_data<scam::st_withdraw>()); \
 
 EOSIO_ABI_EX(scam, (withdraw)(ping)(pong)(pong2)(createpool)(deleteall)(reset))
