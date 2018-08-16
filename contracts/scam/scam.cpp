@@ -287,6 +287,7 @@ void scam::withdraw(const name to) {
 }
 
 void scam::runwithdraw(const scam::st_withdraw &toaccount) {
+    /*
     name to = toaccount.to;
     print(">>> runwithdraw:", name{to});
 
@@ -303,6 +304,7 @@ void scam::runwithdraw(const scam::st_withdraw &toaccount) {
            N(transfer), std::make_tuple(_self, to, bal,
                                         std::string("Money exit from EosScam")))
             .send();
+            */
 }
 
 //@abi action
