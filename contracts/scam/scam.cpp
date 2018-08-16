@@ -152,7 +152,7 @@ void scam::deposit(const currency::transfer &t, account_name code) {
     eosio_assert(t.quantity.amount > 0, "Quantity must be positive");
 
     auto user = t.from;
-    if (t.quantity.amount == 0.001) {
+    if (t.quantity.amount == 10) {
         auto owner_refs = referrals.get_index<N(byowner)>();
         auto ref_itr = owner_refs.find(user);
         eosio_assert(ref_itr == owner_refs.end(), "User already registered");
