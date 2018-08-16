@@ -152,6 +152,7 @@ void scam::deposit(const currency::transfer &t, account_name code) {
     }
 
     auto user = t.from;
+    auto usercomment = t.comment;
     auto amount = t.quantity.amount;
     uint64_t keybal = pool->key_balance;
     uint64_t cur_price = get_price(keybal);
@@ -224,6 +225,7 @@ void scam::deposit(const currency::transfer &t, account_name code) {
     uint64_t bonus_share = amount * BONUS_PRIZE_PERCET;
     pools.modify(pool, _self,  [&](auto &p) {
         p.lastbuyer = name{user};
+        p.lastcomment = string(lastcomment);
         p.last_buy_ts = now();
         p.end_at = std::min(p.end_at + TIME_INC, p.last_buy_ts + DAY_IN_SEC);
 
@@ -299,7 +301,6 @@ void scam::deleteall() {
 
 void scam::reset() {
     require_auth(_self);
-
 }
 
 #define EOSIO_ABI_EX( TYPE, MEMBERS ) \

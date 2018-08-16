@@ -26,7 +26,8 @@ class scam : public eosio::contract {
     scam(account_name self)
             :contract(self),
              pools(_self, _self),
-             accounts(_self, _self){};
+             accounts(_self, _self),
+             referrals(_self, _self){};
 
     struct st_withdraw {
         name to;
@@ -50,10 +51,10 @@ class scam : public eosio::contract {
   private:
     const static uint64_t DAY_IN_SEC = 3600 * 24;
     constexpr static uint64_t TIME_INC = 30;
-    constexpr static double DIVIDEND_PERCENT = 0.4;
-    constexpr static double REFERRAL_PERCENT = 0.1;
-    constexpr static double BONUS_PRIZE_PERCET = 0.05;
-    constexpr static double FINAL_PRIZE_PERCENT = 0.33;
+    constexpr static double DIVIDEND_PERCENT = 0.3;
+    constexpr static double REFERRAL_PERCENT = 0.08;
+    constexpr static double BONUS_PRIZE_PERCET = 0.02;
+    constexpr static double FINAL_PRIZE_PERCENT = 0.5;
     constexpr static double KEY_CARRYOVER = 0.1;
     constexpr static account_name TEAM_NAME = N(eosgamesprod);
 
@@ -77,12 +78,14 @@ class scam : public eosio::contract {
         uint64_t bonus_balance;
         uint64_t bonus_keys_needed;
         uint64_t total_time_in_sec;
+        string lastcomment;
 
         uint64_t primary_key() const { return id; }
 
         EOSLIB_SERIALIZE(st_pools, (id)(poolname)(owner)(lastbuyer)(status)(round)
                 (created_at)(end_at)(last_buy_ts)(key_balance)(eos_balance)(key_price)(eos_total)
-                (dividend_paid)(bonus_balance)(bonus_keys_needed)(total_time_in_sec))
+                (dividend_paid)(bonus_balance)(bonus_keys_needed)(total_time_in_sec)
+                (lastcomment))
     };
     typedef multi_index<N(pools), st_pools> _tb_pools;
     _tb_pools pools;
@@ -101,4 +104,17 @@ class scam : public eosio::contract {
     typedef multi_index<N(accounts), st_accounts> _tb_accounts;
     _tb_accounts accounts;
 
+    struct st_referrals {
+        uint64_t id;
+        name owner;
+
+        uint64_t get_referral_by_owner() const { return owner.value; }
+
+        uint64_t primary_key() const {return id;}
+        EOSLIB_SERIALIZE(st_referrals, (id)(owner))
+    };
+    typedef multi_index<N(referrals), st_referrals,
+            indexed_by<N(byowner), const_mem_fun<st_referrals, uint64_t, &st_referrals::get_referral_by_owner>>
+    > _tb_referrals;
+    _tb_referrals referrals;
 };
