@@ -76,19 +76,15 @@ void scam::pong2(const name to) {
 
 void scam::checkpool() {
     auto pool = pools.begin();
-    if (pool == pools.end()) {
-        print(">>> no pool is found");
-        return;
-    } else {
-        print(">>> current time: ", now());
-        print(">>> found the poolname: ", pool->poolname);
-        print(">>> found the round: ", pool->round);
-        print(">>> found the onwer: ", pool->owner);
-        print(">>> found the created_at: ", pool->created_at);
-        print(">>> found the end_at: ", pool->end_at);
-        print(">>> found the key_balance: ", pool->key_balance);
-        print(">>> found the eos_balance: ", pool->eos_balance);
-    }
+    eosio_assert(pool != pools.end(), "No pool is found");
+    print(">>> current time: ", now());
+    print(">>> found the poolname: ", pool->poolname);
+    print(">>> found the round: ", pool->round);
+    print(">>> found the onwer: ", pool->owner);
+    print(">>> found the created_at: ", pool->created_at);
+    print(">>> found the end_at: ", pool->end_at);
+    print(">>> found the key_balance: ", pool->key_balance);
+    print(">>> found the eos_balance: ", pool->eos_balance);
 
     if (pool->end_at <= now()) {
         // Get the number of key we hold and discard for finaltable
