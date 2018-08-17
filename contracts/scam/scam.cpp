@@ -91,7 +91,9 @@ void scam::checkpool() {
     }
 
     //update final table
-    uint64_t dump_size = pool->key_balance * (1 - FINAL_TABLE_PORTION);
+    uint64_t finaltable_size = pool->key_balance * FINAL_TABLE_PORTION;
+    uint64_t dump_size = pool->key_balance - finaltable_size;
+
     auto itr_ft = finaltable.begin();
     while (itr_ft != finaltable.end()) {
         if (itr_ft->end <= dump_size) {
@@ -143,6 +145,24 @@ void scam::checkpool() {
         }
         auto itr2 = finaltable.begin();
         while (itr2 != finaltable.end()) {
+            // final check on each user's final table chips
+            if (itr2->end <= dump_size) {
+                auto itr_fter = accounts.find(itr2->owner);
+                if (itr_fter != accounts.end()) {
+                    uint64_t reduced_keys = itr2->end - itr2->start + 1;
+                    accounts.modify(itr_fter, _self, [&](auto &p){
+                        p.finaltable_keys -= reduced_keys;
+                    });
+                }
+            } else if (itr2->start <= dump_size) {
+                auto itr_fter = accounts.find(itr2->owner);
+                if (itr_fter != accounts.end()) {
+                    accounts.modify(itr_fter, _self, [&](auto &p){
+                        p.finaltable_keys -= (dump_size - itr2->start + 1);
+                    });
+                }
+                break;
+            }
             itr2 = finaltable.erase(itr2);
         }
 
@@ -153,7 +173,7 @@ void scam::checkpool() {
             accounts.modify(itr, _self, [&](auto &p){
                 //uint64_t newkeybal = p.key_balance * KEY_CARRYOVER;
                 p.key_balance = 0;
-                uint64_t ftprize = balance_finaltable * ((double)p.finaltable_keys / (double)dump_size);
+                uint64_t ftprize = balance_finaltable * ((double)p.finaltable_keys / (double)finaltable_size);
                 p.eos_balance += ftprize;
                 p.finaltable_keys = 0;
 
