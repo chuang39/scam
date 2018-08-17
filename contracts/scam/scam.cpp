@@ -90,38 +90,11 @@ void scam::checkpool() {
         print(">>> found the eos_balance: ", pool->eos_balance);
     }
 
-    //update final table
-    uint64_t finaltable_size = pool->key_balance * FINAL_TABLE_PORTION;
-    uint64_t dump_size = pool->key_balance - finaltable_size;
-
-    auto itr_ft = finaltable.begin();
-    while (itr_ft != finaltable.end()) {
-        if (itr_ft->end <= dump_size) {
-            auto itr_fter = accounts.find(itr_ft->owner);
-            if (itr_fter != accounts.end()) {
-                uint64_t reduced_keys = itr_ft->end - itr_ft->start + 1;
-                accounts.modify(itr_fter, _self, [&](auto &p){
-                    p.finaltable_keys -= reduced_keys;
-                });
-            }
-            itr_ft = finaltable.erase(itr_ft);
-        } else if (itr_ft->start <= dump_size) {
-            auto itr_fter = accounts.find(itr_ft->owner);
-            if (itr_fter != accounts.end()) {
-                accounts.modify(itr_fter, _self, [&](auto &p){
-                    p.finaltable_keys -= (dump_size - itr_ft->start + 1);
-                });
-                finaltable.modify(itr_ft, _self, [&](auto &p){
-                    p.start = dump_size + 1;
-                });
-            }
-            break;
-        } else {
-            break;
-        }
-    }
-
     if (pool->end_at <= now()) {
+        // Get the number of key we hold and discard for finaltable
+        uint64_t finaltable_size = pool->key_balance * FINAL_TABLE_PORTION;
+        uint64_t dump_size = pool->key_balance - finaltable_size;
+        // Get the balance for jackpot and final table
         auto balance_finaltable = pool->eos_balance * FINAL_TABLE_PERCENT;
         auto balance_jackpot = pool->eos_balance - balance_finaltable;
 
@@ -268,6 +241,36 @@ void scam::deposit(const currency::transfer &t, account_name code) {
     uint64_t newkeycnt = keybal + keycnt;
     uint64_t new_price = get_price(newkeycnt);
 
+    //update final table
+    uint64_t finaltable_size = pool->key_balance * FINAL_TABLE_PORTION;
+    uint64_t dump_size = pool->key_balance - finaltable_size;
+    auto itr_ft = finaltable.begin();
+    while (itr_ft != finaltable.end()) {
+        if (itr_ft->end <= dump_size) {
+            auto itr_fter = accounts.find(itr_ft->owner);
+            if (itr_fter != accounts.end()) {
+                uint64_t reduced_keys = itr_ft->end - itr_ft->start + 1;
+                accounts.modify(itr_fter, _self, [&](auto &p){
+                    p.finaltable_keys -= reduced_keys;
+                });
+            }
+            itr_ft = finaltable.erase(itr_ft);
+        } else if (itr_ft->start <= dump_size) {
+            auto itr_fter = accounts.find(itr_ft->owner);
+            if (itr_fter != accounts.end()) {
+                accounts.modify(itr_fter, _self, [&](auto &p){
+                    p.finaltable_keys -= (dump_size - itr_ft->start + 1);
+                });
+                finaltable.modify(itr_ft, _self, [&](auto &p){
+                    p.start = dump_size + 1;
+                });
+            }
+            break;
+        } else {
+            break;
+        }
+    }
+
     // pay dividend
     uint64_t dividend = accounts.begin() == accounts.end() ? 0 : (amount * DIVIDEND_PERCENT);
     uint64_t dividend_paid = 0;
@@ -307,6 +310,7 @@ void scam::deposit(const currency::transfer &t, account_name code) {
            p.bonus_keys_needed = next_level_keys;
         });
         accounts.modify(itr_user, _self, [&](auto &p){
+            p.bonus_balance += sweetiebonus;
             p.eos_balance += sweetiebonus;
         });
     }
