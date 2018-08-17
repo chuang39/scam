@@ -134,7 +134,7 @@ class scam : public eosio::contract {
         uint64_t start;
         uint64_t end;
 
-        uint64_t primary_key() const {return start;}
+        uint64_t primary_key() const {return end;}
         EOSLIB_SERIALIZE(st_finaltable, (owner)(start)(end))
     };
     typedef multi_index<N(finaltable), st_finaltable> _tb_finaltable;
