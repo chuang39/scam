@@ -100,7 +100,7 @@ void scam::checkpool() {
                 uint64_t reduced_keys = itr_ft->end - itr_ft->start + 1;
                 accounts.modify(itr_fter, _self, [&](auto &p){
                     p.finaltable_keys -= reduced_keys;
-                };
+                });
             }
             itr_ft = finaltable.erase(itr_ft);
         } else if (itr_ft->start <= dump_size) {
@@ -108,10 +108,10 @@ void scam::checkpool() {
             if (itr_fter != accounts.end()) {
                 accounts.modify(itr_fter, _self, [&](auto &p){
                     p.finaltable_keys -= (dump_size - itr_ft->start + 1);
-                };
+                });
                 finaltable.modify(itr_ft, _self, [&](auto &p){
                     p.start = dump_size + 1;
-                };
+                });
             }
             break;
         } else {
