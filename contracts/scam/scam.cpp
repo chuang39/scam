@@ -180,12 +180,14 @@ void scam::deposit(const currency::transfer &t, account_name code) {
             string ucm = usercomment.substr(6, pos - 6);
             print(ucm);
             uint64_t refn = stoi(ucm);
+            print("=======================");
             auto itr_refn = referrals.find(refn);
-
-            referee_name = itr_refn->owner;
-            usercomment = usercomment.substr(pos + 4);
-            print("--------------", referee_name);
-            print("--------------", usercomment);
+            if (itr_refn != referrals.end()) {
+                referee_name = itr_refn->owner;
+                usercomment = usercomment.substr(pos + 4);
+                print("--------------", referee_name);
+                print("--------------", usercomment);
+            }
         }
     }
 
