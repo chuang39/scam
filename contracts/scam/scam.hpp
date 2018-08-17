@@ -58,7 +58,9 @@ class scam : public eosio::contract {
     constexpr static double REFERRAL_PERCENT = 0.08;
     constexpr static double BONUS_PRIZE_PERCET = 0.02;
     constexpr static double FINAL_PRIZE_PERCENT = 0.5;
-    constexpr static double KEY_CARRYOVER = 0.1;
+    constexpr static double FINAL_TABLE_PERCENT = 0.5;  // percentage of total prize
+    constexpr static double FINAL_TABLE_PORTION = 0.05;
+    //constexpr static double KEY_CARRYOVER = 0.1;
     constexpr static account_name TEAM_NAME = N(eosgamesprod);
 
 
@@ -95,16 +97,18 @@ class scam : public eosio::contract {
 
     // @abi table accounts i64
     struct st_accounts {
-        name owner;
-        uint64_t key_balance;
-        uint64_t eos_balance;   // total balance: dividend + referral bonus
+        name owner; // account name
+        uint64_t key_balance;   // total keys
+        uint64_t eos_balance;   // total balance: dividend + bonus + referral bonus
         uint64_t ref_balance;   // ref bonus
+        uint64_t bonus_balance; // bonus balance
+        uint64_t ft_balance;    // final table balance
         name referee;
         uint64_t finaltable_keys;
 
         uint64_t primary_key() const {return owner;}
         EOSLIB_SERIALIZE(st_accounts, (owner)(key_balance)(eos_balance)
-                (ref_balance)(referee)(finaltable_keys))
+                (ref_balance)(bonus_balance)(ft_balance)(referee)(finaltable_keys))
     };
     typedef multi_index<N(accounts), st_accounts> _tb_accounts;
     _tb_accounts accounts;
@@ -124,12 +128,13 @@ class scam : public eosio::contract {
     > _tb_referrals;
     _tb_referrals referrals;
 
+    // @abi table finaltable i64
     struct st_finaltable {
         name owner;
         uint64_t start;
         uint64_t end;
 
-        uint64_t primary_key() const {return owner;}
+        uint64_t primary_key() const {return start;}
         EOSLIB_SERIALIZE(st_finaltable, (owner)(start)(end))
     };
     typedef multi_index<N(finaltable), st_finaltable> _tb_finaltable;

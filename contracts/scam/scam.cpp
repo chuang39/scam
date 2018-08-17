@@ -9,6 +9,8 @@ uint64_t pricemap[8][2] = {{100000 * 16, 100},
                                 {100000 * 768, 1109},
                                 {100000 * 1536, 1794},
                                 {100000 * 3072, 2903}};
+// TODO: add exception for overflow
+
 
 uint64_t get_price(uint64_t sold_keys) {
     for (int i = 0; i < 8; i++) {
@@ -88,12 +90,45 @@ void scam::checkpool() {
         print(">>> found the eos_balance: ", pool->eos_balance);
     }
 
+    //update final table
+    uint64_t dump_size = pool->key_balance * (1 - FINAL_TABLE_PORTION);
+    auto itr_ft = finaltable.begin();
+    while (itr_ft != finaltable.end()) {
+        if (itr_ft->end <= dump_size) {
+            auto itr_fter = accounts.find(itr_ft->owner);
+            if (itr_fter != accounts.end()) {
+                uint64_t reduced_keys = itr_ft->end - itr_ft->start + 1;
+                accounts.modify(itr_fter, _self, [&](auto &p){
+                    p.finaltable_keys -= reduced_keys;
+                };
+            }
+            itr_ft = finaltable.erase(itr_ft);
+        } else if (itr_ft->start <= dump_size) {
+            auto itr_fter = accounts.find(itr_ft->owner);
+            if (itr_fter != accounts.end()) {
+                accounts.modify(itr_fter, _self, [&](auto &p){
+                    p.finaltable_keys -= (dump_size - itr_ft->start + 1);
+                };
+                finaltable.modify(itr_ft, _self, [&](auto &p){
+                    p.start = dump_size + 1;
+                };
+            }
+            break;
+        } else {
+            break;
+        }
+    }
+
     if (pool->end_at <= now()) {
+        auto balance_finaltable = pool->eos_balance * FINAL_TABLE_PERCENT;
+        auto balance_jackpot = pool->eos_balance - balance_finaltable;
+
+        // pay the jackpot winner
         auto winner = pool->lastbuyer;
         auto itr_winner = accounts.find(winner);
         if (itr_winner != accounts.end()) {
             accounts.modify(itr_winner, _self, [&](auto &p){
-                p.eos_balance += pool->eos_balance;
+                p.eos_balance += balance_jackpot;
             });
         }
 
@@ -106,12 +141,26 @@ void scam::checkpool() {
         while (itr != pools.end()) {
             itr = pools.erase(itr);
         }
+        auto itr2 = finaltable.begin();
+        while (itr2 != finaltable.end()) {
+            itr2 = finaltable.erase(itr2);
+        }
 
+        // pay tournament winners on final table
         // update accounts key_balance for new round
+
         for (auto itr = accounts.begin(); itr != accounts.end(); itr++) {
             accounts.modify(itr, _self, [&](auto &p){
-                uint64_t newkeybal = p.key_balance * KEY_CARRYOVER;
-                p.key_balance = newkeybal;
+                //uint64_t newkeybal = p.key_balance * KEY_CARRYOVER;
+                p.key_balance = 0;
+                uint64_t ftprize = balance_finaltable * ((double)p.finaltable_keys / (double)dump_size);
+                p.eos_balance += ftprize;
+                p.finaltable_keys = 0;
+
+                // TODO: clearing all here is better?
+                p.ref_balance = 0;
+                p.bonus_balance = 0;
+                p.ft_balance = 0;
             });
         }
         // start new round
@@ -173,9 +222,9 @@ void scam::deposit(const currency::transfer &t, account_name code) {
 
     string usercomment = t.memo;
     name referee_name = name{TEAM_NAME};
+    // check if user comes from referral or not
     if (usercomment.find("ref:0x") == 0) {
         uint32_t pos = usercomment.find(":ref");
-        print("--------------", pos);
         if (pos > 0) {
             string ucm = usercomment.substr(6, pos - 6);
             print(ucm);
@@ -184,6 +233,7 @@ void scam::deposit(const currency::transfer &t, account_name code) {
             auto itr_refn = referrals.find(refn);
             if (itr_refn != referrals.end()) {
                 referee_name = itr_refn->owner;
+                eosio_assert(referee_name != user, "Referring yourself is not allowed.");
                 usercomment = usercomment.substr(pos + 4);
                 print(">>> referee:", referee_name);
                 print(">>> comment", usercomment);
@@ -195,17 +245,13 @@ void scam::deposit(const currency::transfer &t, account_name code) {
     uint64_t keybal = pool->key_balance;
     uint64_t cur_price = get_price(keybal);
     uint64_t keycnt = amount / cur_price;
-    uint64_t new_price = get_price(keybal + keycnt);
+    uint64_t newkeycnt = keybal + keycnt;
+    uint64_t new_price = get_price(newkeycnt);
 
-    // TODO: user and referee cannot be the same person
-    print("==============================0");
     // pay dividend
     uint64_t dividend = accounts.begin() == accounts.end() ? 0 : (amount * DIVIDEND_PERCENT);
     uint64_t dividend_paid = 0;
     for (auto itr = accounts.begin(); itr != accounts.end(); itr++) {
-        print("==============================", itr->key_balance);
-        print("==============================", keybal);
-        print("==============================", dividend);
         auto share = dividend * ((double)itr->key_balance / (double)keybal);
         dividend_paid += share;
         accounts.modify(itr, _self, [&](auto &p){
@@ -222,6 +268,8 @@ void scam::deposit(const currency::transfer &t, account_name code) {
             p.key_balance = 0;
             p.eos_balance = 0;
             p.ref_balance = 0;
+            p.bonus_balance = 0;
+            p.ft_balance = 0;
             p.finaltable_keys = 0;
             p.referee = referee_name;
         });
@@ -231,7 +279,7 @@ void scam::deposit(const currency::transfer &t, account_name code) {
     if (pool->bonus_keys_needed < keycnt ) {
         // congrats to the bonus winner!
         uint64_t sweetiebonus = pool->bonus_balance;
-        uint64_t next_level_keys = get_level_keys(keybal + keycnt);
+        uint64_t next_level_keys = get_level_keys(newkeycnt);
 
         pools.modify(pool, _self,  [&](auto &p) {
            p.dividend_paid += sweetiebonus;
@@ -246,6 +294,13 @@ void scam::deposit(const currency::transfer &t, account_name code) {
     // update user keys
     accounts.modify(itr_user, _self, [&](auto &p){
         p.key_balance += keycnt;
+        p.finaltable_keys += keycnt;
+    });
+    // update final table
+    finaltable.emplace(_self, [&](auto &p){
+        p.start = keybal + 1;
+        p.end = newkeycnt;
+        p.owner = name{user};
     });
 
     // pay referral
@@ -289,6 +344,8 @@ void scam::deposit(const currency::transfer &t, account_name code) {
             p.key_balance = 0;
             p.eos_balance = 0;
             p.ref_balance = 0;
+            p.bonus_balance = 0;
+            p.ft_balance = 0;
             p.finaltable_keys = 0;
             p.referee = name{TEAM_NAME};
         });
