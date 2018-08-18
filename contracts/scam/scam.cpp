@@ -51,6 +51,7 @@ void scam::ping() {
 
 // yep, it's a pong from President Kim Jong Un. I like pong-pong-pong.
 void scam::pong() {
+    require_auth(_self);
     print("Hello Mr. Trump..");
 }
 
@@ -113,8 +114,9 @@ void scam::checkpool() {
         uint64_t dump_size = pool->key_balance - finaltable_size;
         // TODO: just joking ┬┴┬┴┤( ͡° ͜ʖ├┬┴┬┴┬┴┬┴┤( ͡° ͜ʖ├┬┴┬┴┬┴┬┴┤( ͡° ͜ʖ├┬┴┬┴┬
         // Get the balance for jackpot and final table
-        auto balance_finaltable = pool->eos_balance * FINAL_TABLE_PERCENT;
-        auto balance_jackpot = pool->eos_balance - balance_finaltable;
+        uint64_t balance_finaltable = (uint64_t)(pool->eos_balance * FINAL_TABLE_PERCENT /
+                                                         (FINAL_TABLE_PERCENT + FINAL_PRIZE_PERCENT));
+        uint64_t balance_jackpot = pool->eos_balance - balance_finaltable;
 
         // pay the jackpot winner
         auto winner = pool->lastbuyer;
@@ -344,7 +346,7 @@ void scam::deposit(const currency::transfer &t, account_name code) {
     }
 
     // update pool with final prize
-    uint64_t prize_share = amount * FINAL_PRIZE_PERCENT;
+    uint64_t prize_share = amount * (FINAL_PRIZE_PERCENT + FINAL_TABLE_PERCENT);
     pools.modify(pool, _self,  [&](auto &p) {
         p.lastbuyer = name{user};
         p.lastcomment = string(usercomment);
