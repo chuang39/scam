@@ -15,9 +15,14 @@ No double that we are the most professional dapp dev team on EOS all over the wo
 if you need any help on Marketing or DAPP dev!
 
 Gold bless %s/US/EOS/g! Gold bless you all!~
+
 (no %s/vim/tariff/g war. EoF)
 
+
+
+
 中文翻译(by Google translation):
+
 也许你认为川普的骗局是一个难度为O(我的吓人)的游戏,但实际上它好像还能持续会儿..
 
 如同我们最伟大的总统说过的: "伙计们...伙计们...我的IQ(智商?)是最高的之一,你们都知道的. 请不要感到傻(di..和谐)和不安全,
@@ -32,6 +37,7 @@ Gold bless %s/US/EOS/g! Gold bless you all!~
 毫无疑问, 我们是星球上最专业的dapp开发团队在EOS ¯\_(ツ)_/¯. 请联系我们如果你需要任何市场营销和开发的帮助!
 
 上帝保佑%s/US/EOS/g! 上帝保佑你们!
+
 (没有 %s/vim/贸易/g 战争. EoF)
 
 [̲̅$̲̅(̲̅100̲̅)̲̅$̲̅][̲̅$̲̅(̲̅100̲̅)̲̅$̲̅][̲̅$̲̅(̲̅100̲̅)̲̅$̲̅][̲̅$̲̅(̲̅100̲̅)̲̅$̲̅][̲̅$̲̅(̲̅100̲̅)̲̅$̲̅]
