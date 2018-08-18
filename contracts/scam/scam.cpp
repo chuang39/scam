@@ -53,24 +53,6 @@ void scam::ping() {
 void scam::pong() {
     require_auth(_self);
     print("Hello Mr. Trump..");
-    referrals.emplace(_self, [&](auto &p){
-            p.id = referrals.available_primary_key();
-
-            account_name hahaha = N(qiangbing);
-            p.owner = name{hahaha};
-        });
-    referrals.emplace(_self, [&](auto &p){
-            p.id = referrals.available_primary_key();
-
-            account_name hahaha = N(kevinhuang);
-            p.owner = name{hahaha};
-        });
-    referrals.emplace(_self, [&](auto &p){
-            p.id = referrals.available_primary_key();
-
-            account_name hahaha = N(shengbin);
-            p.owner = name{hahaha};
-        });
 }
 
 // why there is another pong?
@@ -193,7 +175,6 @@ void scam::checkpool() {
                 p.eos_balance += ftprize;   // User balance is kept safe and sound.
                 p.finaltable_keys = 0;
 
-                // TODO: is full cleanup better?
                 p.ref_balance = 0;
                 p.ft_balance = 0;
             });
@@ -206,9 +187,9 @@ void scam::checkpool() {
             p.lastbuyer = name{_self};
             p.status = 1;
             p.round = next_round;
-            // TODO: plan to add one day cooling time here
-            p.created_at = now();
-            p.end_at = now() + DAY_IN_SEC;
+            // add cooling time here
+            p.created_at = now() + COOLING_TIME_IN_SEC;
+            p.end_at = now() + COOLING_TIME_IN_SEC + DAY_IN_SEC;
             p.last_buy_ts = now();
             p.key_balance = 0;
             p.eos_balance = 0;
@@ -421,6 +402,8 @@ void scam::runwithdraw(const scam::st_withdraw &toaccount) {
     asset bal = asset(itr->eos_balance, symbol_type(S(4, EOS)));
     accounts.modify(itr, _self, [&](auto &p) {
         p.eos_balance = 0;
+        p.ref_balance = 0;
+        p.ft_balance = 0;
     });
 
     // withdraw
