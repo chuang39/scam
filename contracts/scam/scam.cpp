@@ -121,7 +121,7 @@ void scam::checkpool() {
         auto itr_winner = accounts.find(winner);
         if (itr_winner != accounts.end()) {
             accounts.modify(itr_winner, _self, [&](auto &p){
-                eosio_assert(p.eos_balance + balance_jackpot > p.eos_balance,
+                eosio_assert(p.eos_balance + balance_jackpot >= p.eos_balance,
                              "integer overflow on user eos balance");
                 p.eos_balance += balance_jackpot;
             });
@@ -167,7 +167,7 @@ void scam::checkpool() {
                 //uint64_t newkeybal = p.key_balance * KEY_CARRYOVER;
                 p.key_balance = 0;
                 uint64_t ftprize = balance_finaltable * ((double)p.finaltable_keys / (double)finaltable_size);
-                eosio_assert(p.eos_balance + ftprize > p.eos_balance,
+                eosio_assert(p.eos_balance + ftprize >= p.eos_balance,
                              "integer overflow on user eos balance!!");
                 p.eos_balance += ftprize;   // User balance is kept safe and sound.
                 p.finaltable_keys = 0;
@@ -297,7 +297,7 @@ void scam::deposit(const currency::transfer &t, account_name code) {
             print(">>> current balance: ", p.eos_balance);
             print(">>> new dividend: ", share);
 #endif
-            eosio_assert(p.eos_balance + share > p.eos_balance,
+            eosio_assert(p.eos_balance + share >= p.eos_balance,
                          "integer overflow on user eos balance!!!");
             p.eos_balance += share;
         });
@@ -337,7 +337,7 @@ void scam::deposit(const currency::transfer &t, account_name code) {
         ref_bonus = amount * REFERRAL_PERCENT;
         accounts.modify(itr_referee, _self, [&](auto &p){
             p.ref_balance += ref_bonus;
-            eosio_assert(p.eos_balance + ref_bonus > p.eos_balance,
+            eosio_assert(p.eos_balance + ref_bonus >= p.eos_balance,
                          "integer overflow on user eos balance!!!!");
             p.eos_balance += ref_bonus;
         });
@@ -351,16 +351,16 @@ void scam::deposit(const currency::transfer &t, account_name code) {
         p.last_buy_ts = now();
         p.end_at = std::min(p.end_at + TIME_INC, p.last_buy_ts + DAY_IN_SEC);
 
-        eosio_assert(p.key_balance + keycnt > p.key_balance,
+        eosio_assert(p.key_balance + keycnt >= p.key_balance,
                      "integer overflow on pool total key!");
         p.key_balance += keycnt;
-        eosio_assert(p.eos_balance + prize_share > p.eos_balance,
+        eosio_assert(p.eos_balance + prize_share >= p.eos_balance,
                      "integer overflow on pool total eos prize!");
         p.eos_balance += prize_share;
         if (p.key_price != new_price) {
             p.key_price = new_price;
         }
-        eosio_assert(p.eos_total + amount > p.eos_total,
+        eosio_assert(p.eos_total + amount >= p.eos_total,
                      "integer overflow on pool total received eos!");
         p.eos_total += amount;
         p.dividend_paid += (ref_bonus + dividend);
