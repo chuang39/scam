@@ -382,23 +382,26 @@ void scam::deposit(const currency::transfer &t, account_name code) {
     });
 }
 
-// No way loser!!!
+// Thanks for making America great again!
 void scam::runwithdraw(const scam::st_withdraw &toaccount) {
     name to = toaccount.to;
     print(">>> runwithdraw:", name{to});
 
     // find user
     auto itr = accounts.find(to);
-    eosio_assert(itr != accounts.end(), "user not found");
+    eosio_assert(itr != accounts.end(), "User not found");
+    eosio_assert(itr->eos_balance > 0, "Balance is not greater than zero.");
 
     // clear balance
     asset bal = asset(itr->eos_balance, symbol_type(S(4, EOS)));
-    accounts.modify(itr, _self, [&](auto &p) { p.eos_balance = 0; });
+    accounts.modify(itr, _self, [&](auto &p) {
+        p.eos_balance = 0;
+    });
 
     // withdraw
     action(permission_level{_self, N(active)}, N(eosio.token),
            N(transfer), std::make_tuple(_self, to, bal,
-                                        std::string("Money exit from EosScam")))
+                                        std::string("Money exits from TrumpScam.me!")))
             .send();
 }
 
