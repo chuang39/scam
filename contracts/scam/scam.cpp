@@ -218,8 +218,7 @@ void scam::deposit(const currency::transfer &t, account_name code) {
 
     auto user = t.from;
     if (t.quantity.amount == 10) {
-        auto owner_refs = referrals2.get_index<N(byowner)>();
-        auto ref_itr = owner_refs.find(user);
+        auto ref_itr = referrals2.find(user);
         eosio_assert(ref_itr == owner_refs.end(), "User already registered");
         uint64_t nextid = referrals.available_primary_key();
         referrals.emplace(_self, [&](auto &p){
