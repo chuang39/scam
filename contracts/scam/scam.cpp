@@ -61,7 +61,7 @@ void scam::pong2(const name to) {
 }
 
 // Start of the gambling.. I will make SO MANY of the jobs!
-void scam::createpool(const name owner, const string poolname) {
+void scam::createpool(const name owner, const string poolname, const uint32_t starttime) {
     require_auth(_self);
 
 #ifdef DEBUG
@@ -75,8 +75,8 @@ void scam::createpool(const name owner, const string poolname) {
         pool.lastbuyer = name{owner};
         pool.status = 1;
         pool.round = 1;
-        pool.created_at = now();
-        pool.end_at = now() + DAY_IN_SEC;
+        pool.created_at = starttime;
+        pool.end_at = starttime + DAY_IN_SEC;
         pool.last_buy_ts = now();
         pool.key_balance = 0;
         pool.eos_balance = 0;

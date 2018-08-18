@@ -39,7 +39,7 @@ class scam : public eosio::contract {
     };
 
     //@abi action
-    void createpool(const name owner, const string poolname);
+    void createpool(const name owner, const string poolname, const uint32_t starttime);
     //@abi action
     void deleteall();
     //@abi action
@@ -56,8 +56,8 @@ class scam : public eosio::contract {
     void runwithdraw(const st_withdraw &toaccount);
 
   private:
-    //const static uint64_t DAY_IN_SEC = 3600 * 24;
-    const static uint64_t DAY_IN_SEC = 60;
+    const static uint64_t DAY_IN_SEC = 3600 * 24;
+    //const static uint64_t DAY_IN_SEC = 60;
     constexpr static uint64_t TIME_INC = 30;
     constexpr static uint64_t COOLING_TIME_IN_SEC = 3600 * 24;
     constexpr static double DIVIDEND_PERCENT = 0.20;
