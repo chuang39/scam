@@ -108,7 +108,7 @@ void scam::checkpool() {
     print(">>> found the key_balance: ", pool->key_balance);
     print(">>> found the eos_balance: ", pool->eos_balance);
 #endif
-/*
+
     if (pool->end_at <= now()) {
         // Get the number of key we hold and discard for finaltable
         uint64_t finaltable_size = pool->key_balance * FINAL_TABLE_PORTION;
@@ -200,7 +200,6 @@ void scam::checkpool() {
             p.total_time_in_sec = 0;
         });
     }
-    */
 }
 
 // Hurray!!!! I got you!!!
