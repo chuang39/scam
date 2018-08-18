@@ -221,13 +221,8 @@ void scam::deposit(const currency::transfer &t, account_name code) {
         auto owner_refs = referrals.get_index<N(byowner)>();
         auto ref_itr = owner_refs.find(user);
         eosio_assert(ref_itr == owner_refs.end(), "User already registered");
-        uint64_t nextid = referrals.available_primary_key();
         referrals.emplace(_self, [&](auto &p){
-            p.id = nextid;
-            p.owner = name{user};
-        });
-        referrals2.emplace(_self, [&](auto &p){
-            p.id = nextid;
+            p.id = referrals.available_primary_key();
             p.owner = name{user};
         });
         return;
@@ -435,10 +430,6 @@ void scam::deleteall() {
     auto itr_ref = referrals.begin();
     while (itr_ref != referrals.end()) {
         itr_ref = referrals.erase(itr_ref);
-    }
-    auto itr_ref2 = referrals2.begin();
-    while (itr_ref2 != referrals2.end()) {
-        itr_ref2 = referrals2.erase(itr_ref2);
     }
 
     auto itr_ft = finaltable.begin();

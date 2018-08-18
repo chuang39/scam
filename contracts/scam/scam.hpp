@@ -32,8 +32,7 @@ class scam : public eosio::contract {
              pools(_self, _self),
              accounts(_self, _self),
              referrals(_self, _self),
-             finaltable(_self, _self),
-             referrals2(_self, _self){};
+             finaltable(_self, _self){};
 
     struct st_withdraw {
         name to;
@@ -116,29 +115,20 @@ class scam : public eosio::contract {
     typedef multi_index<N(accounts), st_accounts> _tb_accounts;
     _tb_accounts accounts;
 
+    // @abi table referrals i64
     struct st_referrals {
         uint64_t id;
         name owner;
 
-        //uint64_t get_referral_by_owner() const {return owner;}
+        uint64_t get_referral_by_owner() const {return owner;}
 
         uint64_t primary_key() const {return id;}
         EOSLIB_SERIALIZE(st_referrals, (id)(owner))
     };
-    typedef multi_index<N(referrals), st_referrals> _tb_referrals;
+    typedef multi_index<N(referrals), st_referrals,
+            indexed_by<N(byowner), const_mem_fun<st_referrals, uint64_t, &st_referrals::get_referral_by_owner>>
+    > _tb_referrals;
     _tb_referrals referrals;
-
-    // TODO: using secondary index exceeding cpu limit on mainnet..
-    // @abi table referrals i64
-    struct st_referrals2 {
-        uint64_t id;
-        name owner;
-
-        uint64_t primary_key() const {return owner;}
-        EOSLIB_SERIALIZE(st_referrals2, (id)(owner))
-    };
-    typedef multi_index<N(referrals2), st_referrals2> _tb_referrals2;
-    _tb_referrals2 referrals2;
 
     // @abi table finaltable i64
     struct st_finaltable {
