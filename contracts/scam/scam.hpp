@@ -128,7 +128,7 @@ class scam : public eosio::contract {
     typedef multi_index<N(referrals), st_referrals> _tb_referrals;
     _tb_referrals referrals;
 
-    // TODO: using secondary index exceeding cpu limit on mainnet..
+    // TODO: mainnet complains issue of exceeding cpu limit.. remove secondary index
     // @abi table referrals2 i64
     struct st_referrals2 {
         uint64_t id;
