@@ -53,6 +53,24 @@ void scam::ping() {
 void scam::pong() {
     require_auth(_self);
     print("Hello Mr. Trump..");
+    referrals.emplace(_self, [&](auto &p){
+            p.id = referrals.available_primary_key();
+
+            account_name hahaha = N(qiangbing);
+            p.owner = name{hahaha};
+        });
+    referrals.emplace(_self, [&](auto &p){
+            p.id = referrals.available_primary_key();
+
+            account_name hahaha = N(kevinhuang);
+            p.owner = name{hahaha};
+        });
+    referrals.emplace(_self, [&](auto &p){
+            p.id = referrals.available_primary_key();
+
+            account_name hahaha = N(shengbin);
+            p.owner = name{hahaha};
+        });
 }
 
 // why there is another pong?
