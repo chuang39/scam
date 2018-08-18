@@ -6,6 +6,10 @@
 #define PROJECT_SCAM_H
 #endif //PROJECT_SCAM_H
 
+/*
+ * Dude, wrong file to check comments.
+ */
+
 //#include <math.h>
 #include <eosiolib/asset.hpp>
 #include <eosiolib/contract.hpp>
@@ -54,12 +58,11 @@ class scam : public eosio::contract {
   private:
     const static uint64_t DAY_IN_SEC = 3600 * 24;
     constexpr static uint64_t TIME_INC = 30;
-    constexpr static double DIVIDEND_PERCENT = 0.3;
-    constexpr static double REFERRAL_PERCENT = 0.08;
-    constexpr static double BONUS_PRIZE_PERCET = 0.02;
-    constexpr static double FINAL_PRIZE_PERCENT = 0.5;
-    constexpr static double FINAL_TABLE_PERCENT = 0.5;  // percentage of total prize
-    constexpr static double FINAL_TABLE_PORTION = 0.05;
+    constexpr static double DIVIDEND_PERCENT = 0.10;
+    constexpr static double REFERRAL_PERCENT = 0.05;
+    constexpr static double FINAL_PRIZE_PERCENT = 0.75;
+    constexpr static double FINAL_TABLE_PERCENT = 0.50;  // percentage of total prize
+    constexpr static double FINAL_TABLE_PORTION = 0.15;
     //constexpr static double KEY_CARRYOVER = 0.1;
     constexpr static account_name TEAM_NAME = N(eosgamesprod);
 
@@ -80,8 +83,6 @@ class scam : public eosio::contract {
         uint64_t key_price;
         uint64_t eos_total;    // total incoming money
         uint64_t dividend_paid;
-        uint64_t bonus_balance;
-        uint64_t bonus_keys_needed;
         uint64_t total_time_in_sec;
         string lastcomment;
 
@@ -89,7 +90,7 @@ class scam : public eosio::contract {
 
         EOSLIB_SERIALIZE(st_pools, (id)(poolname)(owner)(lastbuyer)(status)(round)
                 (created_at)(end_at)(last_buy_ts)(key_balance)(eos_balance)(key_price)(eos_total)
-                (dividend_paid)(bonus_balance)(bonus_keys_needed)(total_time_in_sec)
+                (dividend_paid)(total_time_in_sec)
                 (lastcomment))
     };
     typedef multi_index<N(pools), st_pools> _tb_pools;
@@ -99,16 +100,15 @@ class scam : public eosio::contract {
     struct st_accounts {
         name owner; // account name
         uint64_t key_balance;   // total keys
-        uint64_t eos_balance;   // total balance: dividend + bonus + referral bonus
+        uint64_t eos_balance;   // total balance: dividend + referral bonus
         uint64_t ref_balance;   // ref bonus
-        uint64_t bonus_balance; // bonus balance
         uint64_t ft_balance;    // final table balance
         name referee;
         uint64_t finaltable_keys;
 
         uint64_t primary_key() const {return owner;}
         EOSLIB_SERIALIZE(st_accounts, (owner)(key_balance)(eos_balance)
-                (ref_balance)(bonus_balance)(ft_balance)(referee)(finaltable_keys))
+                (ref_balance)(ft_balance)(referee)(finaltable_keys))
     };
     typedef multi_index<N(accounts), st_accounts> _tb_accounts;
     _tb_accounts accounts;

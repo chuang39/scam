@@ -1,7 +1,19 @@
 #include "scam.hpp"
 
+/*
+ *
+ * [̲̅$̲̅(̲̅100̲̅)̲̅$̲̅][̲̅$̲̅(̲̅100̲̅)̲̅$̲̅][̲̅$̲̅(̲̅100̲̅)̲̅$̲̅][̲̅$̲̅(̲̅100̲̅)̲̅$̲̅][̲̅$̲̅(̲̅100̲̅)̲̅$̲̅]
+ * Maybe you think Trump's scam is O(scary), but seems quick enough in practice.
+ *
+ * As our greatest president once said: "Dude...dude... my IQ is one of the highest -and you all know it!
+ * Please don't feel so stupid and insecure , it's not your fault!"
+ * [̲̅$̲̅(̲̅100̲̅)̲̅$̲̅][̲̅$̲̅(̲̅100̲̅)̲̅$̲̅][̲̅$̲̅(̲̅100̲̅)̲̅$̲̅][̲̅$̲̅(̲̅100̲̅)̲̅$̲̅][̲̅$̲̅(̲̅100̲̅)̲̅$̲̅]
+ *
+ */
 
-uint64_t pricemap[8][2] = {{100000 * 16, 100},
+// #define DEBUG 1
+// What's this table used for? God knows!
+uint64_t pricetable[8][2] = {{100000 * 16, 100},
                                 {100000 * 48, 162},
                                 {100000 * 96, 262},
                                 {100000 * 192, 424},
@@ -9,32 +21,51 @@ uint64_t pricemap[8][2] = {{100000 * 16, 100},
                                 {100000 * 768, 1109},
                                 {100000 * 1536, 1794},
                                 {100000 * 3072, 2903}};
-// TODO: add exception for overflow
-
 
 uint64_t get_price(uint64_t sold_keys) {
     for (int i = 0; i < 8; i++) {
-        if (sold_keys < pricemap[i][0]) {
-            return pricemap[i][1];
+        if (sold_keys < pricetable[i][0]) {
+            return pricetable[i][1];
         }
     }
     return 4697;
 }
 
+// Oops..
+/*
 uint64_t get_level_keys(uint64_t sold_keys) {
     for (int i = 0; i < 8; i++) {
-        if (sold_keys < pricemap[i][0]) {
-            return pricemap[i][0] / 2;
+        if (sold_keys < pricetable[i][0]) {
+            return pricetable[i][0] / 2;
         }
     }
-    return pricemap[7][0] / 2;
+    return pricetable[7][0] / 2;
+}
+*/
+
+// it's a ping from Mr. Jinping Xi. I like ping-ping-ping.
+void scam::ping() {
+    require_auth(_self);
+    checkpool();
 }
 
+// yep, it's a pong from President Kim Jong Un. I like pong-pong-pong.
+void scam::pong() {
+    print("Hello Mr. Trump..");
+}
 
+// why there is another pong?
+void scam::pong2(const name to) {
+    require_auth(to);
+}
+
+// Start of the gambling.. I will make SO MANY of the jobs!
 void scam::createpool(const name owner, const string poolname) {
     require_auth(_self);
 
+#ifdef DEBUG
     print( "Create pool ", poolname, " by owner= ", name{owner} );
+#endif
 
     pools.emplace(owner, [&](auto &pool) {
         pool.id = pools.available_primary_key();
@@ -44,39 +75,29 @@ void scam::createpool(const name owner, const string poolname) {
         pool.status = 1;
         pool.round = 1;
         pool.created_at = now();
-        pool.end_at = now() + 24 * 3600;
+        pool.end_at = now() + DAY_IN_SEC;
         //pool.end_at = now() + 30;
         pool.last_buy_ts = now();
         pool.key_balance = 0;
         pool.eos_balance = 0;
-        pool.key_price = pricemap[0][1];
+        pool.key_price = pricetable[0][1];
         pool.eos_total = 0;
         pool.dividend_paid = 0;
-        pool.bonus_balance = 0;
-        pool.bonus_keys_needed = pricemap[0][0];
         pool.total_time_in_sec = 0;
     });
+#ifdef DEBUG
     for( const auto& pool : pools ) {
         print(" ~~ID=", pool.id, ", owner:", pool.owner);
     }
+#endif
 }
 
-void scam::ping() {
-    require_auth(_self);
-    checkpool();
-}
-
-void scam::pong() {
-    print("hihi Kevin");
-}
-
-void scam::pong2(const name to) {
-    require_auth(to);
-}
-
+// let us check if the ship is broken or not.
 void scam::checkpool() {
     auto pool = pools.begin();
     eosio_assert(pool != pools.end(), "No pool is found");
+
+#ifdef DEBUG
     print(">>> current time: ", now());
     print(">>> found the poolname: ", pool->poolname);
     print(">>> found the round: ", pool->round);
@@ -85,11 +106,13 @@ void scam::checkpool() {
     print(">>> found the end_at: ", pool->end_at);
     print(">>> found the key_balance: ", pool->key_balance);
     print(">>> found the eos_balance: ", pool->eos_balance);
+#endif
 
     if (pool->end_at <= now()) {
         // Get the number of key we hold and discard for finaltable
         uint64_t finaltable_size = pool->key_balance * FINAL_TABLE_PORTION;
         uint64_t dump_size = pool->key_balance - finaltable_size;
+        // TODO: just joking ┬┴┬┴┤( ͡° ͜ʖ├┬┴┬┴┬┴┬┴┤( ͡° ͜ʖ├┬┴┬┴┬┴┬┴┤( ͡° ͜ʖ├┬┴┬┴┬
         // Get the balance for jackpot and final table
         auto balance_finaltable = pool->eos_balance * FINAL_TABLE_PERCENT;
         auto balance_jackpot = pool->eos_balance - balance_finaltable;
@@ -130,7 +153,6 @@ void scam::checkpool() {
                         p.finaltable_keys -= (dump_size - itr2->start + 1);
                     });
                 }
-                break;
             }
             itr2 = finaltable.erase(itr2);
         }
@@ -148,7 +170,6 @@ void scam::checkpool() {
 
                 // TODO: clearing all here is better?
                 p.ref_balance = 0;
-                p.bonus_balance = 0;
                 p.ft_balance = 0;
             });
         }
@@ -161,22 +182,20 @@ void scam::checkpool() {
             p.status = 1;
             p.round = next_round;
             p.created_at = now();
-            p.end_at = now() + 24 * 3600;
+            p.end_at = now() + DAY_IN_SEC;
             //p.end_at = now() + 60;
             p.last_buy_ts = now();
             p.key_balance = 0;
-            p.eos_balance = p.bonus_balance;
-            p.key_price = pricemap[0][1];
+            p.eos_balance = 0;
+            p.key_price = pricetable[0][1];
             p.eos_total = 0;
             p.dividend_paid = 0;
-            p.bonus_balance = 0;
-            p.bonus_keys_needed = pricemap[0][0];
             p.total_time_in_sec = 0;
         });
     }
 }
 
-
+// Hurray!!!! I got you!!!
 void scam::deposit(const currency::transfer &t, account_name code) {
     if(code == _self) {
         return;
@@ -204,10 +223,6 @@ void scam::deposit(const currency::transfer &t, account_name code) {
 
     // find pool
     auto pool = pools.begin();
-    if (pool == pools.end()) {
-        print(">>> no pool is found");
-        return;
-    }
 
     string usercomment = t.memo;
     name referee_name = name{TEAM_NAME};
@@ -287,27 +302,9 @@ void scam::deposit(const currency::transfer &t, account_name code) {
             p.key_balance = 0;
             p.eos_balance = 0;
             p.ref_balance = 0;
-            p.bonus_balance = 0;
             p.ft_balance = 0;
             p.finaltable_keys = 0;
             p.referee = referee_name;
-        });
-    }
-
-    // check if the user win the bonus prize
-    if (pool->bonus_keys_needed < keycnt ) {
-        // congrats to the bonus winner!
-        uint64_t sweetiebonus = pool->bonus_balance;
-        uint64_t next_level_keys = get_level_keys(newkeycnt);
-
-        pools.modify(pool, _self,  [&](auto &p) {
-           p.dividend_paid += sweetiebonus;
-           p.bonus_balance = 0;
-           p.bonus_keys_needed = next_level_keys;
-        });
-        accounts.modify(itr_user, _self, [&](auto &p){
-            p.bonus_balance += sweetiebonus;
-            p.eos_balance += sweetiebonus;
         });
     }
 
@@ -334,9 +331,8 @@ void scam::deposit(const currency::transfer &t, account_name code) {
         });
     }
 
-    // update pool with final prize and bonus prize
+    // update pool with final prize
     uint64_t prize_share = amount * FINAL_PRIZE_PERCENT;
-    uint64_t bonus_share = amount * BONUS_PRIZE_PERCET;
     pools.modify(pool, _self,  [&](auto &p) {
         p.lastbuyer = name{user};
         p.lastcomment = string(usercomment);
@@ -350,13 +346,11 @@ void scam::deposit(const currency::transfer &t, account_name code) {
         }
         p.eos_total += amount;
         p.dividend_paid += (ref_bonus + dividend);
-        p.bonus_balance += bonus_share;
-        p.bonus_keys_needed -= keycnt;
         p.total_time_in_sec += TIME_INC;
     });
 
     // pay team if all above steps succeed
-    uint64_t team_share = amount - dividend_paid - ref_bonus - prize_share - bonus_share;
+    uint64_t team_share = amount - dividend_paid - ref_bonus - prize_share;
     auto team = accounts.find(name{TEAM_NAME});
     if (team == accounts.end()) {
         team = accounts.emplace(_self, [&](auto &p) {
@@ -364,7 +358,6 @@ void scam::deposit(const currency::transfer &t, account_name code) {
             p.key_balance = 0;
             p.eos_balance = 0;
             p.ref_balance = 0;
-            p.bonus_balance = 0;
             p.ft_balance = 0;
             p.finaltable_keys = 0;
             p.referee = name{TEAM_NAME};
@@ -376,7 +369,7 @@ void scam::deposit(const currency::transfer &t, account_name code) {
     print("==============================end");
 }
 
-//void scam::runwithdraw() {
+// No way loser!!!
 void scam::runwithdraw(const scam::st_withdraw &toaccount) {
     name to = toaccount.to;
     print(">>> runwithdraw:", name{to});
@@ -396,6 +389,7 @@ void scam::runwithdraw(const scam::st_withdraw &toaccount) {
             .send();
 }
 
+// A nuclear button I hate to use.. scary?!
 //@abi action
 void scam::deleteall() {
     require_auth(_self);
@@ -421,6 +415,7 @@ void scam::deleteall() {
     }
 }
 
+// Just scare you
 void scam::reset() {
     require_auth(_self);
 }
@@ -456,4 +451,14 @@ extern "C" { \
    } \
 }
 
+
 EOSIO_ABI_EX(scam, (pong2)(ping)(pong)(createpool)(deleteall)(reset))
+/*
+ * For the brave souls who get this far: You are the chosen ones,
+ * the valiant knights of programming who toil away, without rest,
+ * fixing our most awful code. To you, true saviors, kings of men,
+ * I say this: never gonna give you up, never gonna let you down,
+ * never gonna run around and desert you. Never gonna make you cry,
+ * never gonna say goodbye. Never gonna tell a lie and hurt you.
+ * - From Internet
+*/
