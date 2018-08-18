@@ -129,7 +129,7 @@ class scam : public eosio::contract {
     _tb_referrals referrals;
 
     // TODO: using secondary index exceeding cpu limit on mainnet..
-    // @abi table referrals i64
+    // @abi table referrals2 i64
     struct st_referrals2 {
         uint64_t id;
         name owner;
