@@ -58,6 +58,7 @@ class scam : public eosio::contract {
   private:
     const static uint64_t DAY_IN_SEC = 3600 * 24;
     constexpr static uint64_t TIME_INC = 30;
+    constexpr static uint64_t COOLING_TIME_IN_SEC = 3600 * 24;
     constexpr static double DIVIDEND_PERCENT = 0.10;
     constexpr static double REFERRAL_PERCENT = 0.05;
     constexpr static double FINAL_PRIZE_PERCENT = 0.75;

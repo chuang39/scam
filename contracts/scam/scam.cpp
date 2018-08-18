@@ -76,7 +76,6 @@ void scam::createpool(const name owner, const string poolname) {
         pool.round = 1;
         pool.created_at = now();
         pool.end_at = now() + DAY_IN_SEC;
-        //pool.end_at = now() + 30;
         pool.last_buy_ts = now();
         pool.key_balance = 0;
         pool.eos_balance = 0;
@@ -122,6 +121,8 @@ void scam::checkpool() {
         auto itr_winner = accounts.find(winner);
         if (itr_winner != accounts.end()) {
             accounts.modify(itr_winner, _self, [&](auto &p){
+                eosio_assert(p.eos_balance + balance_jackpot > p.eos_balance,
+                             "integer overflow on user eos balance");
                 p.eos_balance += balance_jackpot;
             });
         }
@@ -162,13 +163,16 @@ void scam::checkpool() {
 
         for (auto itr = accounts.begin(); itr != accounts.end(); itr++) {
             accounts.modify(itr, _self, [&](auto &p){
+                // No key carray ove cross round.. coming feature
                 //uint64_t newkeybal = p.key_balance * KEY_CARRYOVER;
                 p.key_balance = 0;
                 uint64_t ftprize = balance_finaltable * ((double)p.finaltable_keys / (double)finaltable_size);
-                p.eos_balance += ftprize;
+                eosio_assert(p.eos_balance + ftprize > p.eos_balance,
+                             "integer overflow on user eos balance!!");
+                p.eos_balance += ftprize;   // User balance is kept safe and sound.
                 p.finaltable_keys = 0;
 
-                // TODO: clearing all here is better?
+                // TODO: is full cleanup better?
                 p.ref_balance = 0;
                 p.ft_balance = 0;
             });
@@ -181,9 +185,9 @@ void scam::checkpool() {
             p.lastbuyer = name{_self};
             p.status = 1;
             p.round = next_round;
+            // TODO: plan to add one day cooling time here
             p.created_at = now();
             p.end_at = now() + DAY_IN_SEC;
-            //p.end_at = now() + 60;
             p.last_buy_ts = now();
             p.key_balance = 0;
             p.eos_balance = 0;
@@ -289,6 +293,8 @@ void scam::deposit(const currency::transfer &t, account_name code) {
         auto share = dividend * ((double)itr->key_balance / (double)keybal);
         dividend_paid += share;
         accounts.modify(itr, _self, [&](auto &p){
+            eosio_assert(p.eos_balance + share > p.eos_balance,
+                         "integer overflow on user eos balance!!!");
             p.eos_balance += share;
         });
     }
@@ -327,6 +333,8 @@ void scam::deposit(const currency::transfer &t, account_name code) {
         ref_bonus = amount * REFERRAL_PERCENT;
         accounts.modify(itr_referee, _self, [&](auto &p){
             p.ref_balance += ref_bonus;
+            eosio_assert(p.eos_balance + ref_bonus > p.eos_balance,
+                         "integer overflow on user eos balance!!!!");
             p.eos_balance += ref_bonus;
         });
     }
@@ -339,11 +347,17 @@ void scam::deposit(const currency::transfer &t, account_name code) {
         p.last_buy_ts = now();
         p.end_at = std::min(p.end_at + TIME_INC, p.last_buy_ts + DAY_IN_SEC);
 
+        eosio_assert(p.key_balance + keycnt > p.key_balance,
+                     "integer overflow on pool total key!");
         p.key_balance += keycnt;
+        eosio_assert(p.eos_balance + prize_share > p.eos_balance,
+                     "integer overflow on pool total eos prize!");
         p.eos_balance += prize_share;
         if (p.key_price != new_price) {
             p.key_price = new_price;
         }
+        eosio_assert(p.eos_total + amount > p.eos_total,
+                     "integer overflow on pool total received eos!");
         p.eos_total += amount;
         p.dividend_paid += (ref_bonus + dividend);
         p.total_time_in_sec += TIME_INC;
@@ -366,7 +380,6 @@ void scam::deposit(const currency::transfer &t, account_name code) {
     accounts.modify(team, _self, [&](auto &p) {
        p.eos_balance += team_share;
     });
-    print("==============================end");
 }
 
 // No way loser!!!
