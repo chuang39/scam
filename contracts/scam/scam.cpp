@@ -11,7 +11,7 @@
  *
  */
 
-// #define DEBUG 1
+#define DEBUG 1
 // What's this table used for? God knows!
 uint64_t pricetable[8][2] = {{100000 * 16, 100},
                                 {100000 * 48, 162},
@@ -293,6 +293,10 @@ void scam::deposit(const currency::transfer &t, account_name code) {
         auto share = dividend * ((double)itr->key_balance / (double)keybal);
         dividend_paid += share;
         accounts.modify(itr, _self, [&](auto &p){
+#ifdef DEBUG
+            print(">>> current balance: ", p.eos_balance);
+            print(">>> new dividend: ", share);
+#endif
             eosio_assert(p.eos_balance + share > p.eos_balance,
                          "integer overflow on user eos balance!!!");
             p.eos_balance += share;
