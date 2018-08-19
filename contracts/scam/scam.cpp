@@ -19,6 +19,7 @@
 
 //#define DEBUG 1
 // What's this table used for? God knows!
+/*
 uint64_t pricetable[8][2] = {{100000 * 16, 100},
                                 {100000 * 48, 162},
                                 {100000 * 96, 262},
@@ -26,7 +27,20 @@ uint64_t pricetable[8][2] = {{100000 * 16, 100},
                                 {100000 * 384, 685},
                                 {100000 * 768, 1109},
                                 {100000 * 1536, 1794},
-                                {100000 * 3072, 2903}};
+                                {100000 * 3072, 2903},
+                                {9223372036854775807, 4697}};
+*/
+uint64_t pricetable[8][2] = {{4, 10},
+                                {8, 20},
+                                {12, 30},
+                                {16, 40},
+                                {20, 50},
+                                {24, 60},
+                                {28, 70},
+                                {32, 80},
+                                {9223372036854775807, 90}};
+
+
 
 uint64_t get_price(uint64_t sold_keys) {
     for (int i = 0; i < 8; i++) {
@@ -34,7 +48,7 @@ uint64_t get_price(uint64_t sold_keys) {
             return pricetable[i][1];
         }
     }
-    return 4697;
+    return pricetable[8][1];
 }
 
 // Oops..
