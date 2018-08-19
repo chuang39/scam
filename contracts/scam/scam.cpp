@@ -9,7 +9,13 @@
  * Please don't feel so stupid and insecure , it's not your fault!"
  * [̲̅$̲̅(̲̅100̲̅)̲̅$̲̅][̲̅$̲̅(̲̅100̲̅)̲̅$̲̅][̲̅$̲̅(̲̅100̲̅)̲̅$̲̅][̲̅$̲̅(̲̅100̲̅)̲̅$̲̅][̲̅$̲̅(̲̅100̲̅)̲̅$̲̅]
  *
+ *
+ * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ * Please notice that the buyer purchases the bond after last buyer when the pool expires will trigger the
+ * pool termination. As a surprising bonus, we will make him the first buyer of next round of game.
+ * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
  */
+
 
 //#define DEBUG 1
 // What's this table used for? God knows!
