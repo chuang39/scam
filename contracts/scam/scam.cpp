@@ -52,7 +52,7 @@ void scam::ping() {
 // yep, it's a pong from President Kim Jong Un. I like pong-pong-pong.
 void scam::pong() {
     require_auth(_self);
-    print("Hello Mr. Trump..");
+    print("Hello Mr. Trump..", now());
 }
 
 // why there is another pong?
