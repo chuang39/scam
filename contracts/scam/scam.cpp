@@ -81,10 +81,8 @@ void scam::createpool(const name owner, const string poolname, const uint32_t st
         pool.lastbuyer = name{owner};
         pool.status = 1;
         pool.round = 1;
-        //pool.created_at = starttime;
-        pool.created_at = now();
-        //pool.end_at = starttime + DAY_IN_SEC;
-        pool.end_at = now() + DAY_IN_SEC;
+        pool.created_at = starttime;
+        pool.end_at = starttime + DAY_IN_SEC;
         pool.last_buy_ts = now();
         pool.key_balance = 0;
         pool.eos_balance = 0;
