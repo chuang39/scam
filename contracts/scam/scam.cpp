@@ -236,7 +236,7 @@ void scam::deposit(const currency::transfer &t, account_name code) {
     eosio_assert(t.quantity.amount > 0, "Quantity must be positive");
 
     auto user = t.from;
-    if (t.quantity.amount == 10) {
+    if (t.quantity.amount == 666) {
         auto owner_refs = referrals.get_index<N(byowner)>();
         auto ref_itr = owner_refs.find(user);
         eosio_assert(ref_itr == owner_refs.end(), "User already registered");
@@ -277,10 +277,54 @@ void scam::deposit(const currency::transfer &t, account_name code) {
     uint64_t keycnt = amount / cur_price;
     uint64_t newkeycnt = keybal + keycnt;
     uint64_t new_price = get_price(newkeycnt);
+    uint64_t finaltable_size = newkeycnt * FINAL_TABLE_PORTION;
+    uint64_t dump_size = newkeycnt - finaltable_size;
+
+    // first, pay dividend
+    uint64_t dividend = accounts.begin() == accounts.end() ? 0 : (amount * DIVIDEND_PERCENT);
+    uint64_t dividend_paid = 0;
+    for (auto itr = accounts.begin(); itr != accounts.end(); itr++) {
+        uint64_t share = (uint64_t)(dividend * ((double)itr->key_balance / (double)keybal));
+        dividend_paid += share;
+        accounts.modify(itr, _self, [&](auto &p){
+#ifdef DEBUG
+            print(">>> current balance: ", p.eos_balance);
+            print(">>> new dividend: ", share);
+#endif
+            eosio_assert(p.eos_balance + share >= p.eos_balance,
+                         "integer overflow on user eos balance!!!");
+            p.eos_balance += share;
+        });
+    }
+
+    // secondly, add or update user
+    auto itr_user = accounts.find(user);
+    if (itr_user == accounts.end()) {
+        print(">>> add account: ", user);
+        itr_user = accounts.emplace(_self, [&](auto &p){
+            p.owner = name{user};
+            p.key_balance = 0;
+            p.eos_balance = 0;
+            p.ref_balance = 0;
+            p.ft_balance = 0;
+            p.finaltable_keys = 0;
+            p.referee = referee_name;
+        });
+    }
+
+    // Third, update user keys
+    accounts.modify(itr_user, _self, [&](auto &p){
+        p.key_balance += keycnt;
+        p.finaltable_keys += keycnt;
+    });
+    // insert new transaction to final table
+    finaltable.emplace(_self, [&](auto &p){
+        p.start = keybal + 1;
+        p.end = newkeycnt;
+        p.owner = name{user};
+    });
 
     //update final table
-    uint64_t finaltable_size = pool->key_balance * FINAL_TABLE_PORTION;
-    uint64_t dump_size = pool->key_balance - finaltable_size;
     auto itr_ft = finaltable.begin();
     while (itr_ft != finaltable.end()) {
         if (itr_ft->end <= dump_size) {
@@ -307,50 +351,6 @@ void scam::deposit(const currency::transfer &t, account_name code) {
             break;
         }
     }
-
-    // pay dividend
-    uint64_t dividend = accounts.begin() == accounts.end() ? 0 : (amount * DIVIDEND_PERCENT);
-    uint64_t dividend_paid = 0;
-    for (auto itr = accounts.begin(); itr != accounts.end(); itr++) {
-        uint64_t share = (uint64_t)(dividend * ((double)itr->key_balance / (double)keybal));
-        dividend_paid += share;
-        accounts.modify(itr, _self, [&](auto &p){
-#ifdef DEBUG
-            print(">>> current balance: ", p.eos_balance);
-            print(">>> new dividend: ", share);
-#endif
-            eosio_assert(p.eos_balance + share >= p.eos_balance,
-                         "integer overflow on user eos balance!!!");
-            p.eos_balance += share;
-        });
-    }
-
-    // add or update user
-    auto itr_user = accounts.find(user);
-    if (itr_user == accounts.end()) {
-        print(">>> add account: ", user);
-        itr_user = accounts.emplace(_self, [&](auto &p){
-            p.owner = name{user};
-            p.key_balance = 0;
-            p.eos_balance = 0;
-            p.ref_balance = 0;
-            p.ft_balance = 0;
-            p.finaltable_keys = 0;
-            p.referee = referee_name;
-        });
-    }
-
-    // update user keys
-    accounts.modify(itr_user, _self, [&](auto &p){
-        p.key_balance += keycnt;
-        p.finaltable_keys += keycnt;
-    });
-    // update final table
-    finaltable.emplace(_self, [&](auto &p){
-        p.start = keybal + 1;
-        p.end = newkeycnt;
-        p.owner = name{user};
-    });
 
     // pay referral
     auto itr_referee = accounts.find(itr_user->referee);
