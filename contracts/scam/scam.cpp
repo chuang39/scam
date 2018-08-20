@@ -185,6 +185,8 @@ bool scam::checkpool(uint32_t cur_in_sec) {
                 // No key carray ove cross round.. coming feature
                 //uint64_t newkeybal = p.key_balance * KEY_CARRYOVER;
                 p.key_balance = 0;
+                eosio_assert(finaltable_size > 0,
+                             "Final table size should be larger than 0.");
                 uint64_t ftprize = balance_finaltable * ((double)p.finaltable_keys / (double)finaltable_size);
                 eosio_assert(p.eos_balance + ftprize >= p.eos_balance,
                              "integer overflow on user eos balance!!");
