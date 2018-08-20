@@ -17,7 +17,7 @@
  */
 
 
-#define DEBUG 1
+// #define DEBUG 1
 // What's this table used for? God knows!
 uint64_t pricetable[9][2] = {{100000 * 16, 100},
                                 {100000 * 48, 162},
