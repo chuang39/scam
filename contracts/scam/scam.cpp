@@ -104,7 +104,7 @@ void scam::createpool(const name owner, const string poolname, const uint32_t st
         pool.eos_total = 0;
         pool.dividend_paid = 0;
         pool.total_time_in_sec = 0;
-        pool.lastcomment = "Guys... I say, not in a braggadocios way, I've made billions and billions of dollars dealing with people all around the world. We're winning Again!!"
+        pool.lastcomment = "Guys... I say, not in a braggadocios way, I've made billions and billions of dollars dealing with people all around the world. We're winning Again!!";
     });
 #ifdef DEBUG
     for( const auto& pool : pools ) {
