@@ -246,7 +246,7 @@ void scam::deposit(const currency::transfer &t, account_name code) {
     eosio_assert(t.quantity.amount > 0, "Quantity must be positive");
 
     auto user = t.from;
-    if (t.quantity.amount == 666) {
+    if (t.quantity.amount == 10) {
         auto owner_refs = referrals.get_index<N(byowner)>();
         auto ref_itr = owner_refs.find(user);
         eosio_assert(ref_itr == owner_refs.end(), "User already registered");
@@ -294,6 +294,7 @@ void scam::deposit(const currency::transfer &t, account_name code) {
     uint64_t dividend = accounts.begin() == accounts.end() ? 0 : (amount * DIVIDEND_PERCENT);
     uint64_t dividend_paid = 0;
     for (auto itr = accounts.begin(); itr != accounts.end(); itr++) {
+        eosio_assert(keybal > 0);
         uint64_t share = (uint64_t)(dividend * ((double)itr->key_balance / (double)keybal));
         dividend_paid += share;
         accounts.modify(itr, _self, [&](auto &p){
