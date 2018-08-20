@@ -300,7 +300,7 @@ void scam::deposit(const currency::transfer &t, account_name code) {
 #ifdef DEBUG
             print(">>> 1: ", itr->key_balance);
             print(">>> 2: ", keybal);
-            print(">>> 3: ", divident);
+            print(">>> 3: ", dividend);
             print(">>> new dividend: ", share);
             print(">>> current balance: ", p.eos_balance);
 #endif
