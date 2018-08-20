@@ -92,7 +92,9 @@ void scam::createpool(const name owner, const string poolname, const uint32_t st
         pool.eos_total = 0;
         pool.dividend_paid = 0;
         pool.total_time_in_sec = 0;
-        pool.lastcomment = "Guys... as the greatest President, I say, not in a braggadocios way, I've made billions and billions of dollars dealing with people all around the world. Buy the bonds in my as much as you can.. You'll be rich too!!";
+        pool.lastcomment = "Guys... as the greatest President, I say, not in a braggadocios "
+                "way, I've made billions and billions of dollars dealing with people all around the world. "
+                "Buy the bonds in my as much as you can.. You'll be rich too!!";
     });
 #ifdef DEBUG
     for( const auto& pool : pools ) {
@@ -211,7 +213,8 @@ bool scam::checkpool(uint32_t cur_in_sec) {
             p.eos_total = 0;
             p.dividend_paid = 0;
             p.total_time_in_sec = 0;
-            pool.lastcomment = "You know the funny thing, last round won't be the last term of my presidency. I will be the greatest god ever created forever! Is that funny?";
+            p.lastcomment = "You know the funny thing, last round won't be the last term of my presidency. "
+                    "I will be the greatest god ever created forever! Is that funny?";
         });
         return false;
     }
