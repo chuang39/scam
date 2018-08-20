@@ -97,7 +97,7 @@ void scam::createpool(const name owner, const string poolname, const uint32_t st
         pool.round = 1;
         pool.created_at = starttime;
         pool.end_at = starttime + DAY_IN_SEC;
-        pool.last_buy_ts = now();
+        pool.last_buy_ts = starttime;
         pool.key_balance = 0;
         pool.eos_balance = 0;
         pool.key_price = pricetable[0][1];
