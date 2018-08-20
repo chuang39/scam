@@ -66,7 +66,8 @@ uint64_t get_level_keys(uint64_t sold_keys) {
 // it's a ping from Mr. Jinping Xi. I like ping-ping-ping.
 void scam::ping() {
     require_auth(_self);
-    checkpool();
+    uint32_t cur_in_sec = now();
+    checkpool(cur_in_sec);
 }
 
 // yep, it's a pong from President Kim Jong Un. I like pong-pong-pong.
@@ -114,14 +115,13 @@ void scam::createpool(const name owner, const string poolname, const uint32_t st
 }
 
 // let us check if the ship is broken or not.
-void scam::checkpool() {
-    print("===========================");
+bool scam::checkpool(uint32_t cur_in_sec) {
     auto pool = pools.begin();
     eosio_assert(pool != pools.end(), "No pool is found");
-    eosio_assert(now() >= pool->created_at, "Game hasn't started yet. Please keep patient.");
+    eosio_assert(cur_in_sec >= pool->created_at, "Game hasn't started yet. Please keep patient.");
 
 #ifdef DEBUG
-    print(">>> current time: ", now());
+    print(">>> current time: ", cur_in_sec);
     print(">>> found the poolname: ", pool->poolname);
     print(">>> found the round: ", pool->round);
     print(">>> found the onwer: ", pool->owner);
@@ -131,7 +131,7 @@ void scam::checkpool() {
     print(">>> found the eos_balance: ", pool->eos_balance);
 #endif
 
-    if (pool->end_at <= now()) {
+    if (pool->end_at <= cur_in_sec) {
         // Get the number of key we hold and discard for finaltable
         uint64_t finaltable_size = pool->key_balance * FINAL_TABLE_PORTION;
         uint64_t dump_size = pool->key_balance - finaltable_size;
@@ -225,10 +225,12 @@ void scam::checkpool() {
             p.dividend_paid = 0;
             p.total_time_in_sec = 0;
         });
+        return false;
     }
 #ifdef DEBUG
     print( ">>> checkpool is finished.");
 #endif
+    return true;
 }
 
 // Hurray!!!! I got you!!!
@@ -237,8 +239,10 @@ void scam::deposit(const currency::transfer &t, account_name code) {
         return;
     }
 
-    checkpool();
+    uint32_t cur_in_sec = now();
+    bool isValidPool = checkpool(cur_in_sec);
 
+    // run sanity check here
     eosio_assert(code == N(eosio.token), "Transfer not from eosio.token");
     eosio_assert(t.to == _self, "Transfer not made to this contract");
     eosio_assert(t.quantity.symbol == string_to_symbol(4, "EOS"), "Only accepts EOS for deposits");
@@ -246,6 +250,7 @@ void scam::deposit(const currency::transfer &t, account_name code) {
     eosio_assert(t.quantity.amount > 0, "Quantity must be positive");
 
     auto user = t.from;
+    // accept referral registration all time.
     if (t.quantity.amount == 10) {
         auto owner_refs = referrals.get_index<N(byowner)>();
         auto ref_itr = owner_refs.find(user);
@@ -257,7 +262,27 @@ void scam::deposit(const currency::transfer &t, account_name code) {
         return;
     }
 
-    // find pool
+    // return the balance to user account if the pool is in inactive or invalid status.
+    if (isValidPool == false) {
+        auto itr_refund = accounts.find(user);
+        if (itr_refund == accounts.end()) {
+            itr_refund = accounts.emplace(_self, [&](auto &p){
+                p.owner = name{user};
+                p.key_balance = 0;
+                p.eos_balance = 0;
+                p.ref_balance = 0;
+                p.ft_balance = 0;
+                p.finaltable_keys = 0;
+                p.referee = name{TEAM_NAME};
+            });
+        }
+        accounts.modify(itr_refund, _self, [&](auto &p){
+            p.eos_balance += t.quantity.amount;
+        });
+        return;
+    }
+
+    // find current pool
     auto pool = pools.begin();
 
     string usercomment = t.memo;
@@ -281,6 +306,7 @@ void scam::deposit(const currency::transfer &t, account_name code) {
         }
     }
 
+    // get necessary information here.
     auto amount = t.quantity.amount;
     uint64_t keybal = pool->key_balance;
     uint64_t cur_price = get_price(keybal);
@@ -299,17 +325,12 @@ void scam::deposit(const currency::transfer &t, account_name code) {
         dividend_paid += share;
         accounts.modify(itr, _self, [&](auto &p){
 #ifdef DEBUG
-            print(">>> 1: ", itr->key_balance);
-            print(">>> 2: ", keybal);
-            print(">>> 3: ", dividend);
             print(">>> new dividend: ", share);
             print(">>> current balance: ", p.eos_balance);
 #endif
             eosio_assert(p.eos_balance + share >= p.eos_balance,
                          "integer overflow on user eos balance!!!");
-            print("==================== 1");
             p.eos_balance += share;
-            print("==================== 2");
         });
     }
 #ifdef DEBUG
