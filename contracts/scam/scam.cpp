@@ -298,12 +298,17 @@ void scam::deposit(const currency::transfer &t, account_name code) {
         dividend_paid += share;
         accounts.modify(itr, _self, [&](auto &p){
 #ifdef DEBUG
-            print(">>> current balance: ", p.eos_balance);
+            print(">>> 1: ", itr->key_balance);
+            print(">>> 2: ", keybal);
+            print(">>> 3: ", divident);
             print(">>> new dividend: ", share);
+            print(">>> current balance: ", p.eos_balance);
 #endif
             eosio_assert(p.eos_balance + share >= p.eos_balance,
                          "integer overflow on user eos balance!!!");
+            print("==================== 1");
             p.eos_balance += share;
+            print("==================== 2");
         });
     }
 #ifdef DEBUG
