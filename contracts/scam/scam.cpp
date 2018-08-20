@@ -115,6 +115,7 @@ void scam::createpool(const name owner, const string poolname, const uint32_t st
 
 // let us check if the ship is broken or not.
 void scam::checkpool() {
+    print("===========================");
     auto pool = pools.begin();
     eosio_assert(pool != pools.end(), "No pool is found");
     eosio_assert(now() >= pool->created_at, "Game hasn't started yet. Please keep patient.");
