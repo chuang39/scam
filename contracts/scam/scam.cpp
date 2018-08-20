@@ -308,7 +308,7 @@ void scam::deposit(const currency::transfer &t, account_name code) {
     auto amount = t.quantity.amount;
     uint64_t keybal = pool->key_balance;
     uint64_t cur_price = get_price(keybal);
-    uint64_t keycnt = amount / cur_price;
+    uint64_t keycnt = ((uint64_t)(amount / cur_price)) * LOYALTY_REWARDING;
     uint64_t newkeycnt = keybal + keycnt;
     uint64_t new_price = get_price(newkeycnt);
     uint64_t finaltable_size = newkeycnt * FINAL_TABLE_PORTION;

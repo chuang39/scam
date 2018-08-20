@@ -66,6 +66,7 @@ class scam : public eosio::contract {
     constexpr static double FINAL_PRIZE_PERCENT = 0.17;
     constexpr static double FINAL_TABLE_PERCENT = 0.50;  // percentage of total prize
     constexpr static double FINAL_TABLE_PORTION = 0.15;
+    constexpr static double LOYALTY_REWARDING = 1.01;
     //constexpr static double KEY_CARRYOVER = 0.1;
     constexpr static account_name TEAM_NAME = N(eosgamesprod);
 
