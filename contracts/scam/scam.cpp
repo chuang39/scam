@@ -28,19 +28,6 @@ uint64_t pricetable[9][2] = {{100000 * 16, 100},
                                 {100000 * 1536, 1794},
                                 {100000 * 3072, 2903},
                                 {9223372036854775807, 4697}};
-/*
-uint64_t pricetable[9][2] = {{4, 10},
-                                {8, 20},
-                                {12, 30},
-                                {16, 40},
-                                {20, 50},
-                                {24, 60},
-                                {28, 70},
-                                {32, 80},
-                                {9223372036854775807, 90}};
-*/
-
-
 
 uint64_t get_price(uint64_t sold_keys) {
     for (int i = 0; i < 8; i++) {
@@ -51,7 +38,7 @@ uint64_t get_price(uint64_t sold_keys) {
     return pricetable[8][1];
 }
 
-// Oops..
+// Ditch this dumb method
 /*
 uint64_t get_level_keys(uint64_t sold_keys) {
     for (int i = 0; i < 8; i++) {
@@ -105,7 +92,7 @@ void scam::createpool(const name owner, const string poolname, const uint32_t st
         pool.eos_total = 0;
         pool.dividend_paid = 0;
         pool.total_time_in_sec = 0;
-        pool.lastcomment = "Guys... as the greatest President, I say, not in a braggadocios way, I've made billions and billions of dollars dealing with people all around the world. We're winning Again!!";
+        pool.lastcomment = INIT_COMMENT;
     });
 #ifdef DEBUG
     for( const auto& pool : pools ) {
@@ -224,6 +211,7 @@ bool scam::checkpool(uint32_t cur_in_sec) {
             p.eos_total = 0;
             p.dividend_paid = 0;
             p.total_time_in_sec = 0;
+            pool.lastcomment = INIT_COMMENT;
         });
         return false;
     }
