@@ -228,22 +228,19 @@ bool scam::checkpool(uint32_t cur_in_sec) {
 
 // Hurray!!!! I got you!!!
 void scam::deposit(const currency::transfer &t, account_name code) {
+    // run sanity check here
     if(code == _self) {
         return;
     }
-
-    uint32_t cur_in_sec = now();
-    bool isValidPool = checkpool(cur_in_sec);
-
-    // run sanity check here
     eosio_assert(code == N(eosio.token), "Transfer not from eosio.token");
     eosio_assert(t.to == _self, "Transfer not made to this contract");
     eosio_assert(t.quantity.symbol == string_to_symbol(4, "EOS"), "Only accepts EOS for deposits");
     eosio_assert(t.quantity.is_valid(), "Invalid token transfer");
     eosio_assert(t.quantity.amount > 0, "Quantity must be positive");
 
+    // Always accept referral registration. Please notice that if you don't buy bond,
+    // you wouldn't have an account to receive referral bonus.
     auto user = t.from;
-    // accept referral registration all time.
     if (t.quantity.amount == 10) {
         auto owner_refs = referrals.get_index<N(byowner)>();
         auto ref_itr = owner_refs.find(user);
@@ -254,6 +251,10 @@ void scam::deposit(const currency::transfer &t, account_name code) {
         });
         return;
     }
+
+    // Get current epoch time and run pool check
+    uint32_t cur_in_sec = now();
+    bool isValidPool = checkpool(cur_in_sec);
 
     // return the balance to user account if the pool is in inactive or invalid status.
     if (isValidPool == false) {
@@ -275,7 +276,7 @@ void scam::deposit(const currency::transfer &t, account_name code) {
         return;
     }
 
-    // find current pool
+    // find current active pool
     auto pool = pools.begin();
 
     string usercomment = t.memo;
