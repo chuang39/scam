@@ -69,7 +69,7 @@ class scam : public eosio::contract {
     //constexpr static double KEY_CARRYOVER = 0.1;
     constexpr static account_name TEAM_NAME = N(eosgamesprod);
 
-    constexpr static INIT_COMMENT = "Guys... as the greatest President, I say, not in a braggadocios way, I've made "
+    constexpr static string INIT_COMMENT = "Guys... as the greatest President, I say, not in a braggadocios way, I've made "
             "billions and billions of dollars dealing with people all around the world. We're winning Again!!";
 
     // @abi table pools i64
