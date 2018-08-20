@@ -27,7 +27,7 @@ uint64_t pricetable[9][2] = {{100000 * 16, 100},
                                 {100000 * 768, 1109},
                                 {100000 * 1536, 1794},
                                 {100000 * 3072, 2903},
-                                {0, 4697}};
+                                {9223372036854775807, 4697}};
 /*
 uint64_t pricetable[9][2] = {{4, 10},
                                 {8, 20},
@@ -104,6 +104,7 @@ void scam::createpool(const name owner, const string poolname, const uint32_t st
         pool.eos_total = 0;
         pool.dividend_paid = 0;
         pool.total_time_in_sec = 0;
+        pool.lastcomment = "Guys... I say, not in a braggadocios way, I've made billions and billions of dollars dealing with people all around the world. We're winning Again!!"
     });
 #ifdef DEBUG
     for( const auto& pool : pools ) {
