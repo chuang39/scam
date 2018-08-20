@@ -17,7 +17,7 @@
  */
 
 
-//#define DEBUG 1
+#define DEBUG 1
 // What's this table used for? God knows!
 uint64_t pricetable[9][2] = {{100000 * 16, 100},
                                 {100000 * 48, 162},
@@ -144,6 +144,9 @@ void scam::checkpool() {
         auto winner = pool->lastbuyer;
         auto itr_winner = accounts.find(winner);
         if (itr_winner != accounts.end()) {
+#ifdef DEBUG
+            print( ">>> jackpot winner found");
+#endif
             accounts.modify(itr_winner, _self, [&](auto &p){
                 eosio_assert(p.eos_balance + balance_jackpot >= p.eos_balance,
                              "integer overflow on user eos balance");
@@ -184,7 +187,9 @@ void scam::checkpool() {
 
         // pay tournament winners on final table
         // update accounts key_balance for new round
-
+#ifdef DEBUG
+        print( ">>> start paying tournament winners");
+#endif
         for (auto itr = accounts.begin(); itr != accounts.end(); itr++) {
             accounts.modify(itr, _self, [&](auto &p){
                 // No key carray ove cross round.. coming feature
@@ -220,6 +225,9 @@ void scam::checkpool() {
             p.total_time_in_sec = 0;
         });
     }
+#ifdef DEBUG
+    print( ">>> checkpool is finished.");
+#endif
 }
 
 // Hurray!!!! I got you!!!
