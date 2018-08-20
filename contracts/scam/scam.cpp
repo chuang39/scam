@@ -306,6 +306,9 @@ void scam::deposit(const currency::transfer &t, account_name code) {
             p.eos_balance += share;
         });
     }
+#ifdef DEBUG
+    print(">>> dividend paid ");
+#endif
 
     // secondly, add or update user
     auto itr_user = accounts.find(user);
@@ -321,18 +324,27 @@ void scam::deposit(const currency::transfer &t, account_name code) {
             p.referee = referee_name;
         });
     }
+#ifdef DEBUG
+    print(">>> user added ");
+#endif
 
     // Third, update user keys
     accounts.modify(itr_user, _self, [&](auto &p){
         p.key_balance += keycnt;
         p.finaltable_keys += keycnt;
     });
+#ifdef DEBUG
+    print(">>> updaded user key ");
+#endif
     // insert new transaction to final table
     finaltable.emplace(_self, [&](auto &p){
         p.start = keybal + 1;
         p.end = newkeycnt;
         p.owner = name{user};
     });
+#ifdef DEBUG
+    print(">>> new transaction inserted ");
+#endif
 
     //update final table
     auto itr_ft = finaltable.begin();
@@ -361,6 +373,9 @@ void scam::deposit(const currency::transfer &t, account_name code) {
             break;
         }
     }
+#ifdef DEBUG
+    print(">>> final table updated ");
+#endif
 
     // pay referral
     auto itr_referee = accounts.find(itr_user->referee);
@@ -374,6 +389,9 @@ void scam::deposit(const currency::transfer &t, account_name code) {
             p.eos_balance += ref_bonus;
         });
     }
+#ifdef DEBUG
+    print(">>> referral paid ");
+#endif
 
     // update pool with final prize
     uint64_t prize_share = amount * (FINAL_PRIZE_PERCENT + FINAL_TABLE_PERCENT);
@@ -398,6 +416,9 @@ void scam::deposit(const currency::transfer &t, account_name code) {
         p.dividend_paid += (ref_bonus + dividend);
         p.total_time_in_sec += TIME_INC;
     });
+#ifdef DEBUG
+    print(">>> pool updated ");
+#endif
 
     // pay team if all above steps succeed
     uint64_t team_share = amount - dividend_paid - ref_bonus - prize_share;
@@ -416,6 +437,9 @@ void scam::deposit(const currency::transfer &t, account_name code) {
     accounts.modify(team, _self, [&](auto &p) {
        p.eos_balance += team_share;
     });
+#ifdef DEBUG
+    print(">>> team paid at last after everything suceeds!");
+#endif
 }
 
 // Thanks for making America great again!
