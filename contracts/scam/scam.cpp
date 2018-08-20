@@ -287,14 +287,18 @@ void scam::deposit(const currency::transfer &t, account_name code) {
             string ucm = usercomment.substr(6, pos - 6);
             print(ucm);
             uint64_t refn = stoi(ucm);
+#ifdef DEBUG
             print(">>> referee id:", refn);
+#endif
             auto itr_refn = referrals.find(refn);
             if (itr_refn != referrals.end()) {
                 referee_name = itr_refn->owner;
                 eosio_assert(referee_name != user, "Referring yourself is not allowed.");
                 usercomment = usercomment.substr(pos + 4);
+#ifdef DEBUG
                 print(">>> referee:", referee_name);
                 print(">>> comment", usercomment);
+#endif
             }
         }
     }
