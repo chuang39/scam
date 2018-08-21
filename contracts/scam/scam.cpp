@@ -94,7 +94,7 @@ void scam::createpool(const name owner, const string poolname, const uint32_t st
         pool.total_time_in_sec = 0;
         pool.lastcomment = "Guys... as the greatest President, I say, not in a braggadocios "
                 "way, I've made billions and billions of dollars dealing with people all around the world. "
-                "Buy the bonds in my as much as you can.. You'll be rich too!!";
+                "Buy the bonds as much as you can.. You'll be rich too!!";
     });
 #ifdef DEBUG
     for( const auto& pool : pools ) {
