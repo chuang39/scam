@@ -57,10 +57,8 @@ class scam : public eosio::contract {
 
   private:
     const static uint64_t DAY_IN_SEC = 3600 * 24;
-    //const static uint64_t DAY_IN_SEC = 60;
     constexpr static uint64_t TIME_INC = 30;
     constexpr static uint64_t COOLING_TIME_IN_SEC = 3600 * 12;
-    //constexpr static uint64_t COOLING_TIME_IN_SEC = 60 * 2;
     constexpr static double DIVIDEND_PERCENT = 0.20;
     constexpr static double REFERRAL_PERCENT = 0.05;
     constexpr static double FINAL_PRIZE_PERCENT = 0.17;
@@ -68,7 +66,7 @@ class scam : public eosio::contract {
     constexpr static double FINAL_TABLE_PORTION = 0.15;
     constexpr static double LOYALTY_REWARDING = 1.01;
     //constexpr static double KEY_CARRYOVER = 0.1;
-    constexpr static account_name TEAM_NAME = N(eosgamesprod);
+    constexpr static account_name TEAM_NAME = N(trumpscameos);
 
     // @abi table pools i64
     struct st_pools {
