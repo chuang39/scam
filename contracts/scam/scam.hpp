@@ -41,10 +41,6 @@ class scam : public eosio::contract {
     //@abi action
     void createpool(const name owner, const string poolname, const uint32_t starttime);
     //@abi action
-    void deleteall();
-    //@abi action
-    void reset();
-    //@abi action
     void ping();
     //@abi action
     void pong();

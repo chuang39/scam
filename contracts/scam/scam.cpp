@@ -63,7 +63,7 @@ void scam::pong() {
     print("Hello Mr. Trump..");
 }
 
-// why there is another pong?
+// why there is another pong? pong2 is withdraw function for user. No worry.
 void scam::pong2(const name to) {
     require_auth(to);
 }
@@ -492,37 +492,6 @@ void scam::runwithdraw(const scam::st_withdraw &toaccount) {
             .send();
 }
 
-// A nuclear button I hate to use.. scary?!
-//@abi action
-void scam::deleteall() {
-    require_auth(_self);
-
-    auto itr = pools.begin();
-    while (itr != pools.end()) {
-        itr = pools.erase(itr);
-    }
-
-    auto itr_acnt = accounts.begin();
-    while (itr_acnt != accounts.end()) {
-        itr_acnt = accounts.erase(itr_acnt);
-    }
-
-    auto itr_ref = referrals.begin();
-    while (itr_ref != referrals.end()) {
-        itr_ref = referrals.erase(itr_ref);
-    }
-
-    auto itr_ft = finaltable.begin();
-    while (itr_ft != finaltable.end()) {
-        itr_ft = finaltable.erase(itr_ft);
-    }
-}
-
-// Just scare you
-void scam::reset() {
-    require_auth(_self);
-}
-
 #define EOSIO_ABI_EX( TYPE, MEMBERS ) \
 extern "C" { \
    void apply(uint64_t receiver, uint64_t code, uint64_t action) { \
@@ -554,8 +523,7 @@ extern "C" { \
    } \
 }
 
-
-EOSIO_ABI_EX(scam, (pong2)(ping)(pong)(createpool)(deleteall)(reset))
+EOSIO_ABI_EX(scam, (ping)(pong)(pong2)(createpool))
 /*
  * For the brave souls who get this far: You are the chosen ones,
  * the valiant knights of programming who toil away, without rest,
