@@ -19,23 +19,23 @@
 
 // #define DEBUG 1
 // What's this table used for? God knows!
-uint64_t pricetable[9][2] = {{100000 * 16, 100},
-                                {100000 * 48, 162},
-                                {100000 * 96, 262},
-                                {100000 * 192, 424},
-                                {100000 * 384, 685},
-                                {100000 * 768, 1109},
-                                {100000 * 1536, 1794},
-                                {100000 * 3072, 2903},
-                                {9223372036854775807, 4697}};
+uint64_t pricetable[9][3] = {{100000 * 16, 100, 3000},
+                                {100000 * 48, 162, 1854},
+                                {100000 * 96, 262, 1146},
+                                {100000 * 192, 424, 708},
+                                {100000 * 384, 685, 437},
+                                {100000 * 768, 1109, 270},
+                                {100000 * 1536, 1794, 167},
+                                {100000 * 3072, 2903, 103},
+                                {9223372036854775807, 4697, 64}};
 
-uint64_t get_price(uint64_t sold_keys) {
+uint64_t get_pricetable_index(uint64_t sold_keys) {
     for (int i = 0; i < 8; i++) {
         if (sold_keys < pricetable[i][0]) {
-            return pricetable[i][1];
+            return i;
         }
     }
-    return pricetable[8][1];
+    return 8;
 }
 
 // Ditch this dumb method
@@ -307,10 +307,13 @@ void scam::deposit(const currency::transfer &t, account_name code) {
     // get necessary information here.
     auto amount = t.quantity.amount;
     uint64_t keybal = pool->key_balance;
-    uint64_t cur_price = get_price(keybal);
+    uint64_t cur_index = get_pricetable_index(keybal);
+    uint64_t cur_price = pricetable[cur_index][1];
     uint64_t keycnt = ((uint64_t)(amount / cur_price)) * LOYALTY_REWARDING;
+    uint64_t cur_inc_time = (keycnt * pricetable[cur_index][2]) / 100;
     uint64_t newkeycnt = keybal + keycnt;
-    uint64_t new_price = get_price(newkeycnt);
+    uint64_t new_index = get_pricetable_index(newkeycnt);
+    uint64_t new_price = pricetable[new_index][1];
     uint64_t finaltable_size = newkeycnt * FINAL_TABLE_PORTION;
     uint64_t dump_size = newkeycnt - finaltable_size;
 
@@ -424,7 +427,7 @@ void scam::deposit(const currency::transfer &t, account_name code) {
         p.lastbuyer = name{user};
         p.lastcomment = string(usercomment);
         p.last_buy_ts = now();
-        p.end_at = std::min(p.end_at + TIME_INC, p.last_buy_ts + DAY_IN_SEC);
+        p.end_at = std::min(p.end_at + cur_inc_time, p.last_buy_ts + DAY_IN_SEC);
 
         eosio_assert(p.key_balance + keycnt >= p.key_balance,
                      "integer overflow on pool total key!");

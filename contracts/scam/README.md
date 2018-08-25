@@ -5,7 +5,7 @@ Maybe you think Trump's scam is O(scary), but seems quick enough in practice.
 As our greatest president once said: "Dude...dude... my IQ is one of the highest -and you all know it!
 Please don't feel so stupid and insecure , it's not your fault!"
 
-The game contract is deployed under EOS account: eosgamesprod.
+The game contract is deployed under EOS account: eosgamesprod. The contract is verified by the 3rd-party: https://eospark.com/MainNet/contract/eosgamesprod.
 
 We'll turn the ownership to eosio.prods@active once all features are done. ETA 8/3x..really!?
 
@@ -28,7 +28,7 @@ Gold bless %s/US/EOS/g! Gold bless you all!~
 如同我们最伟大的总统说过的: "伙计们...伙计们...我的IQ(智商?)是最高的之一,你们都知道的. 请不要感到傻(di..和谐)和不安全,
 这不是你们的错!"
 
-游戏合约被部署到EOS帐户: eosgamesprod.
+游戏合约被部署到EOS帐户: eosgamesprod. 合约安全一致性已由第三方认证: https://eospark.com/MainNet/contract/eosgamesprod.
 
 我们会移交所有权到eosio.prods@active一旦所有特性开发完成. ETA 8/3x..真的!?
 

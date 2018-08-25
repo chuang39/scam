@@ -62,7 +62,7 @@ class scam : public eosio::contract {
     constexpr static double FINAL_TABLE_PORTION = 0.15;
     constexpr static double LOYALTY_REWARDING = 1.01;
     //constexpr static double KEY_CARRYOVER = 0.1;
-    constexpr static account_name TEAM_NAME = N(trumpscameos);
+    constexpr static account_name TEAM_NAME = N(gyytmnbwgige);
 
     // @abi table pools i64
     struct st_pools {
