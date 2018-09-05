@@ -103,7 +103,7 @@ void pokergame1::deposit(const currency::transfer &t, account_name code) {
     });
 }
 
-void pokergame1::dealreceipt(const name from, string hash1, string hash2, string card1, string card2, string card3, string card4, string card5) {
+void pokergame1::dealreceipt(const name from, string hash1, string hash2, string card1, string card2, string card3, string card4, string card5, uint64_t bet, uint64_t win) {
 
     uint32_t c1 = parsecard(card1);
     eosio_assert(c1 < 52, "card1 larger than 51");
@@ -125,7 +125,37 @@ void pokergame1::dealreceipt(const name from, string hash1, string hash2, string
     eosio_assert(hash1 == itr_user->cardhash1, "cardhash1 is not valid");
     eosio_assert(hash2 == itr_user->cardhash2, "cardhash2 is not valid");
     eosio_assert(itr_user->bet > 0, "bet must be larger than zero");
+    eosio_assert(bet == itr_user->bet, "Bet does not match.");
+    eosio_assert(win == itr_user->betwin, "Win does not match.");
 
+
+    // update events. use metadata table to count the number of events
+    auto itr_metadata = metadatas.begin();
+    uint32_t ratios[10] = {0, 1, 2, 3, 4, 5, 8, 20, 50, 250};
+    if (itr_user->wintype >= 1) {
+        events.emplace(_self, [&](auto &p){
+            p.id = events.available_primary_key();
+            p.owner = from;
+            p.datetime = now();
+            p.wintype = itr_user->wintype;
+            p.ratio = ratios[itr_user->wintype];
+            p.bet = itr_user->bet;
+            p.betwin = itr_user->betwin;
+            p.card1 = itr_user->card1;
+            p.card2 = itr_user->card2;
+            p.card3 = itr_user->card3;
+            p.card4 = itr_user->card4;
+            p.card5 = itr_user->card5;
+        });
+        eosio_assert(itr_metadata != metadatas.end(), "Metadata is empty.");
+        metadatas.modify(itr_metadata, _self, [&](auto &p){
+            p.eventcnt = p.eventcnt + 1;
+        });
+    }
+    if (itr_metadata->eventcnt > 32) {
+        auto itr_event2 = events.begin();
+        events.erase(itr_event2);
+    }
     // clear balance
     asset bal = asset(itr_user->betwin, symbol_type(S(4, EOS)));
     pools.modify(itr_user, _self, [&](auto &p) {
@@ -381,6 +411,14 @@ void pokergame1::clear() {
     while (itr2 != events.end()) {
         itr2 = events.erase(itr2);
     }
+    auto itr3 = metadatas.begin();
+    while (itr3 != metadatas.end()) {
+        itr3 = metadatas.erase(itr3);
+    }
+
+    auto itr_metadata = metadatas.emplace(_self, [&](auto &p){
+        p.eventcnt = 0;
+    });
 }
 
 void pokergame1::setseed(const name from, uint32_t seed) {}

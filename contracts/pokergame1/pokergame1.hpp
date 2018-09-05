@@ -35,9 +35,10 @@ class pokergame1 : public eosio::contract {
     pokergame1(account_name self)
             :contract(self),
             pools(_self, _self),
-            events(_self, _self){};
+            events(_self, _self),
+            metadatas(_self, _self){};
     //@abi action
-    void dealreceipt(const name from, string hash1, string hash2, string card1, string card2, string card3, string card4, string card5);
+    void dealreceipt(const name from, string hash1, string hash2, string card1, string card2, string card3, string card4, string card5, uint64_t bet, uint64_t win);
     //@abi action
     void drawcards(const name from, uint32_t externalsrc, string dump1, string dump2, string dump3, string dump4, string dump5);
     //@abi action
@@ -58,6 +59,15 @@ class pokergame1 : public eosio::contract {
 
 
   private:
+    // @abi table metadatas i64
+    struct st_metadatas {
+        uint64_t id;
+        uint32_t eventcnt;
+        uint64_t primary_key() const { return id; }
+
+        EOSLIB_SERIALIZE(st_metadatas, (id)(eventcnt))
+    };
+
     // @abi table pools i64
     struct st_pools {
         name owner;
@@ -87,12 +97,19 @@ class pokergame1 : public eosio::contract {
         uint32_t ratio;
         uint32_t bet;
         uint32_t betwin;
+        uint8_t card1;
+        uint8_t card2;
+        uint8_t card3;
+        uint8_t card4;
+        uint8_t card5;
 
         uint64_t primary_key() const { return id; }
 
-        EOSLIB_SERIALIZE(st_events, (id)(owner)(datetime)(wintype)(ratio)(bet)(betwin))
+        EOSLIB_SERIALIZE(st_events, (id)(owner)(datetime)(wintype)(ratio)(bet)(betwin)(card1)(card2)(card3)(card4)(card5))
     };
 
+    typedef multi_index<N(metadatas), st_metadatas> _tb_metadatas;
+    _tb_metadatas metadatas;
     typedef multi_index<N(pools), st_pools> _tb_pools;
     _tb_pools pools;
     typedef multi_index<N(events), st_events> _tb_events;
